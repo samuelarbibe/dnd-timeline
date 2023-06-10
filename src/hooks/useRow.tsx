@@ -1,0 +1,58 @@
+import { CSSProperties, useLayoutEffect, useRef } from 'react'
+import ResizeObserver from 'resize-observer-polyfill'
+import { useDroppable } from '@dnd-kit/core'
+
+import useGanttContext from './useGanttContext'
+
+export type RowDefinition = {
+	id: string
+}
+
+export type UseRowProps = RowDefinition
+
+export default (props: UseRowProps) => {
+	const sidebarRef = useRef<HTMLDivElement>(null)
+	const { setSidebarWidth } = useGanttContext()
+
+	const droppableProps = useDroppable({ id: props.id })
+
+	useLayoutEffect(() => {
+		const element = sidebarRef?.current
+		if (!element) return
+
+		const observer = new ResizeObserver(() => {
+			setSidebarWidth((prev) => Math.max(element.clientWidth, prev))
+		})
+
+		observer.observe(element)
+		return () => {
+			observer.disconnect()
+		}
+	}, [])
+
+	const rowWrapperStyle: CSSProperties = {
+		display: 'inline-flex',
+	}
+
+	const rowStyle: CSSProperties = {
+		flex: 1,
+		position: 'relative',
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'stretch',
+	}
+
+	const rowSidebarStyle: CSSProperties = {
+		zIndex: 2,
+		left: 0,
+		position: 'sticky',
+	}
+
+	return {
+		rowStyle,
+		rowWrapperStyle,
+		rowSidebarStyle,
+		setSidebarRef: sidebarRef,
+		...droppableProps,
+	}
+}
