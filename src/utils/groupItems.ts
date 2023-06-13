@@ -1,9 +1,12 @@
 import { isAfter } from 'date-fns'
 
 import { Timeframe } from '../types'
-import { Item } from '../hooks/useItem'
+import { ItemDefinition } from '../hooks/useItem'
 
-export const groupItemsToSubrows = (items: Item[], timeframe?: Timeframe) => {
+export const groupItemsToSubrows = (
+	items: ItemDefinition[],
+	timeframe?: Timeframe
+) => {
 	const sortedItems = [...items]
 	sortedItems.sort((a, b) =>
 		isAfter(a.relevance.start, b.relevance.start) ? 1 : -1
@@ -25,8 +28,8 @@ export const groupItemsToSubrows = (items: Item[], timeframe?: Timeframe) => {
 
 		for (let index = 0; index < acc[item.rowId].length; index++) {
 			const currentSubrow = acc[item.rowId][index]
-			const lastItemInRow = currentSubrow[currentSubrow.length - 1]
-			if (isAfter(item.relevance.start, lastItemInRow.relevance.end)) {
+			const lastItemInSubrow = currentSubrow[currentSubrow.length - 1]
+			if (isAfter(item.relevance.start, lastItemInSubrow.relevance.end)) {
 				acc[item.rowId][index].push(item)
 				return acc
 			}
@@ -34,10 +37,13 @@ export const groupItemsToSubrows = (items: Item[], timeframe?: Timeframe) => {
 
 		acc[item.rowId].push([item])
 		return acc
-	}, {} as Record<string, Item[][]>)
+	}, {} as Record<string, ItemDefinition[][]>)
 }
 
-export const groupItemsToRows = (items: Item[], timeframe?: Timeframe) => {
+export const groupItemsToRows = (
+	items: ItemDefinition[],
+	timeframe?: Timeframe
+) => {
 	return items.reduce((acc, item) => {
 		if (
 			timeframe &&
@@ -53,5 +59,5 @@ export const groupItemsToRows = (items: Item[], timeframe?: Timeframe) => {
 		}
 
 		return acc
-	}, {} as Record<string, Item[]>)
+	}, {} as Record<string, ItemDefinition[]>)
 }

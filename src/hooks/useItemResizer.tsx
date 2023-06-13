@@ -7,6 +7,7 @@ export interface UseItemResizerProps {
 	itemId: string
 	rowId: string
 	disabled?: boolean
+	background?: boolean
 	side: 'start' | 'end'
 }
 
@@ -38,6 +39,7 @@ export default (props: UseItemResizerProps) => {
 		top: 0,
 		height: '100%',
 		minWidth: '5px',
+		zIndex: props.background ? 1 : 2,
 		cursor: props.disabled ? 'inherit' : 'col-resize',
 		transform: CSS.Translate.toString(modifiedTransform),
 	}

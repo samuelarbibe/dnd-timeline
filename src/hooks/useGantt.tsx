@@ -17,6 +17,7 @@ export type OnDragEndHandler = (event: DragEndEvent) => void
 export type Gantt = {
 	style: CSSProperties
 	timeframe: Timeframe
+	overlayed: boolean
 	handleOnDragEnd: OnDragEndHandler
 	direction: 'rtl' | 'ltr'
 	setGanttRef: React.RefObject<HTMLDivElement>
@@ -36,6 +37,7 @@ export type OnItemsChanged = (
 export interface UseGanttProps {
 	timeframe: Timeframe
 	onItemChanged: OnItemsChanged
+	overlayed?: boolean
 	direction?: 'rtl' | 'ltr'
 }
 
@@ -145,6 +147,7 @@ export default (props: UseGanttProps): Gantt => {
 	const value = useMemo<Gantt>(
 		() => ({
 			style,
+			overlayed: !!props.overlayed,
 			setSidebarWidth,
 			handleOnDragEnd,
 			pixelsToMilliseconds,
@@ -161,6 +164,7 @@ export default (props: UseGanttProps): Gantt => {
 			millisecondsToPixels,
 			props.timeframe,
 			props.direction,
+			props.overlayed,
 		]
 	)
 

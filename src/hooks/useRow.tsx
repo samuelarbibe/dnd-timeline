@@ -36,16 +36,16 @@ export default (props: UseRowProps) => {
 
 	const rowStyle: CSSProperties = {
 		flex: 1,
-		position: 'relative',
 		display: 'flex',
-		flexDirection: 'column',
+		position: 'relative',
 		alignItems: 'stretch',
+		flexDirection: 'column',
 	}
 
 	const rowSidebarStyle: CSSProperties = {
-		zIndex: 2,
 		left: 0,
-		position: 'sticky',
+		zIndex: 3,
+		display: 'flex',
 	}
 
 	return {

@@ -5,18 +5,17 @@ import { useDraggable } from '@dnd-kit/core'
 import { Relevance } from '../types'
 import useGanttContext from './useGanttContext'
 
-export type Item = {
+export type ItemDefinition = {
 	id: string
 	rowId: string
-	relevance: Relevance
 	disabled?: boolean
-	overlay?: boolean
+	relevance: Relevance
 	background?: boolean
 }
 
 export type UseItemProps = Pick<
-	Item,
-	'id' | 'relevance' | 'disabled' | 'overlay'
+	ItemDefinition,
+	'id' | 'relevance' | 'disabled' | 'background'
 >
 
 export default (props: UseItemProps) => {
@@ -27,7 +26,8 @@ export default (props: UseItemProps) => {
 			relevance: props.relevance,
 		},
 	})
-	const { timeframe, millisecondsToPixels, direction } = useGanttContext()
+	const { timeframe, millisecondsToPixels, direction, overlayed } =
+		useGanttContext()
 
 	const side = direction === 'rtl' ? 'right' : 'left'
 	const paddingSide = direction === 'rtl' ? 'paddingRight' : 'paddingLeft'
@@ -51,9 +51,9 @@ export default (props: UseItemProps) => {
 		width,
 		[side]: deltaX,
 		cursor,
-		zIndex: 1,
 		height: '100%',
-		...(!props.overlay && {
+		zIndex: props.background ? 1 : 2,
+		...(!(draggableProps.isDragging && overlayed) && {
 			transform: CSS.Translate.toString(draggableProps.transform),
 		}),
 	}
@@ -61,7 +61,8 @@ export default (props: UseItemProps) => {
 	const itemContentStyle: CSSProperties = {
 		height: '100%',
 		display: 'flex',
-		position: 'relative',
+		overflow: 'hidden',
+		alignItems: 'stretch',
 		[paddingSide]: Math.max(0, -parseInt(itemStyle[side]?.toString() || '0')),
 	}
 
