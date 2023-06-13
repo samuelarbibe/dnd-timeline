@@ -10,16 +10,24 @@ import ResizeObserver from 'resize-observer-polyfill'
 import { DragEndEvent } from '@dnd-kit/core'
 
 import { Timeframe } from '../types'
+import { DragDirection } from './useItem'
 import { differenceInMilliseconds } from 'date-fns'
 
-export type OnDragEndHandler = (event: DragEndEvent) => void
+export type OnDragEnd = (event: DragEndEvent) => void
+
+export type OnResizeEnd = (
+	itemId: string,
+	deltaX: number,
+	side: DragDirection
+) => void
 
 export type Gantt = {
 	style: CSSProperties
 	timeframe: Timeframe
 	overlayed: boolean
-	handleOnDragEnd: OnDragEndHandler
-	direction: 'rtl' | 'ltr'
+	onDragEnd: OnDragEnd
+	onResizeEnd: OnResizeEnd
+	direction: CanvasDirection
 	setGanttRef: React.RefObject<HTMLDivElement>
 	setSidebarWidth: React.Dispatch<React.SetStateAction<number>>
 	millisecondsToPixels: MillisecondsToPixels
@@ -89,36 +97,14 @@ export default (props: UseGanttProps): Gantt => {
 		[props.timeframe, ganttViewportWidth]
 	)
 
-	const resizeItemHandler = useCallback<OnDragEndHandler>(
-		(event) => {
-			const overedRow = event.over?.id.toString()
-			const originRow = event.active?.data.current?.rowId
-			if (overedRow !== originRow) return
-
-			const activeItemId = event.active?.data.current?.itemId
-
-			const side = event.active.data.current?.side // TODO: add type
-			const deltaX = event.delta.x * (props.direction === 'rtl' ? -1 : 1)
-			const deltaInMilliseconds =
-				pixelsToMilliseconds(deltaX) * (props.direction === 'rtl' ? -1 : 1)
-
-			props.onItemChanged(activeItemId, {
-				relevance: {
-					[side]: deltaInMilliseconds,
-				},
-			})
-		},
-		[pixelsToMilliseconds, props.onItemChanged, props.direction]
-	)
-
-	const moveItemHandler = useCallback<OnDragEndHandler>(
+	const onDragEnd = useCallback<OnDragEnd>(
 		(event) => {
 			const overedRow = event.over?.id.toString()
 			if (!overedRow) return
 
-			const deltaX = event.delta.x * (props.direction === 'rtl' ? -1 : 1)
-
-			const deltaInMilliseconds = pixelsToMilliseconds(deltaX)
+			const deltaX = event.delta.x
+			const deltaInMilliseconds =
+				pixelsToMilliseconds(deltaX) * (props.direction === 'rtl' ? -1 : 1)
 
 			const activeItemId = event.active.id.toString()
 
@@ -133,33 +119,38 @@ export default (props: UseGanttProps): Gantt => {
 		[pixelsToMilliseconds, props.onItemChanged, props.direction]
 	)
 
-	const handleOnDragEnd = useCallback<OnDragEndHandler>(
-		(event: DragEndEvent) => {
-			if (event.active.data.current?.type === 'resizer') {
-				return resizeItemHandler(event)
-			} else {
-				return moveItemHandler(event)
-			}
+	const onResizeEnd = useCallback<OnResizeEnd>(
+		(itemId: string, deltaX: number, side: 'start' | 'end') => {
+			const deltaInMilliseconds =
+				pixelsToMilliseconds(deltaX) * (props.direction === 'rtl' ? -1 : 1)
+
+			props.onItemChanged(itemId, {
+				relevance: {
+					[side]: deltaInMilliseconds,
+				},
+			})
 		},
-		[resizeItemHandler, moveItemHandler]
+		[pixelsToMilliseconds, props.onItemChanged, props.direction]
 	)
 
 	const value = useMemo<Gantt>(
 		() => ({
 			style,
-			overlayed: !!props.overlayed,
+			onDragEnd,
+			onResizeEnd,
 			setSidebarWidth,
-			handleOnDragEnd,
 			pixelsToMilliseconds,
 			millisecondsToPixels,
 			setGanttRef: ganttRef,
+			overlayed: !!props.overlayed,
 			direction: props.direction || 'ltr',
 			timeframe: props.timeframe,
 		}),
 		[
 			style,
+			onDragEnd,
+			onResizeEnd,
 			setSidebarWidth,
-			handleOnDragEnd,
 			pixelsToMilliseconds,
 			millisecondsToPixels,
 			props.timeframe,

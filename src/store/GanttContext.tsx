@@ -26,7 +26,7 @@ const GanttContext = (props: GanttContextStandalone) => {
 	})
 
 	return (
-		<DndContext autoScroll={false} onDragEnd={gantt.handleOnDragEnd} {...props}>
+		<DndContext autoScroll={false} onDragEnd={gantt.onDragEnd} {...props}>
 			<ganttContext.Provider value={gantt}>
 				{updatedChildren}
 			</ganttContext.Provider>
