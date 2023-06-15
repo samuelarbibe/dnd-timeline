@@ -1,4 +1,11 @@
-import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
+import {
+	CSSProperties,
+	PointerEventHandler,
+	useCallback,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { useDraggable } from '@dnd-kit/core'
 
@@ -65,25 +72,25 @@ export default (props: UseItemProps) => {
 			? 'grabbing'
 			: 'grab'
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!dragDirection) return
 
 		const mouseMoveHandler = (event: MouseEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return
 
-			const dragDelta = event.clientX - dragStartX.current
-			const newWidth =
-				width +
-				(dragDirection === 'end'
-					? dragDelta
-					: dragDirection === 'start'
-						? -dragDelta
-						: 0)
+			const dragDeltaX = event.clientX - dragStartX.current
 
-			const newDeltaX = deltaX + (dragDirection === 'start' ? dragDelta : 0)
+			if (dragDirection === 'start') {
+				const newSideDelta = deltaX + dragDeltaX
+				draggableProps.node.current.style[side] = newSideDelta + 'px'
 
-			draggableProps.node.current.style.width = newWidth + 'px'
-			draggableProps.node.current.style[side] = newDeltaX + 'px'
+				const newWidth = width + deltaX - newSideDelta
+				draggableProps.node.current.style.width = newWidth + 'px'
+			} else {
+				const otherSideDelta = deltaX + width + dragDeltaX
+				const newWidth = otherSideDelta - deltaX
+				draggableProps.node.current.style.width = newWidth + 'px'
+			}
 		}
 
 		window.addEventListener('mousemove', mouseMoveHandler)
@@ -93,13 +100,25 @@ export default (props: UseItemProps) => {
 		}
 	}, [width, deltaX, dragDirection, draggableProps.node.current])
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!dragDirection) return
 
-		const mouseUpHandler = (event: MouseEvent) => {
+		const mouseUpHandler = () => {
 			if (!dragStartX.current || !draggableProps.node.current) return
 
-			const dragDelta = event.clientX - dragStartX.current
+			let dragDelta = 0
+
+			if (dragDirection === 'start') {
+				const currentSideDelta = parseInt(
+					draggableProps.node.current.style[side].slice(0, -2)
+				)
+				dragDelta = currentSideDelta - deltaX
+			} else {
+				const currentWidth = parseInt(
+					draggableProps.node.current.style.width.slice(0, -2)
+				)
+				dragDelta = currentWidth - width
+			}
 
 			onResizeEnd(props.id, dragDelta, dragDirection)
 			setDragDirection(null)
@@ -122,9 +141,9 @@ export default (props: UseItemProps) => {
 		draggableProps.node.current,
 	])
 
-	const onPointerMove = useCallback(
-		(event: MouseEvent) => {
-			if (!draggableProps.node.current) return
+	const onPointerMove = useCallback<PointerEventHandler>(
+		(event) => {
+			if (!draggableProps.node.current || props.disabled) return
 
 			const direction = getDragDirection(
 				event.clientX,
@@ -140,9 +159,9 @@ export default (props: UseItemProps) => {
 		[cursor, draggableProps.node.current]
 	)
 
-	const onPointerDown = useCallback(
-		(event: MouseEvent) => {
-			if (!draggableProps.node.current) return
+	const onPointerDown = useCallback<PointerEventHandler>(
+		(event) => {
+			if (!draggableProps.node.current || props.disabled) return
 
 			const direction = getDragDirection(
 				event.clientX,
@@ -168,7 +187,7 @@ export default (props: UseItemProps) => {
 		[side]: deltaX,
 		cursor,
 		height: '100%',
-		zIndex: props.background ? 1 : 2,
+		zIndex: props.disabled ? 0 : props.background ? 1 : 2,
 		...(!(draggableProps.isDragging && overlayed) && {
 			transform: CSS.Translate.toString(draggableProps.transform),
 		}),

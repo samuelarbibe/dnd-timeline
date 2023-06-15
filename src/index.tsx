@@ -13,6 +13,7 @@ export type {
 	Gantt,
 	UseGanttProps,
 	OnItemsChanged,
+	OnTimeframeChanged,
 	OnDragEnd as OnDragEndHandler,
 	PixelsToMilliseconds,
 	MillisecondsToPixels,

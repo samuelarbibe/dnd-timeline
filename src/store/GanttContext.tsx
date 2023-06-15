@@ -3,8 +3,9 @@ import React, {
 	ReactElement,
 	cloneElement,
 	createContext,
+	useCallback,
 } from 'react'
-import { DndContext, DndContextProps } from '@dnd-kit/core'
+import { DndContext, DndContextProps, DragEndEvent } from '@dnd-kit/core'
 
 import { Gantt } from '../hooks/useGantt'
 
@@ -25,8 +26,16 @@ const GanttContext = (props: GanttContextStandalone) => {
 		} as CSSProperties,
 	})
 
+	const onDragEnd = useCallback(
+		(event: DragEndEvent) => {
+			gantt.onDragEnd(event)
+			props.onDragEnd?.(event)
+		},
+		[gantt.onDragEnd, props.onDragEnd]
+	)
+
 	return (
-		<DndContext autoScroll={false} onDragEnd={gantt.onDragEnd} {...props}>
+		<DndContext autoScroll={false} {...props} onDragEnd={onDragEnd}>
 			<ganttContext.Provider value={gantt}>
 				{updatedChildren}
 			</ganttContext.Provider>

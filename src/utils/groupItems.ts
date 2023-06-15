@@ -1,5 +1,3 @@
-import { isAfter } from 'date-fns'
-
 import { Timeframe } from '../types'
 import { ItemDefinition } from '../hooks/useItem'
 
@@ -8,9 +6,7 @@ export const groupItemsToSubrows = (
 	timeframe?: Timeframe
 ) => {
 	const sortedItems = [...items]
-	sortedItems.sort((a, b) =>
-		isAfter(a.relevance.start, b.relevance.start) ? 1 : -1
-	)
+	sortedItems.sort((a, b) => (a.relevance.start > b.relevance.start ? 1 : -1))
 
 	return sortedItems.reduce((acc, item) => {
 		if (
@@ -29,7 +25,7 @@ export const groupItemsToSubrows = (
 		for (let index = 0; index < acc[item.rowId].length; index++) {
 			const currentSubrow = acc[item.rowId][index]
 			const lastItemInSubrow = currentSubrow[currentSubrow.length - 1]
-			if (isAfter(item.relevance.start, lastItemInSubrow.relevance.end)) {
+			if (item.relevance.start >= lastItemInSubrow.relevance.end) {
 				acc[item.rowId][index].push(item)
 				return acc
 			}

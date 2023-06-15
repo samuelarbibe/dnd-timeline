@@ -6,6 +6,7 @@ import useGanttContext from './useGanttContext'
 
 export type RowDefinition = {
 	id: string
+	disabled?: boolean
 }
 
 export type UseRowProps = RowDefinition
@@ -14,7 +15,10 @@ export default (props: UseRowProps) => {
 	const sidebarRef = useRef<HTMLDivElement>(null)
 	const { setSidebarWidth } = useGanttContext()
 
-	const droppableProps = useDroppable({ id: props.id })
+	const droppableProps = useDroppable({
+		id: props.id,
+		disabled: props.disabled,
+	})
 
 	useLayoutEffect(() => {
 		const element = sidebarRef?.current

@@ -1,9 +1,19 @@
-.row {
-	min-height: 70px;
+.row-disabled {
+	opacity: 0.5;
 }
 
 .row-content-wrapper {
+	min-height: 70px;
 	border-bottom: 1px solid rgb(72, 72, 74);
+}
+
+.row-content-outline {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: calc(100% - 6px);
+	height: calc(100% - 6px);
+	border: 3px solid rgba(160, 90, 0, 60%);
 }
 
 .row-sidebar {
