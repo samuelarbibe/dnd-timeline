@@ -14,6 +14,7 @@ export type {
 	UseGanttProps,
 	OnItemsChanged,
 	OnTimeframeChanged,
+	GridSizeDefinition,
 	OnDragEnd as OnDragEndHandler,
 	PixelsToMilliseconds,
 	MillisecondsToPixels,

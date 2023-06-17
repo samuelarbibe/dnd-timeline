@@ -1,10 +1,4 @@
-import React, {
-	CSSProperties,
-	ReactElement,
-	cloneElement,
-	createContext,
-	useCallback,
-} from 'react'
+import React, { ReactElement, createContext, useCallback } from 'react'
 import { DndContext, DndContextProps, DragEndEvent } from '@dnd-kit/core'
 
 import { Gantt } from '../hooks/useGantt'
@@ -19,13 +13,6 @@ export const ganttContext = createContext<Gantt>({} as Gantt)
 const GanttContext = (props: GanttContextStandalone) => {
 	const gantt = props.value
 
-	const updatedChildren = cloneElement(props.children as ReactElement, {
-		style: {
-			...props.children.props.style,
-			direction: gantt.direction,
-		} as CSSProperties,
-	})
-
 	const onDragEnd = useCallback(
 		(event: DragEndEvent) => {
 			gantt.onDragEnd(event)
@@ -34,10 +21,23 @@ const GanttContext = (props: GanttContextStandalone) => {
 		[gantt.onDragEnd, props.onDragEnd]
 	)
 
+	const onDragStart = useCallback(
+		(event: DragEndEvent) => {
+			gantt.onDragStart(event)
+			props.onDragStart?.(event)
+		},
+		[gantt.onDragStart, props.onDragStart]
+	)
+
 	return (
-		<DndContext autoScroll={false} {...props} onDragEnd={onDragEnd}>
+		<DndContext
+			autoScroll={false}
+			{...props}
+			onDragEnd={onDragEnd}
+			onDragStart={onDragStart}
+		>
 			<ganttContext.Provider value={gantt}>
-				{updatedChildren}
+				{props.children}
 			</ganttContext.Provider>
 		</DndContext>
 	)

@@ -1,7 +1,20 @@
 import '../index.css'
 import classNames from 'classnames'
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
-import { endOfDay, minutesToMilliseconds, startOfDay } from 'date-fns'
+
+import {
+	format,
+	endOfDay,
+	minutesToMilliseconds,
+	startOfDay,
+	setDefaultOptions,
+	hoursToMilliseconds,
+	millisecondsToHours,
+	millisecondsToMinutes,
+} from 'date-fns'
+import { he } from 'date-fns/locale'
+
+setDefaultOptions({ locale: he })
 
 import { Meta, StoryObj } from '@storybook/react'
 import {
@@ -14,6 +27,7 @@ import {
 	groupItemsToSubrows,
 	groupItemsToRows,
 	OnTimeframeChanged,
+	GridSizeDefinition,
 } from 'react-gantt'
 import { DragOverlay, DragStartEvent } from '@dnd-kit/core'
 
@@ -23,7 +37,8 @@ import Row from '../components/Row'
 import Item from '../components/Item'
 
 import { generateItems, generateRows } from '../utils'
-import TimeAxis from '../components/TimeAxis'
+import TimeAxis, { MarkerDefinition } from '../components/TimeAxis'
+import TimeCursor from '../components/TimeCursor'
 
 const DEFAULT_TIMEFRAME: Timeframe = {
 	start: startOfDay(new Date()),
@@ -82,12 +97,37 @@ function Gantt(props: GanttProps) {
 		[setTimeframe]
 	)
 
+	const timeframeGridSize = useMemo<GridSizeDefinition[]>(
+		() => [
+			{
+				value: hoursToMilliseconds(1),
+			},
+			{
+				value: minutesToMilliseconds(30),
+				maxTimeframeSize: hoursToMilliseconds(24),
+			},
+			{
+				value: minutesToMilliseconds(15),
+				maxTimeframeSize: hoursToMilliseconds(12),
+			},
+			{
+				value: minutesToMilliseconds(5),
+				maxTimeframeSize: hoursToMilliseconds(6),
+			},
+			{
+				value: minutesToMilliseconds(1),
+				maxTimeframeSize: hoursToMilliseconds(2),
+			},
+		],
+		[]
+	)
+
 	const gantt = useGantt({
 		timeframe,
 		onItemChanged,
 		overlayed: true,
+		timeframeGridSize,
 		onTimeframeChanged,
-		timeframeGridSize: minutesToMilliseconds(60),
 	})
 
 	const groupedBackgroundItems = useMemo(
@@ -125,6 +165,54 @@ function Gantt(props: GanttProps) {
 		[draggedItemId, props.droppableMap]
 	)
 
+	const timeAxisMarkers = useMemo<MarkerDefinition[]>(
+		() => [
+			{
+				value: hoursToMilliseconds(24),
+				getLabel: (date: Date) => format(date, 'eo'),
+			},
+			{
+				value: hoursToMilliseconds(2),
+				minTimeframeSize: hoursToMilliseconds(24),
+				getLabel: (date: Date) => format(date, 'k'),
+			},
+			{
+				value: hoursToMilliseconds(1),
+				minTimeframeSize: hoursToMilliseconds(24),
+			},
+			{
+				value: hoursToMilliseconds(1),
+				maxTimeframeSize: hoursToMilliseconds(24),
+				getLabel: (date: Date) => format(date, 'k'),
+			},
+			{
+				value: minutesToMilliseconds(30),
+				maxTimeframeSize: hoursToMilliseconds(24),
+				minTimeframeSize: hoursToMilliseconds(12),
+			},
+			{
+				value: minutesToMilliseconds(15),
+				maxTimeframeSize: hoursToMilliseconds(12),
+				getLabel: (date: Date) => format(date, 'm'),
+			},
+			{
+				value: minutesToMilliseconds(5),
+				maxTimeframeSize: hoursToMilliseconds(6),
+				minTimeframeSize: hoursToMilliseconds(3),
+			},
+			{
+				value: minutesToMilliseconds(5),
+				maxTimeframeSize: hoursToMilliseconds(3),
+				getLabel: (date: Date) => format(date, 'm'),
+			},
+			{
+				value: minutesToMilliseconds(1),
+				maxTimeframeSize: hoursToMilliseconds(2),
+			},
+		],
+		[]
+	)
+
 	return (
 		<GanttContext
 			value={gantt}
@@ -133,7 +221,8 @@ function Gantt(props: GanttProps) {
 			onDragCancel={handleOnDragCancel}
 		>
 			<div ref={gantt.setGanttRef} style={gantt.style} className="gantt">
-				<TimeAxis />
+				<TimeCursor />
+				<TimeAxis markers={timeAxisMarkers} />
 				{rows.map((row) => (
 					<Row
 						id={row.id}

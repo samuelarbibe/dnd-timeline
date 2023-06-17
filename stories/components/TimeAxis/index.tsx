@@ -1,15 +1,12 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, memo } from 'react'
 import defaultClasses from './TimeAxis.module.css'
 
 import { useGanttContext } from 'react-gantt'
-import { getHours, hoursToMilliseconds } from 'date-fns'
-
-const DEFAULT_TIMEFRAME_GRIDSIZE = hoursToMilliseconds(1)
+import { minutesToMilliseconds } from 'date-fns'
 
 type Marker = {
 	label?: string
 	sideDelta: number
-	multiplier: number
 	heightMultiplier: number
 }
 
@@ -17,20 +14,23 @@ type TimeAxisClasses = Partial<
 	Record<'time-axis' | 'marker-container' | 'marker' | 'marker-label', string>
 >
 
+export type MarkerDefinition = {
+	value: number
+	maxTimeframeSize?: number
+	minTimeframeSize?: number
+	getLabel?: (time: Date) => string
+}
+
 interface TimeAxisProps {
+	markers: MarkerDefinition[]
 	classes?: TimeAxisClasses
 }
 
-export default function (props: TimeAxisProps) {
-	const {
-		timeframe,
-		direction,
-		sidebarWidth,
-		millisecondsToPixels,
-		timeframeGridSize = DEFAULT_TIMEFRAME_GRIDSIZE,
-	} = useGanttContext()
+export default memo(function (props: TimeAxisProps) {
+	const { timeframe, ganttDirection, sidebarWidth, millisecondsToPixels } =
+		useGanttContext()
 
-	const side = direction === 'rtl' ? 'right' : 'left'
+	const side = ganttDirection === 'rtl' ? 'right' : 'left'
 
 	const classes = useMemo(
 		() => ({ ...defaultClasses, ...props.classes }),
@@ -38,37 +38,44 @@ export default function (props: TimeAxisProps) {
 	)
 
 	const markers = useMemo(() => {
-		const startTime =
-			Math.floor(timeframe.start.getTime() / timeframeGridSize) *
-			timeframeGridSize
+		const sortedMarkers = [...props.markers]
+		sortedMarkers.sort((a, b) => b.value - a.value)
+
+		const delta = sortedMarkers[sortedMarkers.length - 1].value
+
+		const timeframeSize = timeframe.end.getTime() - timeframe.start.getTime()
+
+		const startTime = Math.floor(timeframe.start.getTime() / delta) * delta
 
 		const endTime = timeframe.end.getTime()
-
-		const multipliers = [1, 0.5, 0.25]
+		const timezoneOffset = minutesToMilliseconds(new Date().getTimezoneOffset())
 
 		const markerSideDeltas: Marker[] = []
 
-		for (
-			let time = startTime;
-			time <= endTime;
-			time += hoursToMilliseconds(multipliers[multipliers.length - 1])
-		) {
-			const multiplier = multipliers.find(
-				(divider) => time % hoursToMilliseconds(divider) === 0
-			) as number
+		for (let time = startTime; time <= endTime; time += delta) {
+			const multiplierIndex = sortedMarkers.findIndex(
+				(marker) =>
+					(time - timezoneOffset) % marker.value === 0 &&
+					(!marker.maxTimeframeSize ||
+						timeframeSize <= marker.maxTimeframeSize) &&
+					(!marker.minTimeframeSize || timeframeSize >= marker.minTimeframeSize)
+			)
+
+			if (multiplierIndex === -1) continue
+
+			const multiplier = sortedMarkers[multiplierIndex]
+
+			const label = multiplier.getLabel?.(new Date(time))
 
 			markerSideDeltas.push({
-				...(multiplier === multipliers[0] && {
-					label: getHours(new Date(time)).toString(),
-				}),
+				label,
+				heightMultiplier: 1 / (multiplierIndex + 1),
 				sideDelta: millisecondsToPixels(time - timeframe.start.getTime()),
-				multiplier,
-				heightMultiplier: multiplier,
 			})
 		}
 
 		return markerSideDeltas
-	}, [timeframe, timeframeGridSize, millisecondsToPixels])
+	}, [timeframe, millisecondsToPixels, props.markers])
 
 	return (
 		<div
@@ -87,13 +94,22 @@ export default function (props: TimeAxisProps) {
 				>
 					<div
 						className={classes['marker']}
-						style={{ height: 100 * marker.heightMultiplier + '%' }}
+						style={{
+							height: 100 * marker.heightMultiplier + '%',
+						}}
 					/>
 					{marker.label && (
-						<div className={classes['marker-label']}>{marker.label}</div>
+						<div
+							className={classes['marker-label']}
+							style={{
+								fontWeight: marker.heightMultiplier * 1000,
+							}}
+						>
+							{marker.label}
+						</div>
 					)}
 				</div>
 			))}
 		</div>
 	)
-}
+})

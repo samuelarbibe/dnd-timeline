@@ -14,11 +14,18 @@ import useGanttContext from './useGanttContext'
 
 const getDragDirection = (
 	mouseX: number,
-	clientRect: DOMRect
+	clientRect: DOMRect,
+	direction: CanvasDirection
 ): DragDirection | null => {
-	if (Math.abs(mouseX - clientRect.left) <= RESIZE_HANDLER_WIDTH / 2) {
+	const startSide = direction == 'rtl' ? 'right' : 'left'
+	const endSide = direction == 'rtl' ? 'left' : 'right'
+
+	if (Math.abs(mouseX - clientRect[startSide]) <= RESIZE_HANDLER_WIDTH / 2) {
 		return 'start'
-	} else if (Math.abs(mouseX - clientRect.right) <= RESIZE_HANDLER_WIDTH / 2) {
+	} else if (
+		Math.abs(mouseX - clientRect[endSide]) <=
+		RESIZE_HANDLER_WIDTH / 2
+	) {
 		return 'end'
 	}
 	return null
@@ -53,8 +60,13 @@ export default (props: UseItemProps) => {
 		},
 	})
 
-	const { timeframe, millisecondsToPixels, direction, overlayed, onResizeEnd } =
-		useGanttContext()
+	const {
+		timeframe,
+		overlayed,
+		onResizeEnd,
+		ganttDirection,
+		millisecondsToPixels,
+	} = useGanttContext()
 
 	const deltaX = millisecondsToPixels(
 		props.relevance.start.getTime() - timeframe.start.getTime()
@@ -64,7 +76,7 @@ export default (props: UseItemProps) => {
 		props.relevance.end.getTime() - props.relevance.start.getTime()
 	)
 
-	const side = direction === 'rtl' ? 'right' : 'left'
+	const side = ganttDirection === 'rtl' ? 'right' : 'left'
 
 	const cursor = props.disabled
 		? 'inherit'
@@ -78,7 +90,9 @@ export default (props: UseItemProps) => {
 		const mouseMoveHandler = (event: MouseEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return
 
-			const dragDeltaX = event.clientX - dragStartX.current
+			const dragDeltaX =
+				(event.clientX - dragStartX.current) *
+				(ganttDirection === 'rtl' ? -1 : 1)
 
 			if (dragDirection === 'start') {
 				const newSideDelta = deltaX + dragDeltaX
@@ -145,40 +159,42 @@ export default (props: UseItemProps) => {
 		(event) => {
 			if (!draggableProps.node.current || props.disabled) return
 
-			const direction = getDragDirection(
+			const newDragDirection = getDragDirection(
 				event.clientX,
-				draggableProps.node.current.getBoundingClientRect()
+				draggableProps.node.current.getBoundingClientRect(),
+				ganttDirection
 			)
 
-			if (direction) {
+			if (newDragDirection) {
 				draggableProps.node.current.style.cursor = 'col-resize'
 			} else {
 				draggableProps.node.current.style.cursor = cursor
 			}
 		},
-		[cursor, draggableProps.node.current]
+		[cursor, ganttDirection, draggableProps.node.current]
 	)
 
 	const onPointerDown = useCallback<PointerEventHandler>(
 		(event) => {
 			if (!draggableProps.node.current || props.disabled) return
 
-			const direction = getDragDirection(
+			const newDragDirection = getDragDirection(
 				event.clientX,
-				draggableProps.node.current.getBoundingClientRect()
+				draggableProps.node.current.getBoundingClientRect(),
+				ganttDirection
 			)
 
-			if (direction) {
-				setDragDirection(direction)
+			if (newDragDirection) {
+				setDragDirection(newDragDirection)
 				dragStartX.current = event.clientX
 			} else {
 				draggableProps.listeners?.onPointerDown(event)
 			}
 		},
-		[setDragDirection, draggableProps.node.current]
+		[setDragDirection, draggableProps.node.current, ganttDirection]
 	)
 
-	const paddingSide = direction === 'rtl' ? 'paddingRight' : 'paddingLeft'
+	const paddingSide = ganttDirection === 'rtl' ? 'paddingRight' : 'paddingLeft'
 
 	const itemStyle: CSSProperties = {
 		position: 'absolute',

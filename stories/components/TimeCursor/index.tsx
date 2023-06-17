@@ -1,0 +1,47 @@
+import React, { useMemo, memo, useRef, useLayoutEffect } from 'react'
+import defaultClasses from './TimeCursor.module.css'
+
+import { useGanttContext } from 'react-gantt'
+
+type TimeCursorClasses = Partial<Record<'time-cursor', string>>
+
+interface TimeCursorProps {
+	interval?: number
+	classes?: TimeCursorClasses
+}
+
+export default memo(function (props: TimeCursorProps) {
+	const timeCursorRef = useRef<HTMLDivElement>(null)
+
+	const { timeframe, ganttDirection, sidebarWidth, millisecondsToPixels } =
+		useGanttContext()
+
+	const side = ganttDirection === 'rtl' ? 'right' : 'left'
+
+	const classes = useMemo(
+		() => ({ ...defaultClasses, ...props.classes }),
+		[props.classes]
+	)
+
+	useLayoutEffect(() => {
+		const offsetCursor = () => {
+			if (!timeCursorRef.current) return
+			const timeDelta = new Date().getTime() - timeframe.start.getTime()
+			const timeDeltaInPixels = millisecondsToPixels(timeDelta)
+
+			const sideDelta = sidebarWidth + timeDeltaInPixels
+			console.log(sideDelta)
+			timeCursorRef.current.style[side] = sideDelta + 'px'
+		}
+
+		offsetCursor()
+
+		const interval = setInterval(offsetCursor, props.interval || 1000)
+
+		return () => {
+			clearInterval(interval)
+		}
+	}, [timeframe.start.getTime(), props.interval, sidebarWidth, millisecondsToPixels])
+
+	return <div ref={timeCursorRef} className={classes['time-cursor']} />
+})

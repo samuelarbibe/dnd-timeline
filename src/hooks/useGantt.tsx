@@ -9,13 +9,14 @@ import {
 } from 'react'
 import { addMilliseconds, differenceInMilliseconds } from 'date-fns'
 import ResizeObserver from 'resize-observer-polyfill'
-import { DragEndEvent } from '@dnd-kit/core'
+import { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 
 import { Timeframe } from '../types'
 import { DragDirection, ItemDefinition } from './useItem'
 import usePressedKeys from './usePressedKeys'
 
 export type OnDragEnd = (event: DragEndEvent) => void
+export type OnDragStart = (event: DragStartEvent) => void
 
 export type OnResizeEnd = (
 	itemId: string,
@@ -29,12 +30,13 @@ export type Gantt = {
 	style: CSSProperties
 	timeframe: Timeframe
 	overlayed: boolean
-	onDragEnd: OnDragEnd
-	onResizeEnd: OnResizeEnd
-	direction: CanvasDirection
-	timeframeGridSize?: number
-	setGanttRef: React.RefObject<HTMLDivElement>
 	sidebarWidth: number
+	onDragEnd: OnDragEnd
+	onDragStart: OnDragStart
+	onResizeEnd: OnResizeEnd
+	timeframeGridSize?: number
+	ganttDirection: CanvasDirection
+	setGanttRef: React.RefObject<HTMLDivElement>
 	setSidebarWidth: React.Dispatch<React.SetStateAction<number>>
 	millisecondsToPixels: MillisecondsToPixels
 	pixelsToMilliseconds: PixelsToMilliseconds
@@ -52,32 +54,60 @@ export type OnTimeframeChanged = (
 	updateFunction: (prev: Timeframe) => Timeframe
 ) => void
 
+export type GridSizeDefinition = {
+	value: number
+	maxTimeframeSize?: number
+}
+
 export interface UseGanttProps {
 	timeframe: Timeframe
-	timeframeGridSize?: number
+	timeframeGridSize?: number | GridSizeDefinition[]
 	onTimeframeChanged: OnTimeframeChanged
 	onItemChanged: OnItemsChanged
 	overlayed?: boolean
-	direction?: 'rtl' | 'ltr'
 }
 
 const style: CSSProperties = {
 	display: 'flex',
 	overflow: 'hidden',
+	position: 'relative',
 	flexDirection: 'column',
 }
 
 export default (props: UseGanttProps): Gantt => {
 	const ganttRef = useRef<HTMLDivElement>(null)
+	const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
 
 	const [ganttWidth, setGanttWidth] = useState(0)
 	const [sidebarWidth, setSidebarWidth] = useState(0)
+	const [ganttDirection, setGanttDirection] = useState<CanvasDirection>('ltr')
 
 	const pressedKeys = usePressedKeys()
+
+	const timeframeGridSize = useMemo(() => {
+		if (Array.isArray(props.timeframeGridSize)) {
+			const gridSizes = props.timeframeGridSize as GridSizeDefinition[]
+
+			const timeframeSize =
+				props.timeframe.end.getTime() - props.timeframe.start.getTime()
+
+			const sortedTimeframeGridSizes = [...gridSizes]
+			sortedTimeframeGridSizes.sort((a, b) => a.value - b.value)
+
+			return sortedTimeframeGridSizes.find(
+				(curr) =>
+					!curr?.maxTimeframeSize || timeframeSize < curr.maxTimeframeSize
+			)?.value
+		}
+
+		return props.timeframeGridSize
+	}, [props.timeframe, props.timeframeGridSize])
 
 	useLayoutEffect(() => {
 		const element = ganttRef?.current
 		if (!element) return
+
+		setGanttDirection(getComputedStyle(element).direction as CanvasDirection)
 
 		const observer = new ResizeObserver(() => {
 			setGanttWidth(element.clientWidth)
@@ -113,24 +143,32 @@ export default (props: UseGanttProps): Gantt => {
 
 	const snapDateToTimeframeGrid = useCallback(
 		(date: Date) => {
-			if (!props.timeframeGridSize) return date
+			if (!timeframeGridSize) return date
 
 			return new Date(
-				Math.round(date.getTime() / props.timeframeGridSize) *
-					props.timeframeGridSize
+				Math.round(date.getTime() / timeframeGridSize) * timeframeGridSize
 			)
 		},
-		[props.timeframeGridSize]
+		[timeframeGridSize]
 	)
+
+	const onDragStart = useCallback(() => {
+		dragStartTimeframe.current = props.timeframe
+	}, [props.timeframe])
 
 	const onDragEnd = useCallback<OnDragEnd>(
 		(event) => {
 			const overedRow = event.over?.id.toString()
 			if (!overedRow) return
 
+			const timeframeDelta =
+				dragStartTimeframe.current.start.getTime() -
+				props.timeframe.start.getTime()
+
 			const deltaX = event.delta.x
 			const deltaInMilliseconds =
-				pixelsToMilliseconds(deltaX) * (props.direction === 'rtl' ? -1 : 1)
+				(pixelsToMilliseconds(deltaX) + timeframeDelta) *
+				(ganttDirection === 'rtl' ? -1 : 1)
 
 			const activeItemId = event.active.id.toString()
 
@@ -152,14 +190,14 @@ export default (props: UseGanttProps): Gantt => {
 			pixelsToMilliseconds,
 			snapDateToTimeframeGrid,
 			props.onItemChanged,
-			props.direction,
+			props.timeframe,
+			ganttDirection,
 		]
 	)
 
 	const onResizeEnd = useCallback<OnResizeEnd>(
 		(itemId: string, deltaX: number, side: 'start' | 'end') => {
-			const deltaInMilliseconds =
-				pixelsToMilliseconds(deltaX) * (props.direction === 'rtl' ? -1 : 1)
+			const deltaInMilliseconds = pixelsToMilliseconds(deltaX)
 
 			props.onItemChanged(itemId, (prev) => ({
 				...prev,
@@ -171,12 +209,7 @@ export default (props: UseGanttProps): Gantt => {
 				},
 			}))
 		},
-		[
-			pixelsToMilliseconds,
-			snapDateToTimeframeGrid,
-			props.onItemChanged,
-			props.direction,
-		]
+		[pixelsToMilliseconds, snapDateToTimeframeGrid, props.onItemChanged]
 	)
 
 	const onPanEnd = useCallback<OnPanEnd>(
@@ -184,9 +217,9 @@ export default (props: UseGanttProps): Gantt => {
 			if (!pressedKeys?.Meta) return
 
 			const deltaXInMilliseconds =
-				pixelsToMilliseconds(deltaX) * (props.direction === 'rtl' ? -1 : 1)
+				pixelsToMilliseconds(deltaX) * (ganttDirection === 'rtl' ? -1 : 1)
 			const deltaYInMilliseconds =
-				pixelsToMilliseconds(deltaY) * (props.direction === 'rtl' ? -1 : 1)
+				pixelsToMilliseconds(deltaY) * (ganttDirection === 'rtl' ? -1 : 1)
 
 			const startDelta = deltaYInMilliseconds + deltaXInMilliseconds
 			const endDelta = -deltaYInMilliseconds + deltaXInMilliseconds
@@ -199,7 +232,7 @@ export default (props: UseGanttProps): Gantt => {
 		[
 			pixelsToMilliseconds,
 			props.onTimeframeChanged,
-			props.direction,
+			ganttDirection,
 			pressedKeys,
 		]
 	)
@@ -223,6 +256,7 @@ export default (props: UseGanttProps): Gantt => {
 		() => ({
 			style,
 			onDragEnd,
+			onDragStart,
 			onResizeEnd,
 			sidebarWidth,
 			setSidebarWidth,
@@ -230,22 +264,23 @@ export default (props: UseGanttProps): Gantt => {
 			millisecondsToPixels,
 			setGanttRef: ganttRef,
 			overlayed: !!props.overlayed,
-			direction: props.direction || 'ltr',
+			ganttDirection,
 			timeframe: props.timeframe,
-			timeframeGridSize: props.timeframeGridSize,
+			timeframeGridSize,
 		}),
 		[
 			style,
 			onDragEnd,
+			onDragStart,
 			onResizeEnd,
 			sidebarWidth,
 			setSidebarWidth,
 			pixelsToMilliseconds,
 			millisecondsToPixels,
 			props.timeframe,
-			props.direction,
+			ganttDirection,
 			props.overlayed,
-			props.timeframeGridSize,
+			timeframeGridSize,
 		]
 	)
 
