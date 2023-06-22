@@ -47,6 +47,7 @@
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
+    "@dnd-kit/sortable": "^7.0.2",
     "@size-limit/esbuild": "^8.2.4",
     "@size-limit/esbuild-why": "^8.2.4",
     "@size-limit/preset-small-lib": "^8.2.4",

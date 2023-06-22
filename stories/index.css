@@ -31,10 +31,3 @@ body {
 	min-height: 0;
 	overflow-y: auto;
 }
-
-.gantt {
-	overflow: hidden;
-	border-radius: 6px;
-	background-color: rgb(44, 44, 46);
-	border: 1px solid rgb(72, 72, 74);
-}

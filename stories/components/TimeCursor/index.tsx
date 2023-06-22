@@ -30,7 +30,6 @@ export default memo(function (props: TimeCursorProps) {
 			const timeDeltaInPixels = millisecondsToPixels(timeDelta)
 
 			const sideDelta = sidebarWidth + timeDeltaInPixels
-			console.log(sideDelta)
 			timeCursorRef.current.style[side] = sideDelta + 'px'
 		}
 

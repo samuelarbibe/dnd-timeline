@@ -1,0 +1,8 @@
+.container {
+	display: flex;
+	flex-direction: row;
+}
+
+.container > :first-child {
+	margin-right: 16px;
+}

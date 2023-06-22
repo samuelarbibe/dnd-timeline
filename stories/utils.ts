@@ -1,30 +1,22 @@
-import {
-	startOfDay,
-	addMilliseconds,
-	hoursToMilliseconds,
-	minutesToMilliseconds,
-} from 'date-fns'
+import { minutesToMilliseconds } from 'date-fns'
 import { nanoid } from 'nanoid'
-import { ItemDefinition, Relevance, RowDefinition } from 'react-gantt'
+import {
+	ItemDefinition,
+	Relevance,
+	RowDefinition,
+	Timeframe,
+} from 'react-gantt'
+import { ListItemDefinition } from './components/ExternalList'
 
 type GenerateRowsOptions = {
-	disabledRatio: number
+	disabled?: boolean
 }
 
-const defaultGenerateRowsOptions: GenerateRowsOptions = {
-	disabledRatio: 0,
-}
-
-export const generateRows = (
-	count: number,
-	options?: Partial<GenerateRowsOptions>
-) => {
-	const mergedOptions = { ...defaultGenerateRowsOptions, ...options }
-
+export const generateRows = (count: number, options?: GenerateRowsOptions) => {
 	return Array(count)
 		.fill(0)
 		.map((): RowDefinition => {
-			const disabled = !!(Math.random() < (mergedOptions.disabledRatio || 0))
+			const disabled = options?.disabled
 
 			let id = `row-${nanoid(4)}`
 			if (disabled) id += ' (disabled)'
@@ -36,67 +28,58 @@ export const generateRows = (
 		})
 }
 
-export const getRandomInRange = (min: number, max: number) => {
+const getRandomInRange = (min: number, max: number) => {
 	return Math.random() * (max - min) + min
 }
 
-const MS_IN_DAY = hoursToMilliseconds(24)
-const MIN_ITEM_DURATION = minutesToMilliseconds(120)
-const MAX_ITEM_DURATION = minutesToMilliseconds(360)
+const DEFAULT_MIN_DURATION = minutesToMilliseconds(60)
+const DEFAULT_MAX_DURATION = minutesToMilliseconds(360)
 
 export const generateRandomRelevance = (
-	min: number,
-	max: number
+	timeframe: Timeframe,
+	minDuration: number = DEFAULT_MIN_DURATION,
+	maxDuration: number = DEFAULT_MAX_DURATION
 ): Relevance => {
-	const randomStart = getRandomInRange(0, MS_IN_DAY)
-	const randomDuration = getRandomInRange(min, max)
+	const duration = getRandomInRange(minDuration, maxDuration)
 
-	const start = addMilliseconds(startOfDay(new Date()), randomStart)
-	const end = addMilliseconds(start, randomDuration)
+	const start = getRandomInRange(
+		timeframe.start.getTime(),
+		timeframe.end.getTime() - duration
+	)
+
+	const end = start + duration
 
 	return {
-		start,
-		end,
+		start: new Date(start),
+		end: new Date(end),
 	}
 }
 
 type GenerateItemsOptions = {
-	disabledRatio: number
-	backgroundRatio: number
-	length: {
-		min: number
-		max: number
-	}
-}
-
-const defaultGenerateItemsOptions: GenerateItemsOptions = {
-	backgroundRatio: 0,
-	disabledRatio: 0,
-	length: {
-		min: MIN_ITEM_DURATION,
-		max: MAX_ITEM_DURATION,
-	},
+	disabled?: boolean
+	background?: boolean
+	minDuration?: number
+	maxDuration?: number
 }
 
 export const generateItems = (
 	count: number,
+	timeframe: Timeframe,
 	rows: RowDefinition[],
-	options?: Partial<GenerateItemsOptions>
+	options?: GenerateItemsOptions
 ) => {
-	const mergedOptions = { ...defaultGenerateItemsOptions, ...options }
-
 	return Array(count)
 		.fill(0)
 		.map((): ItemDefinition => {
 			const row = rows[Math.ceil(Math.random() * rows.length - 1)]
 			const rowId = row.id
-			const disabled =
-				row.disabled || !!(Math.random() < mergedOptions.disabledRatio)
-			const background = !!(Math.random() < mergedOptions.backgroundRatio)
+			const disabled = row.disabled || options?.disabled
+			const background = options?.background
 
 			const relevance = generateRandomRelevance(
-				mergedOptions.length.min,
-				mergedOptions.length.max
+				timeframe,
+				options?.minDuration,
+				options?.maxDuration
 			)
 
 			let id = `item-${nanoid(4)}`
@@ -107,6 +90,34 @@ export const generateItems = (
 				id,
 				rowId,
 				relevance,
+				disabled,
+				background,
+			}
+		})
+}
+
+export const generateListItems = (
+	count: number,
+	options?: GenerateItemsOptions
+) => {
+	return Array(count)
+		.fill(0)
+		.map((): ListItemDefinition => {
+			const disabled = options?.disabled
+			const background = options?.background
+
+			let id = `list-item-${nanoid(4)}`
+			if (background) id += ' (bg)'
+			if (disabled) id += ' (disabled)'
+
+			const duration = getRandomInRange(
+				DEFAULT_MIN_DURATION,
+				DEFAULT_MAX_DURATION
+			)
+
+			return {
+				id,
+				duration,
 				disabled,
 				background,
 			}

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ganttContext } from '../store/GanttContext'
+import { ganttContext } from '../store/Gantt'
 
 export default () => {
 	const contextValue = useContext(ganttContext)

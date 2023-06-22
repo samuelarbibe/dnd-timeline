@@ -1,28 +1,17 @@
-.row {
-	height: 70px;
+.list {
+	width: 300px;
 }
 
-.row-content-wrapper {
-	border-bottom: 1px solid rgb(72, 72, 74);
-}
-
-.row-sidebar {
-	text-transform: capitalize;
-	width: 200px;
-	display: flex;
-	padding: 0 20px;
-	flex-direction: row;
-	align-items: center;
-	font-size: larger;
-	color: rgb(209, 209, 214);
-	font-weight: 700;
-	background-color: rgb(58, 58, 60);
-	border-right: 1px solid black;
+.list {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
 }
 
 .item {
 	flex: 1;
 	display: flex;
+	margin: 2px 0;
 	padding: 0 16px;
 	flex-direction: row;
 	align-items: center;
@@ -33,7 +22,7 @@
 	border-radius: 6px;
 	background-color: rgb(255, 204, 0);
 	border: 3px solid rgba(160, 90, 0, 60%);
-	height: 64px;
+	height: 60px;
 }
 
 .item-dragging {
@@ -46,6 +35,7 @@
 
 .item-background {
 	opacity: 0.5;
+	height: auto;
 }
 
 .item svg {

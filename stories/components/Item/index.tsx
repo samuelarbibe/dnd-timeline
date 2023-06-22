@@ -26,6 +26,10 @@ export default function (props: ItemProps) {
 		disabled: props.disabled,
 		relevance: props.relevance,
 		background: props.background,
+		data: {
+			type: 'gantt-item',
+			relevance: props.relevance,
+		},
 	})
 
 	const classes = useMemo(

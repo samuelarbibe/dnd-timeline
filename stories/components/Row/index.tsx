@@ -31,7 +31,11 @@ export default function (props: RowProps) {
 		rowWrapperStyle,
 		rowStyle,
 		rowSidebarStyle,
-	} = useRow({ id: props.id, disabled: props.disabled })
+	} = useRow({
+		id: props.id,
+		disabled: props.disabled,
+		data: { type: 'gantt-row' },
+	})
 
 	return (
 		<div

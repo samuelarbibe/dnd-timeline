@@ -1,10 +1,10 @@
 import {
-	CSSProperties,
-	PointerEventHandler,
-	useCallback,
-	useLayoutEffect,
 	useRef,
 	useState,
+	useCallback,
+	CSSProperties,
+	useLayoutEffect,
+	PointerEventHandler,
 } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { useDraggable } from '@dnd-kit/core'
@@ -46,19 +46,14 @@ export type ItemDefinition = {
 export type UseItemProps = Pick<
 	ItemDefinition,
 	'id' | 'relevance' | 'disabled' | 'background'
->
+> & {
+	data?: object
+}
 
 export default (props: UseItemProps) => {
+	const dataRef = useRef<object>()
 	const dragStartX = useRef<number>()
 	const [dragDirection, setDragDirection] = useState<DragDirection | null>()
-
-	const draggableProps = useDraggable({
-		id: props.id,
-		disabled: props.disabled,
-		data: {
-			relevance: props.relevance,
-		},
-	})
 
 	const {
 		timeframe,
@@ -67,6 +62,14 @@ export default (props: UseItemProps) => {
 		ganttDirection,
 		millisecondsToPixels,
 	} = useGanttContext()
+
+	dataRef.current = props.data
+
+	const draggableProps = useDraggable({
+		id: props.id,
+		data: props.data,
+		disabled: props.disabled,
+	})
 
 	const deltaX = millisecondsToPixels(
 		props.relevance.start.getTime() - timeframe.start.getTime()
@@ -134,7 +137,17 @@ export default (props: UseItemProps) => {
 				dragDelta = currentWidth - width
 			}
 
-			onResizeEnd(props.id, dragDelta, dragDirection)
+			onResizeEnd({
+				delta: {
+					x: dragDelta,
+				},
+				direction: dragDirection,
+				active: {
+					id: props.id,
+					data: dataRef,
+				},
+			})
+
 			setDragDirection(null)
 
 			draggableProps.node.current.style.width = width + 'px'

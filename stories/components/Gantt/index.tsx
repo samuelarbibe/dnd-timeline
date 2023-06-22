@@ -1,49 +1,34 @@
-import '../index.css'
 import classNames from 'classnames'
-import React, { useState, useCallback, useMemo, useEffect } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import {
 	format,
-	endOfDay,
 	minutesToMilliseconds,
-	startOfDay,
 	setDefaultOptions,
 	hoursToMilliseconds,
-	millisecondsToHours,
-	millisecondsToMinutes,
 } from 'date-fns'
 import { he } from 'date-fns/locale'
 
 setDefaultOptions({ locale: he })
 
-import { Meta, StoryObj } from '@storybook/react'
 import {
-	OnItemsChanged,
-	Timeframe,
 	useGantt,
-	GanttContext,
-	RowDefinition,
-	ItemDefinition,
 	groupItemsToSubrows,
 	groupItemsToRows,
 	OnTimeframeChanged,
 	GridSizeDefinition,
+	GanttProvider,
+	ResizeEndEvent,
 } from 'react-gantt'
-import { DragOverlay, DragStartEvent } from '@dnd-kit/core'
 
-import classes from './Row.module.css'
+import classes from './Gantt.module.css'
 
-import Row from '../components/Row'
-import Item from '../components/Item'
+import Row from '../Row'
+import Item from '../Item'
 
-import { generateItems, generateRows } from '../utils'
-import TimeAxis, { MarkerDefinition } from '../components/TimeAxis'
-import TimeCursor from '../components/TimeCursor'
-
-const DEFAULT_TIMEFRAME: Timeframe = {
-	start: startOfDay(new Date()),
-	end: endOfDay(new Date()),
-}
+import TimeAxis, { MarkerDefinition } from '../TimeAxis'
+import TimeCursor from '../TimeCursor'
+import { useGanttWrapperContext } from '../GanttWrapper'
 
 const ItemIcon = (
 	<svg
@@ -61,36 +46,26 @@ const ItemIcon = (
 	</svg>
 )
 
-interface GanttProps {
-	items: ItemDefinition[]
-	rows: RowDefinition[]
-	droppableMap?: Record<string, string[]>
+export function ItemOverlay() {
+	return (
+		<div className={classNames(classes.item, classes['item-overlay'])}>
+			{ItemIcon}
+			<span>Drop Me!</span>
+		</div>
+	)
 }
 
-function Gantt(props: GanttProps) {
-	const [rows, setRows] = useState(props.rows)
-	const [items, setItems] = useState(props.items)
-	const [timeframe, setTimeframe] = useState<Timeframe>(DEFAULT_TIMEFRAME)
-	const [draggedItemId, setDraggedItemId] = useState<string | null>(null)
-
-	useEffect(() => {
-		setRows(props.rows)
-		setItems(props.items)
-	}, [props.rows, props.items])
-
-	const onItemChanged = useCallback<OnItemsChanged>(
-		(itemId, updateFunction) => {
-			setItems((prev) =>
-				prev.map((item) => {
-					if (item.id !== itemId) return item
-
-					return updateFunction(item)
-				})
-			)
-			setDraggedItemId(null)
-		},
-		[setItems, setDraggedItemId]
-	)
+export default function () {
+	const {
+		rows,
+		items,
+		setItems,
+		timeframe,
+		onDragEnd,
+		setTimeframe,
+		droppableMap,
+		draggedItem,
+	} = useGanttWrapperContext()
 
 	const onTimeframeChanged = useCallback<OnTimeframeChanged>(
 		(updateFunction) => setTimeframe(updateFunction),
@@ -122,9 +97,31 @@ function Gantt(props: GanttProps) {
 		[]
 	)
 
+	const onResizeEnd = useCallback(
+		(event: ResizeEndEvent) => {
+			const updatedRelevance = event.active.data.current?.relevance
+			if (!updatedRelevance) return
+
+			const activeItemId = event.active.id
+
+			setItems((prev) =>
+				prev.map((item) => {
+					if (item.id !== activeItemId) return item
+
+					return {
+						...item,
+						relevance: updatedRelevance,
+					}
+				})
+			)
+		},
+		[setItems]
+	)
+
 	const gantt = useGantt({
 		timeframe,
-		onItemChanged,
+		onDragEnd,
+		onResizeEnd,
 		overlayed: true,
 		timeframeGridSize,
 		onTimeframeChanged,
@@ -144,25 +141,15 @@ function Gantt(props: GanttProps) {
 		[items, timeframe]
 	)
 
-	const handleOnDragStart = useCallback(
-		(event: DragStartEvent) => setDraggedItemId(event.active.id.toString()),
-		[setDraggedItemId]
-	)
-
-	const handleOnDragCancel = useCallback(
-		() => setDraggedItemId(null),
-		[setDraggedItemId]
-	)
-
 	const disabledRows = useMemo(
 		(): Record<string, boolean> =>
-			draggedItemId && props.droppableMap
-				? props.droppableMap[draggedItemId].reduce(
+			draggedItem?.id.toString() && droppableMap
+				? droppableMap[draggedItem?.id.toString()].reduce(
 					(acc, curr) => ({ ...acc, [curr]: true }),
 						{} as Record<string, boolean>
 				  )
 				: {},
-		[draggedItemId, props.droppableMap]
+		[draggedItem?.id.toString(), droppableMap]
 	)
 
 	const timeAxisMarkers = useMemo<MarkerDefinition[]>(
@@ -214,13 +201,12 @@ function Gantt(props: GanttProps) {
 	)
 
 	return (
-		<GanttContext
-			value={gantt}
-			onDragEnd={handleOnDragCancel}
-			onDragStart={handleOnDragStart}
-			onDragCancel={handleOnDragCancel}
-		>
-			<div ref={gantt.setGanttRef} style={gantt.style} className="gantt">
+		<GanttProvider value={gantt}>
+			<div
+				ref={gantt.setGanttRef}
+				style={gantt.style}
+				className={classes.gantt}
+			>
 				<TimeCursor />
 				<TimeAxis markers={timeAxisMarkers} />
 				{rows.map((row) => (
@@ -287,122 +273,7 @@ function Gantt(props: GanttProps) {
 						))}
 					</Row>
 				))}
-				<DragOverlay>
-					{draggedItemId && (
-						<div className={classNames(classes.item, classes['item-overlay'])}>
-							{ItemIcon}
-							<span>Drop Me!</span>
-						</div>
-					)}
-				</DragOverlay>
 			</div>
-		</GanttContext>
+		</GanttProvider>
 	)
-}
-
-interface GantWrapperProps {
-	rowCount: number
-	itemCount: number
-	disabledItemCount?: number
-	disabledRowCount?: number
-	backgroundItemCount?: number
-	generateDroppableMap?: boolean
-}
-
-function GanttWrapper(props: GantWrapperProps) {
-	const rows = generateRows(props.rowCount).concat(
-		...generateRows(props.disabledRowCount || 0, { disabledRatio: 1 })
-	)
-	const items = generateItems(props.itemCount, rows)
-		.concat(
-			...generateItems(props.backgroundItemCount || 0, rows, {
-				backgroundRatio: 1,
-			})
-		)
-		.concat(
-			...generateItems(props.disabledItemCount || 0, rows, { disabledRatio: 1 })
-		)
-
-	const droppableMap = props.generateDroppableMap
-		? items.reduce((acc, curr) => {
-			const droppableRows = rows.reduce(
-				(acc, curr) => (Math.random() < 0.5 ? [...acc, curr.id] : acc),
-					[] as string[]
-			)
-			return { ...acc, [curr.id]: droppableRows }
-		  }, {} as Record<string, string[]>)
-		: undefined
-
-	return <Gantt rows={rows} items={items} droppableMap={droppableMap} />
-}
-
-const meta: Meta<typeof GanttWrapper> = {
-	title: 'Row',
-	tags: ['autodocs'],
-	argTypes: {
-		itemCount: { description: 'Number of items to generate', defaultValue: 1 },
-		backgroundItemCount: {
-			description: 'Number of background items to generate',
-			defaultValue: 1,
-			type: 'number',
-		},
-		disabledItemCount: {
-			description: 'Number of disabled items to generate',
-			defaultValue: 1,
-			type: 'number',
-		},
-		rowCount: { description: 'Number of rows to generate', defaultValue: 1 },
-		disabledRowCount: {
-			description: 'Number of disabled rows to generate',
-			defaultValue: 1,
-			type: 'number',
-		},
-		generateDroppableMap: {
-			description: 'Generate a droppable map?',
-			defaultValue: false,
-			type: 'boolean',
-		},
-	},
-	component: GanttWrapper,
-}
-
-export default meta
-
-type Story = StoryObj<typeof GanttWrapper>
-
-export const MultipleRows: Story = {
-	args: {
-		itemCount: 1,
-		rowCount: 2,
-	},
-}
-
-export const MultipleRowsStacked: Story = {
-	args: {
-		itemCount: 2,
-		rowCount: 2,
-	},
-}
-
-export const MultipleRowsStackedWithBackgroundItems: Story = {
-	args: {
-		rowCount: 2,
-		backgroundItemCount: 2,
-	},
-}
-
-export const DisabledRows: Story = {
-	args: {
-		rowCount: 3,
-		disabledRowCount: 2,
-		itemCount: 4,
-	},
-}
-
-export const DisabledRowsForItems: Story = {
-	args: {
-		rowCount: 5,
-		itemCount: 4,
-		generateDroppableMap: true,
-	},
 }

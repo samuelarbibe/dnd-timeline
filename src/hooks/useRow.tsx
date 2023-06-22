@@ -9,7 +9,9 @@ export type RowDefinition = {
 	disabled?: boolean
 }
 
-export type UseRowProps = RowDefinition
+export type UseRowProps = RowDefinition & {
+	data?: object
+}
 
 export default (props: UseRowProps) => {
 	const sidebarRef = useRef<HTMLDivElement>(null)
@@ -17,6 +19,7 @@ export default (props: UseRowProps) => {
 
 	const droppableProps = useDroppable({
 		id: props.id,
+		data: props.data,
 		disabled: props.disabled,
 	})
 
