@@ -1,22 +1,22 @@
 import {
-	CSSProperties,
-	useCallback,
-	useLayoutEffect,
-	useMemo,
 	useRef,
+	useMemo,
 	useState,
+	useCallback,
+	CSSProperties,
+	useLayoutEffect,
 } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import {
 	Active,
 	DragEndEvent,
-	DragStartEvent,
 	useDndMonitor,
+	DragStartEvent,
 } from '@dnd-kit/core'
 import { addMilliseconds, differenceInMilliseconds } from 'date-fns'
 
-import { DragDirection, ItemDefinition } from './useItem'
 import usePressedKeys from './usePressedKeys'
+import { DragDirection, ItemDefinition } from './useItem'
 
 import { Timeframe } from '../types'
 
@@ -28,13 +28,23 @@ export type ResizeEndEvent = {
 	direction: DragDirection
 }
 
+export type PanEndEvent = {
+	deltaX: number
+	deltaY: number
+}
+
 export type GetRelevanceFromDragEvent = (event: DragEndEvent) => void
 
 export type OnDragEnd = (event: DragEndEvent) => void
+
 export type OnDragStart = (event: DragStartEvent) => void
+
 export type OnResizeEnd = (event: ResizeEndEvent) => void
 
 export type OnPanEnd = (deltaX: number, deltaY: number) => void
+
+export type PixelsToMilliseconds = (pixels: number) => number
+export type MillisecondsToPixels = (milliseconds: number) => number
 
 export type GanttBag = {
 	style: CSSProperties
@@ -49,9 +59,6 @@ export type GanttBag = {
 	millisecondsToPixels: MillisecondsToPixels
 	pixelsToMilliseconds: PixelsToMilliseconds
 }
-
-export type PixelsToMilliseconds = (pixels: number) => number
-export type MillisecondsToPixels = (milliseconds: number) => number
 
 export type OnItemsChanged = (
 	itemId: string,
@@ -85,6 +92,13 @@ const style: CSSProperties = {
 }
 
 export default (props: UseGanttProps): GanttBag => {
+	const {
+		onTimeframeChanged,
+		onDragEnd: onDragEndCallback,
+		onDragStart: onDragStartCallback,
+		onResizeEnd: onResizeEndCallback,
+	} = props
+
 	const ganttRef = useRef<HTMLDivElement>(null)
 	const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
 
@@ -93,6 +107,8 @@ export default (props: UseGanttProps): GanttBag => {
 	const [ganttDirection, setGanttDirection] = useState<CanvasDirection>('ltr')
 
 	const pressedKeys = usePressedKeys()
+
+	const ganttViewportWidth = ganttWidth - sidebarWidth
 
 	const timeframeGridSize = useMemo(() => {
 		if (Array.isArray(props.timeframeGridSize)) {
@@ -113,8 +129,6 @@ export default (props: UseGanttProps): GanttBag => {
 		return props.timeframeGridSize
 	}, [props.timeframe, props.timeframeGridSize])
 
-	const ganttViewportWidth = ganttWidth - sidebarWidth
-
 	const millisecondsToPixels = useCallback<MillisecondsToPixels>(
 		(milliseconds: number) => {
 			const msToPixel =
@@ -122,7 +136,7 @@ export default (props: UseGanttProps): GanttBag => {
 				differenceInMilliseconds(props.timeframe.end, props.timeframe.start)
 			return milliseconds * msToPixel
 		},
-		[props.timeframe, ganttViewportWidth]
+		[ganttViewportWidth, props.timeframe]
 	)
 
 	const pixelsToMilliseconds = useCallback<PixelsToMilliseconds>(
@@ -169,6 +183,8 @@ export default (props: UseGanttProps): GanttBag => {
 					),
 				}
 			} else if (event.active.data.current?.duration) {
+				const activeItemDuration = event.active.data.current?.duration
+
 				const side = ganttDirection === 'rtl' ? 'right' : 'left'
 				const activeSideX = event.active.rect.current.translated?.[side] || 0
 				const ganttSideX =
@@ -179,8 +195,6 @@ export default (props: UseGanttProps): GanttBag => {
 				const deltaInMilliseconds =
 					pixelsToMilliseconds(deltaX) * (ganttDirection === 'rtl' ? -1 : 1)
 
-				const activeDuration = event.active.data.current?.duration
-
 				event.active.data.current.relevance = {
 					start: snapDateToTimeframeGrid(
 						addMilliseconds(props.timeframe.start, deltaInMilliseconds)
@@ -188,29 +202,29 @@ export default (props: UseGanttProps): GanttBag => {
 					end: snapDateToTimeframeGrid(
 						addMilliseconds(
 							props.timeframe.start,
-							deltaInMilliseconds + activeDuration
+							deltaInMilliseconds + activeItemDuration
 						)
 					),
 				}
 			}
 
-			props.onDragEnd(event)
+			onDragEndCallback(event)
 		},
 		[
 			sidebarWidth,
+			ganttDirection,
+			props.timeframe,
+			onDragEndCallback,
 			pixelsToMilliseconds,
 			snapDateToTimeframeGrid,
-			props.timeframe,
-			ganttDirection,
 		]
 	)
 
 	const onResizeEnd = useCallback(
 		(event: ResizeEndEvent) => {
-			const deltaInMilliseconds = pixelsToMilliseconds(event.delta.x)
-
 			if (event.active.data.current?.relevance) {
 				const prevRelevance = event.active.data.current?.relevance
+				const deltaInMilliseconds = pixelsToMilliseconds(event.delta.x)
 
 				event.active.data.current.relevance[event.direction] =
 					snapDateToTimeframeGrid(
@@ -218,41 +232,43 @@ export default (props: UseGanttProps): GanttBag => {
 					)
 			}
 
-			props.onResizeEnd(event)
+			onResizeEndCallback(event)
 		},
-		[pixelsToMilliseconds, snapDateToTimeframeGrid, props.onResizeEnd]
+		[pixelsToMilliseconds, snapDateToTimeframeGrid, onResizeEndCallback]
 	)
 
-	const onPanEnd = useCallback<OnPanEnd>(
-		(deltaX: number, deltaY: number) => {
+	const onPanEnd = useCallback(
+		(event: PanEndEvent) => {
 			const deltaXInMilliseconds =
-				pixelsToMilliseconds(deltaX) * (ganttDirection === 'rtl' ? -1 : 1)
+				pixelsToMilliseconds(event.deltaX) * (ganttDirection === 'rtl' ? -1 : 1)
 			const deltaYInMilliseconds =
-				pixelsToMilliseconds(deltaY) * (ganttDirection === 'rtl' ? -1 : 1)
+				pixelsToMilliseconds(event.deltaY) * (ganttDirection === 'rtl' ? -1 : 1)
 
 			const startDelta = deltaYInMilliseconds + deltaXInMilliseconds
 			const endDelta = -deltaYInMilliseconds + deltaXInMilliseconds
 
-			props.onTimeframeChanged((prev) => ({
+			onTimeframeChanged((prev) => ({
 				start: addMilliseconds(prev.start, startDelta),
 				end: addMilliseconds(prev.end, endDelta),
 			}))
 		},
-		[pixelsToMilliseconds, props.onTimeframeChanged, ganttDirection]
+		[pixelsToMilliseconds, onTimeframeChanged, ganttDirection]
 	)
 
 	const onDragStart = useCallback(
 		(event: DragStartEvent) => {
 			if (event.active.data.current?.duration) {
-				const width = millisecondsToPixels(event.active.data.current?.duration)
+				const activeItemDuration = event.active.data.current.duration
+				const width = millisecondsToPixels(activeItemDuration)
+
 				event.active.data.current.width = width
 			}
 
 			dragStartTimeframe.current = props.timeframe
 
-			props.onDragStart?.(event)
+			onDragStartCallback?.(event)
 		},
-		[millisecondsToPixels, props.onDragStart]
+		[millisecondsToPixels, onDragStartCallback, props.timeframe]
 	)
 
 	useDndMonitor({
@@ -261,19 +277,20 @@ export default (props: UseGanttProps): GanttBag => {
 	})
 
 	useLayoutEffect(() => {
-		if (!ganttRef.current) return
+		const element = ganttRef?.current
+		if (!element) return
 
 		const mouseWheelHandler = (event: WheelEvent) => {
 			if (!pressedKeys?.Meta) return
 
 			event.preventDefault()
-			onPanEnd(event.deltaX, event.deltaY)
+			onPanEnd(event)
 		}
 
-		ganttRef.current.addEventListener('wheel', mouseWheelHandler)
+		element.addEventListener('wheel', mouseWheelHandler)
 
 		return () => {
-			ganttRef.current?.removeEventListener('wheel', mouseWheelHandler)
+			element?.removeEventListener('wheel', mouseWheelHandler)
 		}
 	}, [onPanEnd, pressedKeys?.Meta])
 
@@ -308,7 +325,6 @@ export default (props: UseGanttProps): GanttBag => {
 			timeframeGridSize,
 		}),
 		[
-			style,
 			onResizeEnd,
 			sidebarWidth,
 			setSidebarWidth,

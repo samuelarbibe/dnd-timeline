@@ -6,7 +6,7 @@ export default () => {
 
 	if (contextValue === undefined) {
 		throw new Error(
-			'react-gantt: useGanttContext() must be used withing a GanttContext'
+			'react-gantt: useGanttContext() must be used within a GanttContext'
 		)
 	}
 

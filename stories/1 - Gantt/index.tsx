@@ -22,7 +22,7 @@ const DEFAULT_TIMEFRAME: Timeframe = {
 	end: endOfDay(new Date()),
 }
 
-export interface GantWrapperProps {
+export interface GanttWrapperProps {
 	rowCount: number
 	itemCount: number
 	timeframe?: Timeframe
@@ -32,7 +32,7 @@ export interface GantWrapperProps {
 	generateDroppableMap?: boolean
 }
 
-export default function (props: GantWrapperProps) {
+function GanttWrapper(props: GanttWrapperProps) {
 	const [timeframe, setTimeframe] = useState<Timeframe>(
 		props.timeframe || DEFAULT_TIMEFRAME
 	)
@@ -54,19 +54,17 @@ export default function (props: GantWrapperProps) {
 
 	const [draggedItem, setDraggedItem] = useState<Active | null>(null)
 
-	const droppableMap = useMemo(
-		() =>
-			props.generateDroppableMap
-				? items.reduce((acc, curr) => {
-					const droppableRows = rows.reduce(
-						(acc, curr) => (Math.random() < 0.5 ? [...acc, curr.id] : acc),
-							[] as string[]
-					)
-					return { ...acc, [curr.id]: droppableRows }
-				  }, {} as Record<string, string[]>)
-				: undefined,
-		[items, rows, props.generateDroppableMap]
-	)
+	const droppableMap = useMemo(() => {
+		if (!props.generateDroppableMap) return undefined
+
+		return items.reduce((acc, curr) => {
+			const droppableRows = rows.reduce(
+				(acc, curr) => (Math.random() < 0.5 ? [...acc, curr.id] : acc),
+				[] as string[]
+			)
+			return { ...acc, [curr.id]: droppableRows }
+		}, {} as Record<string, string[]>)
+	}, [items, rows, props.generateDroppableMap])
 
 	const onDragStart = useCallback(
 		(event: DragStartEvent) => setDraggedItem(event.active),
@@ -148,3 +146,5 @@ export default function (props: GantWrapperProps) {
 		</GanttWrapperProvider>
 	)
 }
+
+export default GanttWrapper

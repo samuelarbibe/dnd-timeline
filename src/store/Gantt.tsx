@@ -1,17 +1,14 @@
 import React, { PropsWithChildren, createContext, useMemo } from 'react'
 import { DndContext, DndContextProps } from '@dnd-kit/core'
 
-import useGantt, {
-	UseGanttProps,
-	GanttBag as GanttType,
-} from '../hooks/useGantt'
+import useGantt, { UseGanttProps, GanttBag } from '../hooks/useGantt'
 
 export interface GanttContextStandalone
 	extends PropsWithChildren,
 		UseGanttProps,
-		Omit<DndContextProps, 'onDragEnd'> {}
+		Omit<DndContextProps, 'onDragStart' | 'onDragEnd'> {}
 
-export const ganttContext = createContext<GanttType>({} as GanttType)
+export const ganttContext = createContext<GanttBag>({} as GanttBag)
 
 export const GanttProvider = ganttContext.Provider
 
@@ -19,7 +16,8 @@ export const Gantt = (props: GanttContextStandalone) => {
 	const gantt = useGantt(props)
 
 	const dndContextProps = useMemo(() => {
-		const { onDragEnd, ...rest } = props
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { onDragEnd, onDragStart, ...rest } = props
 		return rest
 	}, [props])
 

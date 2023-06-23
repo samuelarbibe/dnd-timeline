@@ -1,6 +1,6 @@
 import { CSSProperties, useLayoutEffect, useRef } from 'react'
-import ResizeObserver from 'resize-observer-polyfill'
 import { useDroppable } from '@dnd-kit/core'
+import ResizeObserver from 'resize-observer-polyfill'
 
 import useGanttContext from './useGanttContext'
 
@@ -35,7 +35,7 @@ export default (props: UseRowProps) => {
 		return () => {
 			observer.disconnect()
 		}
-	}, [])
+	}, [setSidebarWidth])
 
 	const rowWrapperStyle: CSSProperties = {
 		display: 'inline-flex',

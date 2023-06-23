@@ -2,15 +2,32 @@ import {
 	useRef,
 	useState,
 	useCallback,
+	PointerEvent,
 	CSSProperties,
 	useLayoutEffect,
-	PointerEventHandler,
 } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { useDraggable } from '@dnd-kit/core'
 
 import { Relevance } from '../types'
 import useGanttContext from './useGanttContext'
+
+export type DragDirection = 'start' | 'end'
+
+export type ItemDefinition = {
+	id: string
+	rowId: string
+	disabled?: boolean
+	relevance: Relevance
+	background?: boolean
+}
+
+export type UseItemProps = Pick<
+	ItemDefinition,
+	'id' | 'relevance' | 'disabled' | 'background'
+> & {
+	data?: object
+}
 
 const getDragDirection = (
 	mouseX: number,
@@ -32,23 +49,6 @@ const getDragDirection = (
 }
 
 const RESIZE_HANDLER_WIDTH = 20
-
-export type DragDirection = 'start' | 'end'
-
-export type ItemDefinition = {
-	id: string
-	rowId: string
-	disabled?: boolean
-	relevance: Relevance
-	background?: boolean
-}
-
-export type UseItemProps = Pick<
-	ItemDefinition,
-	'id' | 'relevance' | 'disabled' | 'background'
-> & {
-	data?: object
-}
 
 export default (props: UseItemProps) => {
 	const dataRef = useRef<object>()
@@ -115,7 +115,7 @@ export default (props: UseItemProps) => {
 		return () => {
 			window.removeEventListener('mousemove', mouseMoveHandler)
 		}
-	}, [width, deltaX, dragDirection, draggableProps.node.current])
+	}, [width, deltaX, dragDirection, draggableProps.node, ganttDirection, side])
 
 	useLayoutEffect(() => {
 		if (!dragDirection) return
@@ -160,16 +160,18 @@ export default (props: UseItemProps) => {
 			window.removeEventListener('mouseup', mouseUpHandler)
 		}
 	}, [
+		side,
 		width,
 		deltaX,
 		props.id,
+		onResizeEnd,
 		dragDirection,
 		setDragDirection,
-		draggableProps.node.current,
+		draggableProps.node,
 	])
 
-	const onPointerMove = useCallback<PointerEventHandler>(
-		(event) => {
+	const onPointerMove = useCallback(
+		(event: PointerEvent) => {
 			if (!draggableProps.node.current || props.disabled) return
 
 			const newDragDirection = getDragDirection(
@@ -184,11 +186,11 @@ export default (props: UseItemProps) => {
 				draggableProps.node.current.style.cursor = cursor
 			}
 		},
-		[cursor, ganttDirection, draggableProps.node.current]
+		[draggableProps.node, props.disabled, ganttDirection, cursor]
 	)
 
-	const onPointerDown = useCallback<PointerEventHandler>(
-		(event) => {
+	const onPointerDown = useCallback(
+		(event: PointerEvent) => {
 			if (!draggableProps.node.current || props.disabled) return
 
 			const newDragDirection = getDragDirection(
@@ -204,7 +206,12 @@ export default (props: UseItemProps) => {
 				draggableProps.listeners?.onPointerDown(event)
 			}
 		},
-		[setDragDirection, draggableProps.node.current, ganttDirection]
+		[
+			props.disabled,
+			ganttDirection,
+			draggableProps.node,
+			draggableProps.listeners,
+		]
 	)
 
 	const paddingSide = ganttDirection === 'rtl' ? 'paddingRight' : 'paddingLeft'
