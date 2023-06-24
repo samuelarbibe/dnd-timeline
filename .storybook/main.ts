@@ -3,10 +3,8 @@ import { mergeConfig } from 'vite'
 const config: StorybookConfig = {
   viteFinal: (config) => {
     return mergeConfig(config, {
-      resolve: {
-        alias: {
-          'react-gantt': '../src/index.tsx',
-        },
+      optimizeDeps: {
+        include: ['react-gantt'],
       },
     })
   },
