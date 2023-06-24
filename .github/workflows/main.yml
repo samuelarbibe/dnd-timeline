@@ -30,14 +30,16 @@ jobs:
         run: yarn test --ci --coverage --maxWorkers=2
 
   deploy:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
         run: yarn
       - name: Link react-gantt
-        run: yarn link react-gantt
+        run:
+          - yarn link
+          - yarn link react-gantt
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
