@@ -30,7 +30,7 @@ jobs:
         run: yarn test --ci --coverage --maxWorkers=2
 
   deploy:
-    # needs: build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
