@@ -188,7 +188,8 @@ export default (props: UseGanttProps): GanttBag => {
         const side = ganttDirection === 'rtl' ? 'right' : 'left'
         const activeSideX = event.active.rect.current.translated?.[side] || 0
         const ganttSideX =
-          (ganttRef.current?.getBoundingClientRect()[side] || 0) + sidebarWidth
+          (ganttRef.current?.getBoundingClientRect()[side] || 0) +
+          sidebarWidth * (ganttDirection === 'rtl' ? -1 : 1)
 
         const deltaX = activeSideX - ganttSideX
 
