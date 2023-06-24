@@ -14,52 +14,52 @@ export type UseRowProps = RowDefinition & {
 }
 
 export default (props: UseRowProps) => {
-	const sidebarRef = useRef<HTMLDivElement>(null)
-	const { setSidebarWidth } = useGanttContext()
+  const sidebarRef = useRef<HTMLDivElement>(null)
+  const { setSidebarWidth } = useGanttContext()
 
-	const droppableProps = useDroppable({
-		id: props.id,
-		data: props.data,
-		disabled: props.disabled,
-	})
+  const droppableProps = useDroppable({
+    id: props.id,
+    data: props.data,
+    disabled: props.disabled,
+  })
 
-	useLayoutEffect(() => {
-		const element = sidebarRef?.current
-		if (!element) return
+  useLayoutEffect(() => {
+    const element = sidebarRef?.current
+    if (!element) return
 
-		const observer = new ResizeObserver(() => {
-			setSidebarWidth((prev) => Math.max(element.clientWidth, prev))
-		})
+    const observer = new ResizeObserver(() => {
+      setSidebarWidth((prev) => Math.max(element.clientWidth, prev))
+    })
 
-		observer.observe(element)
-		return () => {
-			observer.disconnect()
-		}
-	}, [setSidebarWidth])
+    observer.observe(element)
+    return () => {
+      observer.disconnect()
+    }
+  }, [setSidebarWidth])
 
-	const rowWrapperStyle: CSSProperties = {
-		display: 'inline-flex',
-	}
+  const rowWrapperStyle: CSSProperties = {
+    display: 'inline-flex',
+  }
 
-	const rowStyle: CSSProperties = {
-		flex: 1,
-		display: 'flex',
-		position: 'relative',
-		alignItems: 'stretch',
-		flexDirection: 'column',
-	}
+  const rowStyle: CSSProperties = {
+    flex: 1,
+    display: 'flex',
+    position: 'relative',
+    alignItems: 'stretch',
+    flexDirection: 'column',
+  }
 
-	const rowSidebarStyle: CSSProperties = {
-		left: 0,
-		zIndex: 3,
-		display: 'flex',
-	}
+  const rowSidebarStyle: CSSProperties = {
+    left: 0,
+    zIndex: 3,
+    display: 'flex',
+  }
 
-	return {
-		rowStyle,
-		rowWrapperStyle,
-		rowSidebarStyle,
-		setSidebarRef: sidebarRef,
-		...droppableProps,
-	}
+  return {
+    rowStyle,
+    rowWrapperStyle,
+    rowSidebarStyle,
+    setSidebarRef: sidebarRef,
+    ...droppableProps,
+  }
 }

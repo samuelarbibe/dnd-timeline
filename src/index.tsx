@@ -10,14 +10,14 @@ export type { RowDefinition, UseRowProps } from './hooks/useRow'
 export type { ItemDefinition, UseItemProps } from './hooks/useItem'
 export type { GanttContextStandalone, ganttContext } from './store/Gantt'
 export type {
-	GanttBag,
-	OnDragEnd,
-	OnDragStart,
-	UseGanttProps,
-	ResizeEndEvent,
-	OnItemsChanged,
-	OnTimeframeChanged,
-	GridSizeDefinition,
-	PixelsToMilliseconds,
-	MillisecondsToPixels,
+  GanttBag,
+  OnDragEnd,
+  OnDragStart,
+  UseGanttProps,
+  ResizeEndEvent,
+  OnItemsChanged,
+  OnTimeframeChanged,
+  GridSizeDefinition,
+  PixelsToMilliseconds,
+  MillisecondsToPixels,
 } from './hooks/useGantt'
