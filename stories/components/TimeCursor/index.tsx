@@ -6,41 +6,49 @@ import { useGanttContext } from 'react-gantt'
 type TimeCursorClasses = Partial<Record<'time-cursor', string>>
 
 interface TimeCursorProps {
-	interval?: number
-	classes?: TimeCursorClasses
+  interval?: number
+  classes?: TimeCursorClasses
 }
 
-export default memo(function (props: TimeCursorProps) {
-	const timeCursorRef = useRef<HTMLDivElement>(null)
+function TimeCursor(props: TimeCursorProps) {
+  const timeCursorRef = useRef<HTMLDivElement>(null)
 
-	const { timeframe, ganttDirection, sidebarWidth, millisecondsToPixels } =
-		useGanttContext()
+  const { timeframe, ganttDirection, sidebarWidth, millisecondsToPixels } =
+    useGanttContext()
 
-	const side = ganttDirection === 'rtl' ? 'right' : 'left'
+  const side = ganttDirection === 'rtl' ? 'right' : 'left'
 
-	const classes = useMemo(
-		() => ({ ...defaultClasses, ...props.classes }),
-		[props.classes]
-	)
+  const classes = useMemo(
+    () => ({ ...defaultClasses, ...props.classes }),
+    [props.classes]
+  )
 
-	useLayoutEffect(() => {
-		const offsetCursor = () => {
-			if (!timeCursorRef.current) return
-			const timeDelta = new Date().getTime() - timeframe.start.getTime()
-			const timeDeltaInPixels = millisecondsToPixels(timeDelta)
+  useLayoutEffect(() => {
+    const offsetCursor = () => {
+      if (!timeCursorRef.current) return
+      const timeDelta = new Date().getTime() - timeframe.start.getTime()
+      const timeDeltaInPixels = millisecondsToPixels(timeDelta)
 
-			const sideDelta = sidebarWidth + timeDeltaInPixels
-			timeCursorRef.current.style[side] = sideDelta + 'px'
-		}
+      const sideDelta = sidebarWidth + timeDeltaInPixels
+      timeCursorRef.current.style[side] = sideDelta + 'px'
+    }
 
-		offsetCursor()
+    offsetCursor()
 
-		const interval = setInterval(offsetCursor, props.interval || 1000)
+    const interval = setInterval(offsetCursor, props.interval || 1000)
 
-		return () => {
-			clearInterval(interval)
-		}
-	}, [timeframe.start.getTime(), props.interval, sidebarWidth, millisecondsToPixels])
+    return () => {
+      clearInterval(interval)
+    }
+  }, [
+    side,
+    sidebarWidth,
+    props.interval,
+    timeframe.start,
+    millisecondsToPixels,
+  ])
 
-	return <div ref={timeCursorRef} className={classes['time-cursor']} />
-})
+  return <div ref={timeCursorRef} className={classes['time-cursor']} />
+}
+
+export default memo(TimeCursor)

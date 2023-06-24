@@ -10,8 +10,8 @@ setDefaultOptions({ locale: he })
 import { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof ExternalWrapper> = {
-	title: 'External',
-	component: ExternalWrapper,
+  title: 'External',
+  component: ExternalWrapper,
 }
 
 export default meta
@@ -19,9 +19,9 @@ export default meta
 type Story = StoryObj<typeof ExternalWrapper>
 
 export const Basic: Story = {
-	args: {
-		itemCount: 5,
-		listItemCount: 5,
-		rowCount: 5,
-	},
+  args: {
+    itemCount: 5,
+    listItemCount: 5,
+    rowCount: 5,
+  },
 }

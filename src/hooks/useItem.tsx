@@ -15,18 +15,18 @@ import useGanttContext from './useGanttContext'
 export type DragDirection = 'start' | 'end'
 
 export type ItemDefinition = {
-	id: string
-	rowId: string
-	disabled?: boolean
-	relevance: Relevance
-	background?: boolean
+  id: string
+  rowId: string
+  disabled?: boolean
+  relevance: Relevance
+  background?: boolean
 }
 
 export type UseItemProps = Pick<
-	ItemDefinition,
-	'id' | 'relevance' | 'disabled' | 'background'
+  ItemDefinition,
+  'id' | 'relevance' | 'disabled' | 'background'
 > & {
-	data?: object
+  data?: object
 }
 
 const getDragDirection = (
@@ -41,7 +41,7 @@ const getDragDirection = (
     return 'start'
   } else if (
     Math.abs(mouseX - clientRect[endSide]) <=
-		RESIZE_HANDLER_WIDTH / 2
+    RESIZE_HANDLER_WIDTH / 2
   ) {
     return 'end'
   }
@@ -63,11 +63,14 @@ export default (props: UseItemProps) => {
     millisecondsToPixels,
   } = useGanttContext()
 
-  dataRef.current = props.data
+  dataRef.current = {
+    relevance: props.relevance,
+    ...(props.data || {}),
+  }
 
   const draggableProps = useDraggable({
     id: props.id,
-    data: props.data,
+    data: dataRef.current,
     disabled: props.disabled,
   })
 
@@ -94,8 +97,8 @@ export default (props: UseItemProps) => {
       if (!dragStartX.current || !draggableProps.node.current) return
 
       const dragDeltaX =
-				(event.clientX - dragStartX.current) *
-				(ganttDirection === 'rtl' ? -1 : 1)
+        (event.clientX - dragStartX.current) *
+        (ganttDirection === 'rtl' ? -1 : 1)
 
       if (dragDirection === 'start') {
         const newSideDelta = deltaX + dragDeltaX

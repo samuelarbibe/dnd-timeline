@@ -8,39 +8,41 @@ import { useSortable } from '@dnd-kit/sortable'
 import { ListItemDefinition } from '..'
 
 interface ExternalListItemProps extends ListItemDefinition {
-	children: ReactNode
+  children: ReactNode
 }
 
-export default function (props: ExternalListItemProps) {
-	const {
-		attributes,
-		isDragging,
-		listeners,
-		setNodeRef,
-		transform,
-		transition,
-	} = useSortable({
-		id: props.id,
-		disabled: props.disabled,
-		data: { type: 'list-item', duration: props.duration },
-	})
+function ExternalListItem(props: ExternalListItemProps) {
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({
+    id: props.id,
+    disabled: props.disabled,
+    data: { type: 'list-item', duration: props.duration },
+  })
 
-	const style: CSSProperties = {
-		opacity: isDragging ? 0.4 : undefined,
-		transform: CSS.Translate.toString(transform),
-		transition,
-	}
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.4 : undefined,
+    transform: CSS.Translate.toString(transform),
+    transition,
+  }
 
-	return (
-		<li
-			className={classes['item-wrapper']}
-			ref={setNodeRef}
-			style={style}
-			{...listeners}
-			{...attributes}
-			{...listeners}
-		>
-			{props.children}
-		</li>
-	)
+  return (
+    <li
+      className={classes['item-wrapper']}
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      {...listeners}
+    >
+      {props.children}
+    </li>
+  )
 }
+
+export default ExternalListItem

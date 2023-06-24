@@ -1,27 +1,27 @@
 .time-axis {
-	height: 20px;
-	position: relative;
-	overflow: hidden;
+  height: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .marker-container {
-	position: absolute;
-	bottom: 0;
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	align-items: flex-end;
-	height: 100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  height: 100%;
 }
 
 .marker {
-	width: 1px;
-	background-color: rgb(150, 150, 150);
+  width: 1px;
+  background-color: rgb(150, 150, 150);
 }
 
 .marker-label {
-	font-size: x-small;
-	align-self: flex-start;
-	padding-left: 3px;
-	color: rgb(150, 150, 150);
+  font-size: x-small;
+  align-self: flex-start;
+  padding-left: 3px;
+  color: rgb(150, 150, 150);
 }
