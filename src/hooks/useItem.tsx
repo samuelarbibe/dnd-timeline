@@ -61,9 +61,11 @@ export default (props: UseItemProps) => {
     onResizeEnd,
     ganttDirection,
     millisecondsToPixels,
+    getRelevanceFromDragEvent,
   } = useGanttContext()
 
   dataRef.current = {
+    getRelevanceFromDragEvent,
     relevance: props.relevance,
     ...(props.data || {}),
   }

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import Gantt, { ItemOverlay } from '../components/Gantt'
 
-import { Timeframe } from 'react-gantt'
+import { Relevance, Timeframe } from 'react-gantt'
 
 import { generateItems, generateRows } from '../utils'
 import { endOfDay, startOfDay } from 'date-fns'
@@ -13,6 +13,7 @@ import {
   Active,
   DndContext,
   DragEndEvent,
+  DragMoveEvent,
   DragOverlay,
   DragStartEvent,
 } from '@dnd-kit/core'
@@ -53,6 +54,8 @@ function GanttWrapper(props: GanttWrapperProps) {
   ])
 
   const [draggedItem, setDraggedItem] = useState<Active | null>(null)
+  const [draggedItemTempRelevance, setDraggedItemTempRelevance] =
+    useState<Relevance | null>(null)
 
   const droppableMap = useMemo(() => {
     if (!props.generateDroppableMap) return undefined
@@ -82,8 +85,10 @@ function GanttWrapper(props: GanttWrapperProps) {
 
       const overedType = event.over?.data?.current?.type
       const activeType = event.active?.data?.current?.type
+      const getRelevanceFromDragEvent =
+        event.active?.data?.current?.getRelevanceFromDragEvent
 
-      const updatedRelevance = event.active.data.current?.relevance
+      const updatedRelevance = getRelevanceFromDragEvent(event)
 
       if (
         updatedRelevance &&
@@ -108,6 +113,14 @@ function GanttWrapper(props: GanttWrapperProps) {
     [setItems, setDraggedItem]
   )
 
+  const onDragMove = useCallback(
+    (event: DragMoveEvent) =>
+      setDraggedItemTempRelevance(
+        event.active.data.current?.getRelevanceFromDragEvent(event)
+      ),
+    []
+  )
+
   const value = useMemo<GanttWrapperContextValue>(
     () => ({
       rows,
@@ -119,17 +132,24 @@ function GanttWrapper(props: GanttWrapperProps) {
       draggedItem,
       setDraggedItem,
       droppableMap,
-      onDragEnd,
-      onDragStart,
     }),
-    [rows, items, timeframe, draggedItem, droppableMap, onDragEnd, onDragStart]
+    [rows, items, timeframe, draggedItem, droppableMap]
   )
 
   return (
     <GanttWrapperProvider value={value}>
-      <DndContext onDragCancel={onDragCancel} onDragStart={onDragStart}>
+      <DndContext
+        onDragEnd={onDragEnd}
+        onDragMove={onDragMove}
+        onDragStart={onDragStart}
+        onDragCancel={onDragCancel}
+      >
         <Gantt />
-        <DragOverlay>{draggedItem && <ItemOverlay />}</DragOverlay>
+        <DragOverlay>
+          {draggedItem && draggedItemTempRelevance && (
+            <ItemOverlay relevance={draggedItemTempRelevance} />
+          )}
+        </DragOverlay>
       </DndContext>
     </GanttWrapperProvider>
   )

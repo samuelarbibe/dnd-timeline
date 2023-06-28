@@ -10,8 +10,6 @@ import { Active } from '@dnd-kit/core'
 import { ItemDefinition, RowDefinition, Timeframe } from 'react-gantt'
 import { ListItemDefinition } from '../ExternalList'
 
-import { OnDragEnd, OnDragStart } from 'react-gantt'
-
 export type GanttWrapperContextValue = {
   items: ItemDefinition[]
   unstyled?: boolean
@@ -25,8 +23,6 @@ export type GanttWrapperContextValue = {
   droppableMap?: Record<string, string[]>
   draggedItem: Active | null
   setDraggedItem: Dispatch<SetStateAction<Active | null>>
-  onDragEnd: OnDragEnd
-  onDragStart?: OnDragStart
 }
 
 const ganttWrapperContext = createContext<GanttWrapperContextValue>(

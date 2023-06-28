@@ -13,6 +13,7 @@ setDefaultOptions({ locale: he })
 
 import {
   useGantt,
+  Relevance,
   groupItemsToSubrows,
   groupItemsToRows,
   OnTimeframeChanged,
@@ -46,11 +47,13 @@ const ItemIcon = (
   </svg>
 )
 
-export function ItemOverlay() {
+export function ItemOverlay({ relevance }: { relevance: Relevance }) {
   return (
     <div className={classNames(classes.item, classes['item-overlay'])}>
       {ItemIcon}
-      <span>Drop Me!</span>
+      <span>
+        {format(relevance.start, 'HH:mm')} - {format(relevance.end, 'HH:mm')}
+      </span>
     </div>
   )
 }
@@ -61,7 +64,6 @@ function Gantt() {
     items,
     setItems,
     timeframe,
-    onDragEnd,
     draggedItem,
     setTimeframe,
     droppableMap,
@@ -120,7 +122,6 @@ function Gantt() {
 
   const gantt = useGantt({
     timeframe,
-    onDragEnd,
     onResizeEnd,
     overlayed: true,
     timeframeGridSize,
