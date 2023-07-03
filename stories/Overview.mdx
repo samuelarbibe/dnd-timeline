@@ -25,3 +25,91 @@ import { Basic } from './2 - External/External.stories.tsx'
   <Canvas of={DisabledRows} />
 - **Integration with external DnD:** The gantt can be used in conjunction with other DnD interactions in you app, to drag items into and outside of the gantt.
   <Canvas of={Basic} />
+
+## How does it work?
+
+`react-gantt` uses the `data` field provided on `dnd-kit`'s `useDraggable` hook, to forward utils to infer time data from the draggable's current location.  
+The `Gantt` provider or the `useGantt` hook also expose a `GanttBag` which includes a set of helpers to help the use work in the context of the gantt.
+
+In order to handle a change in an item's relevance, all you need to do is to handle the `onDragEnd` event, and use the provided helper to infer the updated item relevance:
+
+```tsx
+const onDragEnd = (event: DragEndEvent) => {
+  const overedId = event.over?.id.toString()
+  if (!overedId) return
+
+  const activeItemId = event.active.id
+
+  const getRelevanceFromDragEvent =
+    event.active?.data?.current?.getRelevanceFromDragEvent
+
+  const updatedRelevance = getRelevanceFromDragEvent(event)
+
+  // update item with id activeItemId with the updatedRelevance, or the updated row using overedId
+}
+```
+
+This is true for all `dnd-kit` supported handlers:
+
+- `onDragStart`
+- `onDragEnd`
+- `onDragMove`
+- `onDragCancel`
+
+`react-gantt` adds a set of 3 more handlers, to handle the resize event:
+
+- `onResizeStart`
+- `onResizeEnd`
+- `onResizeMove`
+- `onResizeCancel`
+
+These events act just like the `dnd-kit` event, except that the event looks a bit different:
+
+```ts
+type ResizeEvent = {
+  active: Omit<Active, 'rect'> // dnd-kit's Active type
+  delta: {
+    x: number
+  }
+  direction: DragDirection // 'start' | 'end'
+}
+```
+
+The resize events' data already contains the updated relevance.
+
+```tsx
+const onResizeEnd = (event: ResizeEndEvent) => {
+  const updatedRelevance = event.active.data.current?.relevance
+  if (!updatedRelevance) return
+
+  const activeItemId = event.active.id
+
+  // update activeItemId's relevance with the updatedRelevance
+}
+```
+  
+### External items
+
+To handle external items, you will need to pass the react-gantt's helpers when defining your draggabale items:  
+```tsx
+  const { getRelevanceFromDragEvent, millisecondsToPixels } = useGanttContext()
+
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useItem({
+    id: props.id,
+    disabled: props.disabled,
+    data: {
+      getRelevanceFromDragEvent,
+      duration: props.duration, // the getRelevanceFromDragEvent also knows how to handle duration
+    },
+  })
+```  
+  
+For non-gantt items, like an external item, you will need to provide a `duration` field describing the items duration in milliseconds.  
+`react-gantt` will use it to infer its location in the gantt when dropped in and pass it through the event for you to add a new gantt item.
