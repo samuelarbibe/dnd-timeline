@@ -1,22 +1,30 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import Gantt, { ItemOverlay } from '../components/Gantt'
 
-import { Relevance, Timeframe } from 'react-gantt'
-
-import { generateItems, generateRows } from '../utils'
-import { endOfDay, startOfDay } from 'date-fns'
 import {
-  GanttWrapperContextValue,
-  GanttWrapperProvider,
-} from '../components/GanttWrapper'
+  Relevance,
+  Timeframe,
+  ResizeEndEvent,
+  GridSizeDefinition,
+  Gantt as GanttContext,
+} from 'react-gantt'
+
+import {
+  endOfDay,
+  startOfDay,
+  hoursToMilliseconds,
+  minutesToMilliseconds,
+} from 'date-fns'
 import {
   Active,
-  DndContext,
+  DragOverlay,
   DragEndEvent,
   DragMoveEvent,
-  DragOverlay,
   DragStartEvent,
 } from '@dnd-kit/core'
+
+import { generateItems, generateRows } from '../utils'
+
+import Gantt, { ItemOverlay } from '../components/Gantt'
 
 const DEFAULT_TIMEFRAME: Timeframe = {
   start: startOfDay(new Date()),
@@ -38,7 +46,7 @@ function GanttWrapper(props: GanttWrapperProps) {
     props.timeframe || DEFAULT_TIMEFRAME
   )
 
-  const [rows, setRows] = useState(() => [
+  const [rows] = useState(() => [
     ...generateRows(props.rowCount),
     ...generateRows(props.disabledRowCount || 0, { disabled: true }),
   ])
@@ -56,18 +64,6 @@ function GanttWrapper(props: GanttWrapperProps) {
   const [draggedItem, setDraggedItem] = useState<Active | null>(null)
   const [draggedItemTempRelevance, setDraggedItemTempRelevance] =
     useState<Relevance | null>(null)
-
-  const droppableMap = useMemo(() => {
-    if (!props.generateDroppableMap) return undefined
-
-    return items.reduce((acc, curr) => {
-      const droppableRows = rows.reduce(
-        (acc, curr) => (Math.random() < 0.5 ? [...acc, curr.id] : acc),
-        [] as string[]
-      )
-      return { ...acc, [curr.id]: droppableRows }
-    }, {} as Record<string, string[]>)
-  }, [items, rows, props.generateDroppableMap])
 
   const onDragStart = useCallback(
     (event: DragStartEvent) => setDraggedItem(event.active),
@@ -121,37 +117,70 @@ function GanttWrapper(props: GanttWrapperProps) {
     []
   )
 
-  const value = useMemo<GanttWrapperContextValue>(
-    () => ({
-      rows,
-      setRows,
-      items,
-      setItems,
-      timeframe,
-      setTimeframe,
-      draggedItem,
-      setDraggedItem,
-      droppableMap,
-    }),
-    [rows, items, timeframe, draggedItem, droppableMap]
+  const onResizeEnd = useCallback(
+    (event: ResizeEndEvent) => {
+      const updatedRelevance = event.active.data.current?.relevance
+      if (!updatedRelevance) return
+
+      const activeItemId = event.active.id
+
+      setItems((prev) =>
+        prev.map((item) => {
+          if (item.id !== activeItemId) return item
+
+          return {
+            ...item,
+            relevance: updatedRelevance,
+          }
+        })
+      )
+    },
+    [setItems]
+  )
+
+  const timeframeGridSize = useMemo<GridSizeDefinition[]>(
+    () => [
+      {
+        value: hoursToMilliseconds(1),
+      },
+      {
+        value: minutesToMilliseconds(30),
+        maxTimeframeSize: hoursToMilliseconds(24),
+      },
+      {
+        value: minutesToMilliseconds(15),
+        maxTimeframeSize: hoursToMilliseconds(12),
+      },
+      {
+        value: minutesToMilliseconds(5),
+        maxTimeframeSize: hoursToMilliseconds(6),
+      },
+      {
+        value: minutesToMilliseconds(1),
+        maxTimeframeSize: hoursToMilliseconds(2),
+      },
+    ],
+    []
   )
 
   return (
-    <GanttWrapperProvider value={value}>
-      <DndContext
-        onDragEnd={onDragEnd}
-        onDragMove={onDragMove}
-        onDragStart={onDragStart}
-        onDragCancel={onDragCancel}
-      >
-        <Gantt />
-        <DragOverlay>
-          {draggedItem && draggedItemTempRelevance && (
-            <ItemOverlay relevance={draggedItemTempRelevance} />
-          )}
-        </DragOverlay>
-      </DndContext>
-    </GanttWrapperProvider>
+    <GanttContext
+      onDragEnd={onDragEnd}
+      onDragMove={onDragMove}
+      onResizeEnd={onResizeEnd}
+      onDragStart={onDragStart}
+      onDragCancel={onDragCancel}
+      timeframe={timeframe}
+      onTimeframeChanged={setTimeframe}
+      timeframeGridSize={timeframeGridSize}
+    >
+      <Gantt rows={rows} items={items} />
+      <DragOverlay>
+        {draggedItem && draggedItemTempRelevance && (
+          <ItemOverlay relevance={draggedItemTempRelevance} />
+        )}
+      </DragOverlay>
+    </GanttContext>
   )
 }
 

@@ -5,15 +5,15 @@ import ResizeObserver from 'resize-observer-polyfill'
 import useGanttContext from './useGanttContext'
 
 export type RowDefinition = {
-	id: string
-	disabled?: boolean
+  id: string
+  disabled?: boolean
 }
 
 export type UseRowProps = RowDefinition & {
-	data?: object
+  data?: object
 }
 
-export default (props: UseRowProps) => {
+export default function useRow(props: UseRowProps) {
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { setSidebarWidth } = useGanttContext()
 

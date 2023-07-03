@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { ganttContext } from '../store/Gantt'
 
-export default () => {
+export default function useGanttContext() {
   const contextValue = useContext(ganttContext)
 
   if (contextValue === undefined) {

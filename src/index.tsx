@@ -11,8 +11,6 @@ export type { ItemDefinition, UseItemProps } from './hooks/useItem'
 export type { GanttContextStandalone, ganttContext } from './store/Gantt'
 export type {
   GanttBag,
-  OnDragEnd,
-  OnDragStart,
   UseGanttProps,
   ResizeEndEvent,
   OnItemsChanged,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const usePressedKeys = () => {
+export default function usePressedKeys() {
   const [pressedKeys, setPressedKeys] = useState<Record<string, boolean>>()
 
   useEffect(() => {
@@ -23,5 +23,3 @@ const usePressedKeys = () => {
 
   return pressedKeys
 }
-
-export default usePressedKeys

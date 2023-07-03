@@ -93,7 +93,7 @@ const style: CSSProperties = {
   flexDirection: 'column',
 }
 
-export default (props: UseGanttProps): GanttBag => {
+export default function useGantt(props: UseGanttProps): GanttBag {
   const { onTimeframeChanged, onResizeEnd: onResizeEndCallback } = props
 
   const ganttRef = useRef<HTMLDivElement>(null)

@@ -1,25 +1,23 @@
 import classNames from 'classnames'
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import {
   format,
-  minutesToMilliseconds,
   setDefaultOptions,
   hoursToMilliseconds,
+  minutesToMilliseconds,
 } from 'date-fns'
 import { he } from 'date-fns/locale'
 
 setDefaultOptions({ locale: he })
 
 import {
-  useGantt,
   Relevance,
-  groupItemsToSubrows,
+  RowDefinition,
+  ItemDefinition,
+  useGanttContext,
   groupItemsToRows,
-  OnTimeframeChanged,
-  GridSizeDefinition,
-  GanttProvider,
-  ResizeEndEvent,
+  groupItemsToSubrows,
 } from 'react-gantt'
 
 import classes from './Gantt.module.css'
@@ -29,7 +27,7 @@ import Item from '../Item'
 
 import TimeCursor from '../TimeCursor'
 import TimeAxis, { MarkerDefinition } from '../TimeAxis'
-import { useGanttWrapperContext } from '../GanttWrapper'
+// import { Active, useDndMonitor } from '@dnd-kit/core'
 
 const ItemIcon = (
   <svg
@@ -58,99 +56,34 @@ export function ItemOverlay({ relevance }: { relevance: Relevance }) {
   )
 }
 
-function Gantt() {
-  const {
-    rows,
-    items,
-    setItems,
-    timeframe,
-    draggedItem,
-    setTimeframe,
-    droppableMap,
-  } = useGanttWrapperContext()
+interface GanttProps {
+  items: ItemDefinition[]
+  rows: RowDefinition[]
+}
 
-  const onTimeframeChanged = useCallback<OnTimeframeChanged>(
-    (updateFunction) => setTimeframe(updateFunction),
-    [setTimeframe]
-  )
+function Gantt({ items, rows }: GanttProps) {
+  const gantt = useGanttContext()
 
-  const timeframeGridSize = useMemo<GridSizeDefinition[]>(
-    () => [
-      {
-        value: hoursToMilliseconds(1),
-      },
-      {
-        value: minutesToMilliseconds(30),
-        maxTimeframeSize: hoursToMilliseconds(24),
-      },
-      {
-        value: minutesToMilliseconds(15),
-        maxTimeframeSize: hoursToMilliseconds(12),
-      },
-      {
-        value: minutesToMilliseconds(5),
-        maxTimeframeSize: hoursToMilliseconds(6),
-      },
-      {
-        value: minutesToMilliseconds(1),
-        maxTimeframeSize: hoursToMilliseconds(2),
-      },
-    ],
-    []
-  )
+  // const [, setDraggedItem] = useState<Active | null>(null)
 
-  const onResizeEnd = useCallback(
-    (event: ResizeEndEvent) => {
-      const updatedRelevance = event.active.data.current?.relevance
-      if (!updatedRelevance) return
-
-      const activeItemId = event.active.id
-
-      setItems((prev) =>
-        prev.map((item) => {
-          if (item.id !== activeItemId) return item
-
-          return {
-            ...item,
-            relevance: updatedRelevance,
-          }
-        })
-      )
-    },
-    [setItems]
-  )
-
-  const gantt = useGantt({
-    timeframe,
-    onResizeEnd,
-    overlayed: true,
-    timeframeGridSize,
-    onTimeframeChanged,
-  })
+  // useDndMonitor({
+  //   onDragStart: (event) => setDraggedItem(event.active),
+  //   onDragEnd: () => setDraggedItem(null),
+  //   onDragCancel: () => setDraggedItem(null),
+  // })
 
   const groupedBackgroundItems = useMemo(
     () =>
       groupItemsToRows(
         items.filter((item) => item.background),
-        timeframe
+        gantt.timeframe
       ),
-    [items, timeframe]
+    [items, gantt.timeframe]
   )
 
   const groupedSubrows = useMemo(
-    () => groupItemsToSubrows(items, timeframe),
-    [items, timeframe]
-  )
-
-  const disabledRows = useMemo(
-    (): Record<string, boolean> =>
-      draggedItem?.id.toString() && droppableMap
-        ? droppableMap[draggedItem?.id.toString()].reduce(
-          (acc, curr) => ({ ...acc, [curr]: true }),
-            {} as Record<string, boolean>
-        )
-        : {},
-    [draggedItem?.id, droppableMap]
+    () => groupItemsToSubrows(items, gantt.timeframe),
+    [items, gantt.timeframe]
   )
 
   const timeAxisMarkers = useMemo<MarkerDefinition[]>(
@@ -202,80 +135,71 @@ function Gantt() {
   )
 
   return (
-    <GanttProvider value={gantt}>
-      <div
-        ref={gantt.setGanttRef}
-        style={gantt.style}
-        className={classes.gantt}
-      >
-        <TimeCursor />
-        <TimeAxis markers={timeAxisMarkers} />
-        {rows.map((row) => (
-          <Row
-            id={row.id}
-            key={row.id}
-            classes={classes}
-            disabled={row.disabled || disabledRows[row.id]}
-            sidebar={
-              <div className={classes['row-sidebar']}>
-                {row.id.replace('-', ' ')}
-              </div>
-            }
-          >
-            {groupedBackgroundItems[row.id]?.map((item) => (
-              <Item
-                classes={classes}
-                id={item.id}
-                key={item.id}
-                rowId={row.id}
-                disabled={item.disabled}
-                relevance={item.relevance}
-                background={item.background}
+    <div ref={gantt.setGanttRef} style={gantt.style} className={classes.gantt}>
+      <TimeCursor />
+      <TimeAxis markers={timeAxisMarkers} />
+      {rows.map((row) => (
+        <Row
+          id={row.id}
+          key={row.id}
+          classes={classes}
+          disabled={row.disabled}
+          sidebar={
+            <div className={classes['row-sidebar']}>
+              {row.id.replace('-', ' ')}
+            </div>
+          }
+        >
+          {groupedBackgroundItems[row.id]?.map((item) => (
+            <Item
+              classes={classes}
+              id={item.id}
+              key={item.id}
+              rowId={row.id}
+              disabled={item.disabled}
+              relevance={item.relevance}
+              background={item.background}
+            >
+              <div
+                className={classNames(classes.item, classes['item-background'])}
               >
-                <div
-                  className={classNames(
-                    classes.item,
-                    classes['item-background']
-                  )}
-                >
-                  {ItemIcon}
-                  <span>
-                    {item.disabled ? 'Disabled Item' : 'Background Item'}
-                  </span>
-                </div>
-              </Item>
-            ))}
-            {groupedSubrows[row.id]?.map((subrow, index) => (
-              <div key={index} className={classes.subrow}>
-                {subrow.map((item) => (
-                  <Item
-                    classes={classes}
-                    id={item.id}
-                    key={item.id}
-                    rowId={row.id}
-                    disabled={item.disabled}
-                    relevance={item.relevance}
-                    background={item.background}
-                  >
-                    <div
-                      className={classNames(
-                        classes.item,
-                        item.background && classes['item-background']
-                      )}
-                    >
-                      {ItemIcon}
-                      <span>
-                        {item.disabled ? 'Disabled Item' : 'Draggable Item'}
-                      </span>
-                    </div>
-                  </Item>
-                ))}
+                {ItemIcon}
+                <span>
+                  {item.disabled ? 'Disabled Item' : 'Background Item'}
+                </span>
               </div>
-            ))}
-          </Row>
-        ))}
-      </div>
-    </GanttProvider>
+            </Item>
+          ))}
+          {groupedSubrows[row.id]?.map((subrow, index) => (
+            <div key={index} className={classes.subrow}>
+              {subrow.map((item) => (
+                <Item
+                  classes={classes}
+                  id={item.id}
+                  key={item.id}
+                  rowId={row.id}
+                  disabled={item.disabled}
+                  relevance={item.relevance}
+                  background={item.background}
+                >
+                  <div
+                    className={classNames(
+                      classes.item,
+                      item.background && classes['item-background']
+                    )}
+                  >
+                    {ItemIcon}
+                    <span>
+                      {item.disabled ? 'Disabled Item' : 'Draggable Item'}
+                    </span>
+                  </div>
+                </Item>
+              ))}
+            </div>
+          ))}
+        </Row>
+      ))}
+    </div>
   )
 }
 

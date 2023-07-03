@@ -2,12 +2,12 @@ import React from 'react'
 import classNames from 'classnames'
 import { SortableContext } from '@dnd-kit/sortable'
 
-import { ItemDefinition } from 'react-gantt'
+import { format } from 'date-fns'
+import { ItemDefinition, Relevance } from 'react-gantt'
 
 import classes from './ExternalList.module.css'
 
 import ExternalListItem from './ExternalListItem'
-import { useGanttWrapperContext } from '../GanttWrapper'
 
 const ItemIcon = (
   <svg
@@ -29,18 +29,18 @@ export type ListItemDefinition = Omit<ItemDefinition, 'rowId' | 'relevance'> & {
   duration: number
 }
 
-export function ListItemOverlay() {
+export function ListItemOverlay({ relevance }: { relevance: Relevance }) {
   return (
     <div className={classNames(classes.item, classes['item-overlay'])}>
       {ItemIcon}
-      <span>Drop Me inside the Gantt!</span>
+      <span>
+        {format(relevance.start, 'HH:mm')} - {format(relevance.end, 'HH:mm')}
+      </span>
     </div>
   )
 }
 
-function ExternalList() {
-  const { listItems = [] } = useGanttWrapperContext()
-
+function ExternalList({ listItems }: { listItems: ListItemDefinition[] }) {
   return (
     <SortableContext items={listItems}>
       <ul className={classes['list']}>

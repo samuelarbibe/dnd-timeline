@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import {
   Active,
-  DndContext,
   DragEndEvent,
+  DragMoveEvent,
   DragOverlay,
   DragStartEvent,
 } from '@dnd-kit/core'
@@ -12,14 +12,22 @@ import classes from './External.module.css'
 
 import Gantt, { ItemOverlay } from '../components/Gantt'
 import ExternalList, { ListItemOverlay } from '../components/ExternalList'
-import {
-  GanttWrapperContextValue,
-  GanttWrapperProvider,
-} from '../components/GanttWrapper'
 import { generateItems, generateListItems, generateRows } from '../utils'
 
-import { endOfDay, startOfDay } from 'date-fns'
-import { ItemDefinition, Timeframe } from 'react-gantt'
+import {
+  endOfDay,
+  hoursToMilliseconds,
+  minutesToMilliseconds,
+  startOfDay,
+} from 'date-fns'
+import {
+  Relevance,
+  Timeframe,
+  ResizeEndEvent,
+  ItemDefinition,
+  GridSizeDefinition,
+  Gantt as GanttContext,
+} from 'react-gantt'
 
 const DEFAULT_TIMEFRAME: Timeframe = {
   start: startOfDay(new Date()),
@@ -42,7 +50,7 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
     props.timeframe || DEFAULT_TIMEFRAME
   )
 
-  const [rows, setRows] = useState(() => [
+  const [rows] = useState(() => [
     ...generateRows(props.rowCount),
     ...generateRows(props.disabledRowCount || 0, { disabled: true }),
   ])
@@ -62,20 +70,8 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
   ])
 
   const [draggedItem, setDraggedItem] = useState<Active | null>(null)
-
-  const droppableMap = useMemo(
-    () =>
-      props.generateDroppableMap
-        ? items.reduce((acc, curr) => {
-          const droppableRows = rows.reduce(
-            (acc, curr) => (Math.random() < 0.5 ? [...acc, curr.id] : acc),
-              [] as string[]
-          )
-          return { ...acc, [curr.id]: droppableRows }
-        }, {} as Record<string, string[]>)
-        : undefined,
-    [items, rows, props.generateDroppableMap]
-  )
+  const [draggedItemTempRelevance, setDraggedItemTempRelevance] =
+    useState<Relevance | null>(null)
 
   const onDragStart = useCallback(
     (event: DragStartEvent) => setDraggedItem(event.active),
@@ -94,7 +90,10 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
       const overedType = event.over?.data?.current?.type
       const activeType = event.active?.data?.current?.type
 
-      const updatedRelevance = event.active.data.current?.relevance
+      const getRelevanceFromDragEvent =
+        event.active?.data?.current?.getRelevanceFromDragEvent
+
+      const updatedRelevance = getRelevanceFromDragEvent(event)
 
       if (
         updatedRelevance &&
@@ -146,44 +145,89 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
     [setItems, setListItems, setDraggedItem]
   )
 
-  const value = useMemo<GanttWrapperContextValue>(
-    () => ({
-      rows,
-      setRows,
-      items,
-      setItems,
-      listItems,
-      setListItems,
-      timeframe,
-      setTimeframe,
-      draggedItem,
-      setDraggedItem,
-      droppableMap,
-      onDragEnd,
-    }),
-    [rows, items, listItems, timeframe, draggedItem, droppableMap, onDragEnd]
+  const onDragMove = useCallback(
+    (event: DragMoveEvent) =>
+      setDraggedItemTempRelevance(
+        event.active.data.current?.getRelevanceFromDragEvent(event)
+      ),
+    []
+  )
+
+  const onResizeEnd = useCallback(
+    (event: ResizeEndEvent) => {
+      const updatedRelevance = event.active.data.current?.relevance
+      if (!updatedRelevance) return
+
+      const activeItemId = event.active.id
+
+      setItems((prev) =>
+        prev.map((item) => {
+          if (item.id !== activeItemId) return item
+
+          return {
+            ...item,
+            relevance: updatedRelevance,
+          }
+        })
+      )
+    },
+    [setItems]
+  )
+
+  const timeframeGridSize = useMemo<GridSizeDefinition[]>(
+    () => [
+      {
+        value: hoursToMilliseconds(1),
+      },
+      {
+        value: minutesToMilliseconds(30),
+        maxTimeframeSize: hoursToMilliseconds(24),
+      },
+      {
+        value: minutesToMilliseconds(15),
+        maxTimeframeSize: hoursToMilliseconds(12),
+      },
+      {
+        value: minutesToMilliseconds(5),
+        maxTimeframeSize: hoursToMilliseconds(6),
+      },
+      {
+        value: minutesToMilliseconds(1),
+        maxTimeframeSize: hoursToMilliseconds(2),
+      },
+    ],
+    []
   )
 
   return (
     <div className={classes.container}>
-      <GanttWrapperProvider value={value}>
-        <DndContext onDragStart={onDragStart} onDragCancel={onDragCancel}>
-          <ExternalList />
-          <Gantt />
-          <DragOverlay
-            {...(draggedItem?.data?.current?.width && {
-              style: { width: draggedItem?.data?.current?.width + 'px' },
-            })}
-          >
-            {draggedItem?.data?.current?.type === 'gantt-item' && (
-              <ItemOverlay />
-            )}
-            {draggedItem?.data?.current?.type === 'list-item' && (
-              <ListItemOverlay />
-            )}
-          </DragOverlay>
-        </DndContext>
-      </GanttWrapperProvider>
+      <GanttContext
+        onDragEnd={onDragEnd}
+        onDragMove={onDragMove}
+        onResizeEnd={onResizeEnd}
+        onDragStart={onDragStart}
+        onDragCancel={onDragCancel}
+        timeframe={timeframe}
+        onTimeframeChanged={setTimeframe}
+        timeframeGridSize={timeframeGridSize}
+      >
+        <ExternalList listItems={listItems} />
+        <Gantt rows={rows} items={items} />
+        <DragOverlay
+          {...(draggedItem?.data?.current?.width && {
+            style: { width: draggedItem?.data?.current?.width + 'px' },
+          })}
+        >
+          {draggedItem?.data?.current?.type === 'gantt-item' &&
+            draggedItemTempRelevance && (
+            <ItemOverlay relevance={draggedItemTempRelevance} />
+          )}
+          {draggedItem?.data?.current?.type === 'list-item' &&
+            draggedItemTempRelevance && (
+            <ListItemOverlay relevance={draggedItemTempRelevance} />
+          )}
+        </DragOverlay>
+      </GanttContext>
     </div>
   )
 }

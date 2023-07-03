@@ -12,7 +12,6 @@ import { ListItemDefinition } from '../ExternalList'
 
 export type GanttWrapperContextValue = {
   items: ItemDefinition[]
-  unstyled?: boolean
   setItems: Dispatch<SetStateAction<ItemDefinition[]>>
   listItems?: ListItemDefinition[]
   setListItems?: Dispatch<SetStateAction<ListItemDefinition[]>>

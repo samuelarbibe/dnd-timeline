@@ -6,18 +6,22 @@ import useGantt, { UseGanttProps, GanttBag } from '../hooks/useGantt'
 export interface GanttContextStandalone
   extends PropsWithChildren,
     UseGanttProps,
-    Omit<DndContextProps, 'onDragStart' | 'onDragEnd'> {}
+    DndContextProps {}
 
 export const ganttContext = createContext<GanttBag>({} as GanttBag)
 
 export const GanttProvider = ganttContext.Provider
 
-export const Gantt = (props: GanttContextStandalone) => {
+const GanttProviderInner = (props: GanttContextStandalone) => {
   const gantt = useGantt(props)
 
+  return <GanttProvider value={gantt}>{props.children}</GanttProvider>
+}
+
+export const Gantt = (props: GanttContextStandalone) => {
   return (
     <DndContext {...props}>
-      <GanttProvider value={gantt}>{props.children}</GanttProvider>
+      <GanttProviderInner {...props}>{props.children}</GanttProviderInner>
     </DndContext>
   )
 }

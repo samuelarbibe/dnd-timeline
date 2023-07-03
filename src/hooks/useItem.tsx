@@ -50,7 +50,7 @@ const getDragDirection = (
 
 const RESIZE_HANDLER_WIDTH = 20
 
-export default (props: UseItemProps) => {
+export default function useItem(props: UseItemProps) {
   const dataRef = useRef<object>()
   const dragStartX = useRef<number>()
   const [dragDirection, setDragDirection] = useState<DragDirection | null>()
