@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -101,6 +101,5 @@
     "@dnd-kit/modifiers": "^6.0.1",
     "date-fns": "^2.30.0"
   },
-  "readme": "ERROR: No README data found!",
-  "_id": "dnd-timeline@0.1.0"
+  "readme": "ERROR: No README data found!"
 }
