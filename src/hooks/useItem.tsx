@@ -10,7 +10,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useDraggable } from '@dnd-kit/core'
 
 import { Relevance } from '../types'
-import useGanttContext from './useGanttContext'
+import useTimelineContext from './useTimelineContext'
 
 export type DragDirection = 'start' | 'end'
 
@@ -59,10 +59,10 @@ export default function useItem(props: UseItemProps) {
     timeframe,
     overlayed,
     onResizeEnd,
-    ganttDirection,
+    timelineDirection,
     millisecondsToPixels,
     getRelevanceFromDragEvent,
-  } = useGanttContext()
+  } = useTimelineContext()
 
   dataRef.current = {
     getRelevanceFromDragEvent,
@@ -84,7 +84,7 @@ export default function useItem(props: UseItemProps) {
     props.relevance.end.getTime() - props.relevance.start.getTime()
   )
 
-  const side = ganttDirection === 'rtl' ? 'right' : 'left'
+  const side = timelineDirection === 'rtl' ? 'right' : 'left'
 
   const cursor = props.disabled
     ? 'inherit'
@@ -100,7 +100,7 @@ export default function useItem(props: UseItemProps) {
 
       const dragDeltaX =
         (event.clientX - dragStartX.current) *
-        (ganttDirection === 'rtl' ? -1 : 1)
+        (timelineDirection === 'rtl' ? -1 : 1)
 
       if (dragDirection === 'start') {
         const newSideDelta = deltaX + dragDeltaX
@@ -120,7 +120,14 @@ export default function useItem(props: UseItemProps) {
     return () => {
       window.removeEventListener('mousemove', mouseMoveHandler)
     }
-  }, [width, deltaX, dragDirection, draggableProps.node, ganttDirection, side])
+  }, [
+    width,
+    deltaX,
+    dragDirection,
+    draggableProps.node,
+    timelineDirection,
+    side,
+  ])
 
   useLayoutEffect(() => {
     if (!dragDirection) return
@@ -182,7 +189,7 @@ export default function useItem(props: UseItemProps) {
       const newDragDirection = getDragDirection(
         event.clientX,
         draggableProps.node.current.getBoundingClientRect(),
-        ganttDirection
+        timelineDirection
       )
 
       if (newDragDirection) {
@@ -191,7 +198,7 @@ export default function useItem(props: UseItemProps) {
         draggableProps.node.current.style.cursor = cursor
       }
     },
-    [draggableProps.node, props.disabled, ganttDirection, cursor]
+    [draggableProps.node, props.disabled, timelineDirection, cursor]
   )
 
   const onPointerDown = useCallback(
@@ -201,7 +208,7 @@ export default function useItem(props: UseItemProps) {
       const newDragDirection = getDragDirection(
         event.clientX,
         draggableProps.node.current.getBoundingClientRect(),
-        ganttDirection
+        timelineDirection
       )
 
       if (newDragDirection) {
@@ -213,13 +220,14 @@ export default function useItem(props: UseItemProps) {
     },
     [
       props.disabled,
-      ganttDirection,
+      timelineDirection,
       draggableProps.node,
       draggableProps.listeners,
     ]
   )
 
-  const paddingSide = ganttDirection === 'rtl' ? 'paddingRight' : 'paddingLeft'
+  const paddingSide =
+    timelineDirection === 'rtl' ? 'paddingRight' : 'paddingLeft'
 
   const itemStyle: CSSProperties = {
     position: 'absolute',

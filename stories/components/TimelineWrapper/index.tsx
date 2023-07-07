@@ -7,10 +7,10 @@ import React, {
 } from 'react'
 import { Active } from '@dnd-kit/core'
 
-import { ItemDefinition, RowDefinition, Timeframe } from 'react-gantt'
+import { ItemDefinition, RowDefinition, Timeframe } from 'dnd-timeline'
 import { ListItemDefinition } from '../ExternalList'
 
-export type GanttWrapperContextValue = {
+export type TimelineWrapperContextValue = {
   items: ItemDefinition[]
   setItems: Dispatch<SetStateAction<ItemDefinition[]>>
   listItems?: ListItemDefinition[]
@@ -24,20 +24,23 @@ export type GanttWrapperContextValue = {
   setDraggedItem: Dispatch<SetStateAction<Active | null>>
 }
 
-const ganttWrapperContext = createContext<GanttWrapperContextValue>(
-  {} as GanttWrapperContextValue
+const timelineWrapperContext = createContext<TimelineWrapperContextValue>(
+  {} as TimelineWrapperContextValue
 )
 
-interface GanttWrapperProviderProps extends PropsWithChildren {
-  value: GanttWrapperContextValue
+interface TimelineWrapperProviderProps extends PropsWithChildren {
+  value: TimelineWrapperContextValue
 }
 
-export const useGanttWrapperContext = () => useContext(ganttWrapperContext)
+export const useTimelineWrapperContext = () =>
+  useContext(timelineWrapperContext)
 
-export const GanttWrapperProvider = (props: GanttWrapperProviderProps) => {
+export const TimelineWrapperProvider = (
+  props: TimelineWrapperProviderProps
+) => {
   return (
-    <ganttWrapperContext.Provider value={props.value}>
+    <timelineWrapperContext.Provider value={props.value}>
       {props.children}
-    </ganttWrapperContext.Provider>
+    </timelineWrapperContext.Provider>
   )
 }

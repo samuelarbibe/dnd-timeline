@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { SortableContext } from '@dnd-kit/sortable'
 
 import { format } from 'date-fns'
-import { ItemDefinition, Relevance } from 'react-gantt'
+import { ItemDefinition, Relevance } from 'dnd-timeline'
 
 import classes from './ExternalList.module.css'
 

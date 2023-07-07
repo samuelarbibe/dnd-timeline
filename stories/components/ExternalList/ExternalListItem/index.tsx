@@ -3,7 +3,7 @@ import React, { CSSProperties, ReactNode } from 'react'
 import classes from './ExternalListItem.module.css'
 
 import { CSS } from '@dnd-kit/utilities'
-import { useGanttContext } from 'react-gantt'
+import { useTimelineContext } from 'dnd-timeline'
 import { useSortable } from '@dnd-kit/sortable'
 
 import { ListItemDefinition } from '..'
@@ -13,7 +13,8 @@ interface ExternalListItemProps extends ListItemDefinition {
 }
 
 function ExternalListItem(props: ExternalListItemProps) {
-  const { getRelevanceFromDragEvent, millisecondsToPixels } = useGanttContext()
+  const { getRelevanceFromDragEvent, millisecondsToPixels } =
+    useTimelineContext()
 
   const {
     attributes,

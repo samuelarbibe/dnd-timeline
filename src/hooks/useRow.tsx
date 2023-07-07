@@ -2,7 +2,7 @@ import { CSSProperties, useLayoutEffect, useRef } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import ResizeObserver from 'resize-observer-polyfill'
 
-import useGanttContext from './useGanttContext'
+import useTimelineContext from './useTimelineContext'
 
 export type RowDefinition = {
   id: string
@@ -15,7 +15,7 @@ export type UseRowProps = RowDefinition & {
 
 export default function useRow(props: UseRowProps) {
   const sidebarRef = useRef<HTMLDivElement>(null)
-  const { setSidebarWidth } = useGanttContext()
+  const { setSidebarWidth } = useTimelineContext()
 
   const droppableProps = useDroppable({
     id: props.id,

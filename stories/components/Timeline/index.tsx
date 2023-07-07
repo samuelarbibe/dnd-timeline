@@ -15,12 +15,12 @@ import {
   Relevance,
   RowDefinition,
   ItemDefinition,
-  useGanttContext,
+  useTimelineContext,
   groupItemsToRows,
   groupItemsToSubrows,
-} from 'react-gantt'
+} from 'dnd-timeline'
 
-import classes from './Gantt.module.css'
+import classes from './Timeline.module.css'
 
 import Row from '../Row'
 import Item from '../Item'
@@ -56,34 +56,26 @@ export function ItemOverlay({ relevance }: { relevance: Relevance }) {
   )
 }
 
-interface GanttProps {
+interface TimelineProps {
   items: ItemDefinition[]
   rows: RowDefinition[]
 }
 
-function Gantt({ items, rows }: GanttProps) {
-  const gantt = useGanttContext()
-
-  // const [, setDraggedItem] = useState<Active | null>(null)
-
-  // useDndMonitor({
-  //   onDragStart: (event) => setDraggedItem(event.active),
-  //   onDragEnd: () => setDraggedItem(null),
-  //   onDragCancel: () => setDraggedItem(null),
-  // })
+function Timeline({ items, rows }: TimelineProps) {
+  const timeline = useTimelineContext()
 
   const groupedBackgroundItems = useMemo(
     () =>
       groupItemsToRows(
         items.filter((item) => item.background),
-        gantt.timeframe
+        timeline.timeframe
       ),
-    [items, gantt.timeframe]
+    [items, timeline.timeframe]
   )
 
   const groupedSubrows = useMemo(
-    () => groupItemsToSubrows(items, gantt.timeframe),
-    [items, gantt.timeframe]
+    () => groupItemsToSubrows(items, timeline.timeframe),
+    [items, timeline.timeframe]
   )
 
   const timeAxisMarkers = useMemo<MarkerDefinition[]>(
@@ -135,7 +127,11 @@ function Gantt({ items, rows }: GanttProps) {
   )
 
   return (
-    <div ref={gantt.setGanttRef} style={gantt.style} className={classes.gantt}>
+    <div
+      ref={timeline.setTimelineRef}
+      style={timeline.style}
+      className={classes.timeline}
+    >
       <TimeCursor />
       <TimeAxis markers={timeAxisMarkers} />
       {rows.map((row) => (
@@ -203,4 +199,4 @@ function Gantt({ items, rows }: GanttProps) {
   )
 }
 
-export default Gantt
+export default Timeline

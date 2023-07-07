@@ -6,10 +6,10 @@ import { he } from 'date-fns/locale'
 setDefaultOptions({ locale: he })
 
 import { Meta, StoryObj } from '@storybook/react'
-import GanttWrapper from '.'
+import TimelineWrapper from '.'
 
-const meta: Meta<typeof GanttWrapper> = {
-  title: 'Gantt',
+const meta: Meta<typeof TimelineWrapper> = {
+  title: 'Timeline',
   argTypes: {
     itemCount: { description: 'Number of items to generate', defaultValue: 1 },
     backgroundItemCount: {
@@ -34,12 +34,12 @@ const meta: Meta<typeof GanttWrapper> = {
       type: 'boolean',
     },
   },
-  component: GanttWrapper,
+  component: TimelineWrapper,
 }
 
 export default meta
 
-type Story = StoryObj<typeof GanttWrapper>
+type Story = StoryObj<typeof TimelineWrapper>
 
 export const UnstackedItems: Story = {
   args: {

@@ -5,8 +5,8 @@ import {
   Timeframe,
   ResizeEndEvent,
   GridSizeDefinition,
-  Gantt as GanttContext,
-} from 'react-gantt'
+  Timeline as TimelineContext,
+} from 'dnd-timeline'
 
 import {
   endOfDay,
@@ -24,14 +24,14 @@ import {
 
 import { generateItems, generateRows } from '../utils'
 
-import Gantt, { ItemOverlay } from '../components/Gantt'
+import Timeline, { ItemOverlay } from '../components/Timeline'
 
 const DEFAULT_TIMEFRAME: Timeframe = {
   start: startOfDay(new Date()),
   end: endOfDay(new Date()),
 }
 
-export interface GanttWrapperProps {
+export interface TimelineWrapperProps {
   rowCount: number
   itemCount: number
   timeframe?: Timeframe
@@ -41,7 +41,7 @@ export interface GanttWrapperProps {
   generateDroppableMap?: boolean
 }
 
-function GanttWrapper(props: GanttWrapperProps) {
+function TimelineWrapper(props: TimelineWrapperProps) {
   const [timeframe, setTimeframe] = useState<Timeframe>(
     props.timeframe || DEFAULT_TIMEFRAME
   )
@@ -88,8 +88,8 @@ function GanttWrapper(props: GanttWrapperProps) {
 
       if (
         updatedRelevance &&
-        overedType === 'gantt-row' &&
-        activeType === 'gantt-item'
+        overedType === 'timeline-row' &&
+        activeType === 'timeline-item'
       ) {
         setItems((prev) =>
           prev.map((item) => {
@@ -164,7 +164,7 @@ function GanttWrapper(props: GanttWrapperProps) {
   )
 
   return (
-    <GanttContext
+    <TimelineContext
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}
       onResizeEnd={onResizeEnd}
@@ -174,14 +174,14 @@ function GanttWrapper(props: GanttWrapperProps) {
       onTimeframeChanged={setTimeframe}
       timeframeGridSize={timeframeGridSize}
     >
-      <Gantt rows={rows} items={items} />
+      <Timeline rows={rows} items={items} />
       <DragOverlay>
         {draggedItem && draggedItemTempRelevance && (
           <ItemOverlay relevance={draggedItemTempRelevance} />
         )}
       </DragOverlay>
-    </GanttContext>
+    </TimelineContext>
   )
 }
 
-export default GanttWrapper
+export default TimelineWrapper

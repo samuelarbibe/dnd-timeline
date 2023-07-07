@@ -4,7 +4,7 @@ const config: StorybookConfig = {
   viteFinal: (config) => {
     return mergeConfig(config, {
       optimizeDeps: {
-        include: ['react-gantt'],
+        include: ['dnd-timeline'],
       },
     })
   },

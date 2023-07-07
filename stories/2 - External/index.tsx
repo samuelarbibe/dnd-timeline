@@ -10,7 +10,7 @@ import { arrayMove } from '@dnd-kit/sortable'
 
 import classes from './External.module.css'
 
-import Gantt, { ItemOverlay } from '../components/Gantt'
+import Timeline, { ItemOverlay } from '../components/Timeline'
 import ExternalList, { ListItemOverlay } from '../components/ExternalList'
 import { generateItems, generateListItems, generateRows } from '../utils'
 
@@ -26,8 +26,8 @@ import {
   ResizeEndEvent,
   ItemDefinition,
   GridSizeDefinition,
-  Gantt as GanttContext,
-} from 'react-gantt'
+  Timeline as TimelineContext,
+} from 'dnd-timeline'
 
 const DEFAULT_TIMEFRAME: Timeframe = {
   start: startOfDay(new Date()),
@@ -97,8 +97,8 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
 
       if (
         updatedRelevance &&
-        overedType === 'gantt-row' &&
-        activeType === 'gantt-item'
+        overedType === 'timeline-row' &&
+        activeType === 'timeline-item'
       ) {
         setItems((prev) =>
           prev.map((item) => {
@@ -123,7 +123,7 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
         })
       } else if (
         updatedRelevance &&
-        overedType === 'gantt-row' &&
+        overedType === 'timeline-row' &&
         activeType === 'list-item'
       ) {
         setListItems((prev) =>
@@ -201,7 +201,7 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
 
   return (
     <div className={classes.container}>
-      <GanttContext
+      <TimelineContext
         onDragEnd={onDragEnd}
         onDragMove={onDragMove}
         onResizeEnd={onResizeEnd}
@@ -212,13 +212,13 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
         timeframeGridSize={timeframeGridSize}
       >
         <ExternalList listItems={listItems} />
-        <Gantt rows={rows} items={items} />
+        <Timeline rows={rows} items={items} />
         <DragOverlay
           {...(draggedItem?.data?.current?.width && {
             style: { width: draggedItem?.data?.current?.width + 'px' },
           })}
         >
-          {draggedItem?.data?.current?.type === 'gantt-item' &&
+          {draggedItem?.data?.current?.type === 'timeline-item' &&
             draggedItemTempRelevance && (
             <ItemOverlay relevance={draggedItemTempRelevance} />
           )}
@@ -227,7 +227,7 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
             <ListItemOverlay relevance={draggedItemTempRelevance} />
           )}
         </DragOverlay>
-      </GanttContext>
+      </TimelineContext>
     </div>
   )
 }

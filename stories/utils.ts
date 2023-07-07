@@ -5,7 +5,7 @@ import {
   Relevance,
   RowDefinition,
   Timeframe,
-} from 'react-gantt'
+} from 'dnd-timeline'
 import { ListItemDefinition } from './components/ExternalList'
 
 type GenerateRowsOptions = {

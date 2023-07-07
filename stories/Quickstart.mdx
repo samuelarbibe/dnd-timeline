@@ -2,31 +2,31 @@
 
 ### Context
 
-Use the `useGantt` hook, and expose the `GanttBag` using the `GanttProvider`.
+Use the `useTimeline` hook, and expose the `TimelineBag` using the `TimelineProvider`.
 
-the `GanttProvider` doesn't wrap you code with the `DndContext`, so you will need to do it yourself.  
-This also means that you can put the `DndContext` anywhere you want, allowing for integration with external DnD lists and gantt's.
+the `TimelineProvider` doesn't wrap you code with the `DndContext`, so you will need to do it yourself.  
+This also means that you can put the `DndContext` anywhere you want, allowing for integration with external DnD lists and timeline's.
 
-To define a gantt container div, youll need to pass the `ganttRef` as a `ref` to that element, and pass the funtional styling as well.
+To define a timeline container div, youll need to pass the `timelineRef` as a `ref` to that element, and pass the funtional styling as well.
 
 ```jsx
 import { DndContext } from '@dnd-kit/core'
-import { Gantt, useGantt } from 'react-gantt'
+import { Timeline, useTimeline } from 'dnd-timeline'
 
-function GanttContainer() {
-  const ganttBag = useGantt({
-    // Gantt options
+function TimelineContainer() {
+  const timelineBag = useTimeline({
+    // Timeline options
   })
 
   return (
     <DndContext>
-      <GanttProvider value={ganttBag}>
-        <div ref={ganttBag.ganttRef} style={ganttBag.style}>
+      <TimelineProvider value={timelineBag}>
+        <div ref={timelineBag.timelineRef} style={timelineBag.style}>
           {
             // rows and items
           }
         </div>
-      </GanttProvider>
+      </TimelineProvider>
     </DndContext>
   )
 }
@@ -41,7 +41,7 @@ To get going, you can use this simple Row HOC component:
 
 ```jsx
 import React, { ReactNode, useMemo } from 'react'
-import { RowDefinition, useRow } from 'react-gantt'
+import { RowDefinition, useRow } from 'dnd-timeline'
 
 interface RowProps extends RowDefinition {
   id: string
@@ -82,7 +82,7 @@ You can then use this row component to wrap you items on each rows.
 rows should be an array of type `RowDefinition[]`
 
 ```jsx
-<div ref={ganttBag.ganttRef} style={ganttBag.style}>
+<div ref={timelineBag.timelineRef} style={timelineBag.style}>
   {rows.map((row) => (
     <Row
       id={row.id}
@@ -106,7 +106,7 @@ To get going, you can use this simple Item HOC component:
 
 ```jsx
 import React, { ReactNode, useMemo } from 'react'
-import { ItemDefinition, useItem } from 'react-gantt'
+import { ItemDefinition, useItem } from 'dnd-timeline'
 
 interface ItemProps extends ItemDefinition {
   children: ReactNode;
@@ -132,7 +132,7 @@ You can then use it to wrap you own item components, that are going to be displa
 `groupedItems` is an object of type `Record<string, ItemDefinition[]>`, but you can do it however you see fit.
 
 ```jsx
-<div ref={ganttBag.ganttRef} style={ganttBag.style}>
+<div ref={timelineBag.timelineRef} style={timelineBag.style}>
   {rows.map((row) => (
     <Row
       id={row.id}
@@ -159,7 +159,7 @@ You can then use it to wrap you own item components, that are going to be displa
 Add a little bit of styling, and you will get something like this:
 
 import { Canvas } from '@storybook/blocks'
-import { UnstackedItems } from './1 - Gantt/Gantt.stories.tsx'
+import { UnstackedItems } from './1 - Timeline/Timeline.stories.tsx'
 
 <Canvas of={UnstackedItems} />
-You can find all of the examples' code in the [github repository](https://github.com/samuelarbibe/react-gantt/tree/main/stories)
+You can find all of the examples' code in the [github repository](https://github.com/samuelarbibe/dnd-timeline/tree/main/stories)

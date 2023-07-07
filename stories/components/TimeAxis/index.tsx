@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from 'react'
 import defaultClasses from './TimeAxis.module.css'
 
-import { useGanttContext } from 'react-gantt'
+import { useTimelineContext } from 'dnd-timeline'
 import { minutesToMilliseconds } from 'date-fns'
 
 type Marker = {
@@ -27,10 +27,10 @@ interface TimeAxisProps {
 }
 
 function TimeAxis(props: TimeAxisProps) {
-  const { timeframe, ganttDirection, sidebarWidth, millisecondsToPixels } =
-    useGanttContext()
+  const { timeframe, timelineDirection, sidebarWidth, millisecondsToPixels } =
+    useTimelineContext()
 
-  const side = ganttDirection === 'rtl' ? 'right' : 'left'
+  const side = timelineDirection === 'rtl' ? 'right' : 'left'
 
   const classes = useMemo(
     () => ({ ...defaultClasses, ...props.classes }),

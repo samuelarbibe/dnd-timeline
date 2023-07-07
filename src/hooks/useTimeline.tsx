@@ -48,15 +48,15 @@ export type OnPanEnd = (deltaX: number, deltaY: number) => void
 export type PixelsToMilliseconds = (pixels: number) => number
 export type MillisecondsToPixels = (milliseconds: number) => number
 
-export type GanttBag = {
+export type TimelineBag = {
   style: CSSProperties
   timeframe: Timeframe
   overlayed: boolean
   sidebarWidth: number
   onResizeEnd: OnResizeEnd
   timeframeGridSize?: number
-  ganttDirection: CanvasDirection
-  setGanttRef: React.RefObject<HTMLDivElement>
+  timelineDirection: CanvasDirection
+  setTimelineRef: React.RefObject<HTMLDivElement>
   setSidebarWidth: React.Dispatch<React.SetStateAction<number>>
   millisecondsToPixels: MillisecondsToPixels
   pixelsToMilliseconds: PixelsToMilliseconds
@@ -78,7 +78,7 @@ export type GridSizeDefinition = {
   maxTimeframeSize?: number
 }
 
-export interface UseGanttProps {
+export interface UseTimelineProps {
   timeframe: Timeframe
   overlayed?: boolean
   onResizeEnd: OnResizeEnd
@@ -93,19 +93,20 @@ const style: CSSProperties = {
   flexDirection: 'column',
 }
 
-export default function useGantt(props: UseGanttProps): GanttBag {
+export default function useTimeline(props: UseTimelineProps): TimelineBag {
   const { onTimeframeChanged, onResizeEnd: onResizeEndCallback } = props
 
-  const ganttRef = useRef<HTMLDivElement>(null)
+  const timelineRef = useRef<HTMLDivElement>(null)
   const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
 
-  const [ganttWidth, setGanttWidth] = useState(0)
+  const [timelineWidth, setTimelineWidth] = useState(0)
   const [sidebarWidth, setSidebarWidth] = useState(0)
-  const [ganttDirection, setGanttDirection] = useState<CanvasDirection>('ltr')
+  const [timelineDirection, setTimelineDirection] =
+    useState<CanvasDirection>('ltr')
 
   const pressedKeys = usePressedKeys()
 
-  const ganttViewportWidth = ganttWidth - sidebarWidth
+  const timelineViewportWidth = timelineWidth - sidebarWidth
 
   const timeframeGridSize = useMemo(() => {
     if (Array.isArray(props.timeframeGridSize)) {
@@ -129,21 +130,21 @@ export default function useGantt(props: UseGanttProps): GanttBag {
   const millisecondsToPixels = useCallback<MillisecondsToPixels>(
     (milliseconds: number) => {
       const msToPixel =
-        ganttViewportWidth /
+        timelineViewportWidth /
         differenceInMilliseconds(props.timeframe.end, props.timeframe.start)
       return milliseconds * msToPixel
     },
-    [ganttViewportWidth, props.timeframe]
+    [timelineViewportWidth, props.timeframe]
   )
 
   const pixelsToMilliseconds = useCallback<PixelsToMilliseconds>(
     (pixels: number) => {
       const pixelToMs =
         differenceInMilliseconds(props.timeframe.end, props.timeframe.start) /
-        ganttViewportWidth
+        timelineViewportWidth
       return pixels * pixelToMs
     },
-    [props.timeframe, ganttViewportWidth]
+    [props.timeframe, timelineViewportWidth]
   )
 
   const snapDateToTimeframeGrid = useCallback(
@@ -159,16 +160,16 @@ export default function useGantt(props: UseGanttProps): GanttBag {
 
   const getDateFromScreenX = useCallback<GetDateFromScreenX>(
     (screenX) => {
-      const side = ganttDirection === 'rtl' ? 'right' : 'left'
+      const side = timelineDirection === 'rtl' ? 'right' : 'left'
 
-      const ganttSideX =
-        (ganttRef.current?.getBoundingClientRect()[side] || 0) +
-        sidebarWidth * (ganttDirection === 'rtl' ? -1 : 1)
+      const timelineSideX =
+        (timelineRef.current?.getBoundingClientRect()[side] || 0) +
+        sidebarWidth * (timelineDirection === 'rtl' ? -1 : 1)
 
-      const deltaX = screenX - ganttSideX
+      const deltaX = screenX - timelineSideX
 
       const deltaInMilliseconds =
-        pixelsToMilliseconds(deltaX) * (ganttDirection === 'rtl' ? -1 : 1)
+        pixelsToMilliseconds(deltaX) * (timelineDirection === 'rtl' ? -1 : 1)
 
       return snapDateToTimeframeGrid(
         addMilliseconds(props.timeframe.start, deltaInMilliseconds)
@@ -176,7 +177,7 @@ export default function useGantt(props: UseGanttProps): GanttBag {
     },
     [
       sidebarWidth,
-      ganttDirection,
+      timelineDirection,
       pixelsToMilliseconds,
       props.timeframe.start,
       snapDateToTimeframeGrid,
@@ -236,9 +237,11 @@ export default function useGantt(props: UseGanttProps): GanttBag {
   const onPanEnd = useCallback(
     (event: PanEndEvent) => {
       const deltaXInMilliseconds =
-        pixelsToMilliseconds(event.deltaX) * (ganttDirection === 'rtl' ? -1 : 1)
+        pixelsToMilliseconds(event.deltaX) *
+        (timelineDirection === 'rtl' ? -1 : 1)
       const deltaYInMilliseconds =
-        pixelsToMilliseconds(event.deltaY) * (ganttDirection === 'rtl' ? -1 : 1)
+        pixelsToMilliseconds(event.deltaY) *
+        (timelineDirection === 'rtl' ? -1 : 1)
 
       const startDelta = deltaYInMilliseconds + deltaXInMilliseconds
       const endDelta = -deltaYInMilliseconds + deltaXInMilliseconds
@@ -248,7 +251,7 @@ export default function useGantt(props: UseGanttProps): GanttBag {
         end: addMilliseconds(prev.end, endDelta),
       }))
     },
-    [pixelsToMilliseconds, onTimeframeChanged, ganttDirection]
+    [pixelsToMilliseconds, onTimeframeChanged, timelineDirection]
   )
 
   const onDragStart = useCallback(() => {
@@ -260,7 +263,7 @@ export default function useGantt(props: UseGanttProps): GanttBag {
   })
 
   useLayoutEffect(() => {
-    const element = ganttRef?.current
+    const element = timelineRef?.current
     if (!element) return
 
     const mouseWheelHandler = (event: WheelEvent) => {
@@ -278,22 +281,22 @@ export default function useGantt(props: UseGanttProps): GanttBag {
   }, [onPanEnd, pressedKeys?.Meta])
 
   useLayoutEffect(() => {
-    const element = ganttRef?.current
+    const element = timelineRef?.current
     if (!element) return
 
-    setGanttDirection(getComputedStyle(element).direction as CanvasDirection)
+    setTimelineDirection(getComputedStyle(element).direction as CanvasDirection)
 
     const observer = new ResizeObserver(() => {
-      setGanttWidth(element.clientWidth)
+      setTimelineWidth(element.clientWidth)
     })
 
     observer.observe(element)
     return () => {
       observer.disconnect()
     }
-  }, [setGanttWidth])
+  }, [setTimelineWidth])
 
-  const value = useMemo<GanttBag>(
+  const value = useMemo<TimelineBag>(
     () => ({
       style,
       onResizeEnd,
@@ -301,9 +304,9 @@ export default function useGantt(props: UseGanttProps): GanttBag {
       setSidebarWidth,
       pixelsToMilliseconds,
       millisecondsToPixels,
-      setGanttRef: ganttRef,
+      setTimelineRef: timelineRef,
       overlayed: !!props.overlayed,
-      ganttDirection,
+      timelineDirection,
       timeframe: props.timeframe,
       timeframeGridSize,
       getDateFromScreenX,
@@ -316,7 +319,7 @@ export default function useGantt(props: UseGanttProps): GanttBag {
       pixelsToMilliseconds,
       millisecondsToPixels,
       props.timeframe,
-      ganttDirection,
+      timelineDirection,
       props.overlayed,
       timeframeGridSize,
       getDateFromScreenX,

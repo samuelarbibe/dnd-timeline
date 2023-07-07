@@ -1,7 +1,7 @@
 import React, { useMemo, memo, useRef, useLayoutEffect } from 'react'
 import defaultClasses from './TimeCursor.module.css'
 
-import { useGanttContext } from 'react-gantt'
+import { useTimelineContext } from 'dnd-timeline'
 
 type TimeCursorClasses = Partial<Record<'time-cursor', string>>
 
@@ -13,10 +13,10 @@ interface TimeCursorProps {
 function TimeCursor(props: TimeCursorProps) {
   const timeCursorRef = useRef<HTMLDivElement>(null)
 
-  const { timeframe, ganttDirection, sidebarWidth, millisecondsToPixels } =
-    useGanttContext()
+  const { timeframe, timelineDirection, sidebarWidth, millisecondsToPixels } =
+    useTimelineContext()
 
-  const side = ganttDirection === 'rtl' ? 'right' : 'left'
+  const side = timelineDirection === 'rtl' ? 'right' : 'left'
 
   const classes = useMemo(
     () => ({ ...defaultClasses, ...props.classes }),

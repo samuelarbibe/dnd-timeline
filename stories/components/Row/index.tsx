@@ -2,7 +2,7 @@ import defaultClasses from './Row.module.css'
 
 import React, { ReactNode, useMemo } from 'react'
 import classNames from 'classnames'
-import { RowDefinition, useRow } from 'react-gantt'
+import { RowDefinition, useRow } from 'dnd-timeline'
 
 type RowClasses = Partial<
   Record<
@@ -34,7 +34,7 @@ function Row(props: RowProps) {
   } = useRow({
     id: props.id,
     disabled: props.disabled,
-    data: { type: 'gantt-row' },
+    data: { type: 'timeline-row' },
   })
 
   return (

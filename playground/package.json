@@ -1,5 +1,5 @@
 {
-  "name": "react-gantt-playground",
+  "name": "dnd-timeline-playground",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "build": "parcel build index.html"
   },
   "alias": {
-    "react-gantt": "..",
+    "dnd-timeline": "..",
     "react": "../node_modules/react",
     "components": "../stories/components",
     "react-dom": "../node_modules/react-dom",

@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo } from 'react'
 import defaultClasses from './Item.module.css'
 
-import { ItemDefinition, useItem } from 'react-gantt'
+import { ItemDefinition, useItem } from 'dnd-timeline'
 import classNames from 'classnames'
 
 type ItemClasses = Partial<
@@ -27,7 +27,7 @@ function Item(props: ItemProps) {
     relevance: props.relevance,
     background: props.background,
     data: {
-      type: 'gantt-item',
+      type: 'timeline-item',
     },
   })
 

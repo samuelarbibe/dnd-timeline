@@ -1,35 +1,35 @@
 import { Canvas } from '@storybook/blocks'
-import { StackedItems, DisabledRows } from './1 - Gantt/Gantt.stories.tsx'
 import { Basic } from './2 - External/External.stories.tsx'
+import { StackedItems, DisabledRows } from './1 - Timeline/Timeline.stories.tsx'
 
 # Overview
 
-#### A headless gantt library, based on [`dnd-kit`](https://docs.dndkit.com/)
+#### A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
 
-- **Headless:** `react-gantt` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
+- **Headless:** `dnd-timeline` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
 - **Hook-based:** exposes simple hooks like `useItem` and `useRow`, that should integrate seamlessly into your existing architecture.
-- **Flexible:** very slim and flexible by design. `react-gantt` exposes utility functions and positional styling, and you can use them in conjunction with you favorite libraries - styling libraries (MUI, tailwindcss, ant-design, etc.), and functional libraries (react-virtual, framer-motion, etc.)
-- **Based on [`dnd-kit`](https://docs.dndkit.com/):** all features exposed by the [`dnd-kit`](https://docs.dndkit.com/) library are applicable to react-gantt.
+- **Flexible:** very slim and flexible by design. `dnd-timeline` exposes utility functions and positional styling, and you can use them in conjunction with you favorite libraries - styling libraries (MUI, tailwindcss, ant-design, etc.), and functional libraries (react-virtual, framer-motion, etc.)
+- **Based on [`dnd-kit`](https://docs.dndkit.com/):** all features exposed by the [`dnd-kit`](https://docs.dndkit.com/) library are applicable to dnd-timeline.
 - **Performant:** renders only when needed. All the intermediate states and animations are done using css transformations, and require 0 re-renders.
-- **RTL:** `react-gantt` nativly supports RTL. simply declare one of the parent divs as rtl with `dir="rtl"`, and thats it.
+- **RTL:** `dnd-timeline` nativly supports RTL. simply declare one of the parent divs as rtl with `dir="rtl"`, and thats it.
 
 ## Features
 
 - **Stacked rows:** Items whose relevance's intersect are stacked on top of each other inside the same row.
 - **Snap to Grid:** Items snap into a pre-defined grid when dropped, that can be changed according to zoom level.
 - **Time Axis:** An optional time axis can be displayed, with different markers according to zoom level.
-- **Time Cursor:** An optional time cursor indicating the current time on top of the gantt.
+- **Time Cursor:** An optional time cursor indicating the current time on top of the timeline.
 - **Pan and zoom:** You can zoom by holding <kbd>Ctrl</kbd> and scrolling using the mouse wheel, and pan by holding <kbd>Ctrl + Shift</kbd> scrolling using the mouse wheel.
   <Canvas of={StackedItems} />
 - **Dynamically disabled rows and items:** Items and Rows can be disabled according to a client-defined logic.
   <Canvas of={DisabledRows} />
-- **Integration with external DnD:** The gantt can be used in conjunction with other DnD interactions in you app, to drag items into and outside of the gantt.
+- **Integration with external DnD:** The timeline can be used in conjunction with other DnD interactions in you app, to drag items into and outside of the timeline.
   <Canvas of={Basic} />
 
 ## How does it work?
 
-`react-gantt` uses the `data` field provided on `dnd-kit`'s `useDraggable` hook, to forward utils to infer time data from the draggable's current location.  
-The `Gantt` provider or the `useGantt` hook also expose a `GanttBag` which includes a set of helpers to help the use work in the context of the gantt.
+`dnd-timeline` uses the `data` field provided on `dnd-kit`'s `useDraggable` hook, to forward utils to infer time data from the draggable's current location.  
+The `Timeline` provider or the `useTimeline` hook also expose a `TimelineBag` which includes a set of helpers to help the use work in the context of the timeline.
 
 In order to handle a change in an item's relevance, all you need to do is to handle the `onDragEnd` event, and use the provided helper to infer the updated item relevance:
 
@@ -56,7 +56,7 @@ This is true for all `dnd-kit` supported handlers:
 - `onDragMove`
 - `onDragCancel`
 
-`react-gantt` adds a set of 3 more handlers, to handle the resize event:
+`dnd-timeline` adds a set of 3 more handlers, to handle the resize event:
 
 - `onResizeStart`
 - `onResizeEnd`
@@ -87,21 +87,16 @@ const onResizeEnd = (event: ResizeEndEvent) => {
   // update activeItemId's relevance with the updatedRelevance
 }
 ```
-  
+
 ### External items
 
-To handle external items, you will need to pass the react-gantt's helpers when defining your draggabale items:  
-```tsx
-  const { getRelevanceFromDragEvent, millisecondsToPixels } = useGanttContext()
+To handle external items, you will need to pass the dnd-timeline's helpers when defining your draggabale items:
 
-  const {
-    attributes,
-    isDragging,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useItem({
+```tsx
+const { getRelevanceFromDragEvent, millisecondsToPixels } = useTimelineContext()
+
+const { attributes, isDragging, listeners, setNodeRef, transform, transition } =
+  useItem({
     id: props.id,
     disabled: props.disabled,
     data: {
@@ -109,7 +104,7 @@ To handle external items, you will need to pass the react-gantt's helpers when d
       duration: props.duration, // the getRelevanceFromDragEvent also knows how to handle duration
     },
   })
-```  
-  
-For non-gantt items, like an external item, you will need to provide a `duration` field describing the items duration in milliseconds.  
-`react-gantt` will use it to infer its location in the gantt when dropped in and pass it through the event for you to add a new gantt item.
+```
+
+For non-timeline items, like an external item, you will need to provide a `duration` field describing the items duration in milliseconds.  
+`dnd-timeline` will use it to infer its location in the timeline when dropped in and pass it through the event for you to add a new timeline item.
