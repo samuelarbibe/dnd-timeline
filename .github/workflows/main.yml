@@ -40,7 +40,13 @@ jobs:
         run: |
           yarn link
           yarn link dnd-timeline
-      - name: Publish to Chromatic
-        uses: chromaui/action@v1
+      - name: Build Storybook
+        run: npm run build-storybook
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: main
+          FOLDER: storybook-static
+          CLEAN: true
+          TARGET_FOLDER: docs

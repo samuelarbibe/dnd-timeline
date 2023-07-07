@@ -28,8 +28,8 @@ import { StackedItems, DisabledRows } from './1 - Timeline/Timeline.stories.tsx'
 
 ## How does it work?
 
-`dnd-timeline` uses the `data` field provided on `dnd-kit`'s `useDraggable` hook, to forward utils to infer time data from the draggable's current location.  
-The `Timeline` provider or the `useTimeline` hook also expose a `TimelineBag` which includes a set of helpers to help the use work in the context of the timeline.
+`dnd-timeline` uses the `data` field provided on `dnd-kit`'s `useDraggable` hook, to forward date utils to your event handlers.  
+The `TimelineContext` also exposes a `TimelineBag` object, which incudes a set of helpers to work with the timeline.
 
 In order to handle a change in an item's relevance, all you need to do is to handle the `onDragEnd` event, and use the provided helper to infer the updated item relevance:
 
@@ -56,12 +56,12 @@ This is true for all `dnd-kit` supported handlers:
 - `onDragMove`
 - `onDragCancel`
 
-`dnd-timeline` adds a set of 3 more handlers, to handle the resize event:
+`dnd-timeline` adds a set of 4 more handlers, to handle the resize event:
 
-- `onResizeStart`
+- `onResizeStart` (WIP)
 - `onResizeEnd`
-- `onResizeMove`
-- `onResizeCancel`
+- `onResizeMove` (WIP)
+- `onResizeCancel` (WIP)
 
 These events act just like the `dnd-kit` event, except that the event looks a bit different:
 

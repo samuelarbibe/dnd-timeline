@@ -2,6 +2,46 @@
 
 ### Context
 
+#### Simple
+
+Use the `TimelineContext` to wrap your timeline, and access the timeline helpers using the `useTimelineContext` hook.
+
+This is the recommended way to use the `dnd-timeline`
+
+```jsx
+import { DndContext } from '@dnd-kit/core'
+import { TimelineContext, useTimelineContext } from 'dnd-timeline'
+
+function TimelineContainer() {
+  return (
+    <TimelineContext
+    // Timeline options
+    >
+      <Timeline />
+    </TimelineContext>
+  )
+}
+```
+
+```jsx
+import { DndContext } from '@dnd-kit/core'
+import { TimelineContext, useTimelineContext } from 'dnd-timeline'
+
+function Timeline() {
+  const timelineBag = useTimelineContext()
+
+  return (
+    <div ref={timelineBag.timelineRef} style={timelineBag.style}>
+      {
+        // rows and items
+      }
+    </div>
+  )
+}
+```
+
+#### Advanced
+
 Use the `useTimeline` hook, and expose the `TimelineBag` using the `TimelineProvider`.
 
 the `TimelineProvider` doesn't wrap you code with the `DndContext`, so you will need to do it yourself.  
@@ -11,7 +51,7 @@ To define a timeline container div, youll need to pass the `timelineRef` as a `r
 
 ```jsx
 import { DndContext } from '@dnd-kit/core'
-import { Timeline, useTimeline } from 'dnd-timeline'
+import { TimelineProvider, useTimeline } from 'dnd-timeline'
 
 function TimelineContainer() {
   const timelineBag = useTimeline({
@@ -19,7 +59,9 @@ function TimelineContainer() {
   })
 
   return (
-    <DndContext>
+    <DndContext
+    // dnd-kit options
+    >
       <TimelineProvider value={timelineBag}>
         <div ref={timelineBag.timelineRef} style={timelineBag.style}>
           {
