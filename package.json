@@ -88,7 +88,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
-    "resize-observer-polyfill": "^1.5.1",
     "size-limit": "^8.2.4",
     "storybook": "^7.0.26",
     "tsdx": "^0.14.1",
@@ -99,7 +98,8 @@
   "dependencies": {
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
-    "date-fns": "^2.30.0"
+    "date-fns": "^2.30.0",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "readme": "ERROR: No README data found!"
 }

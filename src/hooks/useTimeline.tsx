@@ -267,7 +267,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     if (!element) return
 
     const mouseWheelHandler = (event: WheelEvent) => {
-      if (!pressedKeys?.Meta) return
+      if (!pressedKeys?.Meta && pressedKeys?.Control) return
 
       event.preventDefault()
       onPanEnd(event)
@@ -278,7 +278,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     return () => {
       element?.removeEventListener('wheel', mouseWheelHandler)
     }
-  }, [onPanEnd, pressedKeys?.Meta])
+  }, [onPanEnd, pressedKeys?.Meta, pressedKeys?.Control])
 
   useLayoutEffect(() => {
     const element = timelineRef?.current

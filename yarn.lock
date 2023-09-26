@@ -5065,15 +5065,6 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-"dnd-timeline@file:":
-  version "0.1.0"
-  resolved "file:"
-  dependencies:
-    "@dnd-kit/core" "^6.0.8"
-    "@dnd-kit/modifiers" "^6.0.1"
-    date-fns "^2.30.0"
-    dnd-timeline "file:"
-
 doctrine@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/doctrine/-/doctrine-2.1.0.tgz"
