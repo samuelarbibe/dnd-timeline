@@ -186,7 +186,8 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
 
   const getRelevanceFromDragEvent = useCallback<GetRelevanceFromDragEvent>(
     (event) => {
-      const itemX = event.active.rect.current.translated?.left || 0
+      const side = timelineDirection === 'rtl' ? 'right' : 'left'
+      const itemX = event.active.rect.current.translated?.[side] || 0
 
       const start = getDateFromScreenX(itemX)
 
@@ -214,7 +215,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
 
       return null
     },
-    [getDateFromScreenX, snapDateToTimeframeGrid]
+    [getDateFromScreenX, snapDateToTimeframeGrid, timelineDirection]
   )
 
   const onResizeEnd = useCallback(
