@@ -268,7 +268,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     if (!element) return
 
     const mouseWheelHandler = (event: WheelEvent) => {
-      if (!pressedKeys?.Meta && pressedKeys?.Control) return
+      if (!pressedKeys?.Meta && !pressedKeys?.Control) return
 
       event.preventDefault()
       onPanEnd(event)
