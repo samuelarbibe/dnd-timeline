@@ -17,7 +17,6 @@ import {
 } from '@dnd-kit/core'
 import { addMilliseconds, differenceInMilliseconds } from 'date-fns'
 
-import usePressedKeys from './usePressedKeys'
 import { DragDirection, ItemDefinition } from './useItem'
 
 import { Relevance, Timeframe } from '../types'
@@ -103,8 +102,6 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
   const [sidebarWidth, setSidebarWidth] = useState(0)
   const [timelineDirection, setTimelineDirection] =
     useState<CanvasDirection>('ltr')
-
-  const pressedKeys = usePressedKeys()
 
   const timelineViewportWidth = timelineWidth - sidebarWidth
 
@@ -268,10 +265,20 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     if (!element) return
 
     const mouseWheelHandler = (event: WheelEvent) => {
-      if (!pressedKeys?.Meta && !pressedKeys?.Control) return
+      if (!event.ctrlKey && !event.metaKey) return
 
       event.preventDefault()
-      onPanEnd(event)
+
+      const isHorizontal = event.shiftKey
+
+      console.log(event)
+
+      const panEndEvent: PanEndEvent = {
+        deltaX: isHorizontal ? event.deltaX || event.deltaY : 0,
+        deltaY: isHorizontal ? 0 : event.deltaY,
+      }
+
+      onPanEnd(panEndEvent)
     }
 
     element.addEventListener('wheel', mouseWheelHandler)
@@ -279,7 +286,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     return () => {
       element?.removeEventListener('wheel', mouseWheelHandler)
     }
-  }, [onPanEnd, pressedKeys?.Meta, pressedKeys?.Control])
+  }, [onPanEnd])
 
   useLayoutEffect(() => {
     const element = timelineRef?.current
