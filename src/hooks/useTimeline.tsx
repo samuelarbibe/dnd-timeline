@@ -271,8 +271,6 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
 
       const isHorizontal = event.shiftKey
 
-      console.log(event)
-
       const panEndEvent: PanEndEvent = {
         deltaX: isHorizontal ? event.deltaX || event.deltaY : 0,
         deltaY: isHorizontal ? 0 : event.deltaY,
