@@ -11,6 +11,11 @@ import { useDraggable } from '@dnd-kit/core'
 
 import { Relevance } from '../types'
 import useTimelineContext from './useTimelineContext'
+import {
+  ResizeEndEvent,
+  ResizeMoveEvent,
+  ResizeStartEvent,
+} from './useTimeline'
 
 export type DragDirection = 'start' | 'end'
 
@@ -27,6 +32,9 @@ export type UseItemProps = Pick<
   'id' | 'relevance' | 'disabled' | 'background'
 > & {
   data?: object
+  onResizeEnd?: (event: ResizeEndEvent) => void
+  onResizeMove?: (event: ResizeMoveEvent) => void
+  onResizeStart?: (event: ResizeStartEvent) => void
 }
 
 const getDragDirection = (
@@ -59,10 +67,36 @@ export default function useItem(props: UseItemProps) {
     timeframe,
     overlayed,
     onResizeEnd,
+    onResizeMove,
+    onResizeStart,
     timelineDirection,
     millisecondsToPixels,
     getRelevanceFromDragEvent,
   } = useTimelineContext()
+
+  const onResizeEndCallback = useCallback(
+    (event: ResizeEndEvent) => {
+      onResizeEnd(event)
+      props.onResizeEnd?.(event)
+    },
+    [onResizeEnd, props]
+  )
+
+  const onResizeStartCallback = useCallback(
+    (event: ResizeStartEvent) => {
+      onResizeStart?.(event)
+      props.onResizeStart?.(event)
+    },
+    [onResizeStart, props]
+  )
+
+  const onResizeMoveCallback = useCallback(
+    (event: ResizeMoveEvent) => {
+      onResizeMove?.(event)
+      props.onResizeMove?.(event)
+    },
+    [onResizeMove, props]
+  )
 
   dataRef.current = {
     getRelevanceFromDragEvent,
@@ -113,6 +147,17 @@ export default function useItem(props: UseItemProps) {
         const newWidth = otherSideDelta - deltaX
         draggableProps.node.current.style.width = newWidth + 'px'
       }
+
+      onResizeMoveCallback({
+        delta: {
+          x: dragDeltaX,
+        },
+        direction: dragDirection,
+        active: {
+          id: props.id,
+          data: dataRef,
+        },
+      })
     }
 
     window.addEventListener('mousemove', mouseMoveHandler)
@@ -121,12 +166,14 @@ export default function useItem(props: UseItemProps) {
       window.removeEventListener('mousemove', mouseMoveHandler)
     }
   }, [
+    side,
     width,
     deltaX,
+    props.id,
     dragDirection,
-    draggableProps.node,
     timelineDirection,
-    side,
+    draggableProps.node,
+    onResizeMoveCallback,
   ])
 
   useLayoutEffect(() => {
@@ -135,23 +182,23 @@ export default function useItem(props: UseItemProps) {
     const mouseUpHandler = () => {
       if (!dragStartX.current || !draggableProps.node.current) return
 
-      let dragDelta = 0
+      let dragDeltaX = 0
 
       if (dragDirection === 'start') {
         const currentSideDelta = parseInt(
           draggableProps.node.current.style[side].slice(0, -2)
         )
-        dragDelta = currentSideDelta - deltaX
+        dragDeltaX = currentSideDelta - deltaX
       } else {
         const currentWidth = parseInt(
           draggableProps.node.current.style.width.slice(0, -2)
         )
-        dragDelta = currentWidth - width
+        dragDeltaX = currentWidth - width
       }
 
-      onResizeEnd({
+      onResizeEndCallback({
         delta: {
-          x: dragDelta,
+          x: dragDeltaX,
         },
         direction: dragDirection,
         active: {
@@ -176,10 +223,9 @@ export default function useItem(props: UseItemProps) {
     width,
     deltaX,
     props.id,
-    onResizeEnd,
     dragDirection,
-    setDragDirection,
     draggableProps.node,
+    onResizeEndCallback,
   ])
 
   const onPointerMove = useCallback(
@@ -214,14 +260,24 @@ export default function useItem(props: UseItemProps) {
       if (newDragDirection) {
         setDragDirection(newDragDirection)
         dragStartX.current = event.clientX
+
+        onResizeStartCallback({
+          active: {
+            id: props.id,
+            data: dataRef,
+          },
+          direction: newDragDirection,
+        })
       } else {
         draggableProps.listeners?.onPointerDown(event)
       }
     },
     [
+      props.id,
       props.disabled,
       timelineDirection,
       draggableProps.node,
+      onResizeStartCallback,
       draggableProps.listeners,
     ]
   )

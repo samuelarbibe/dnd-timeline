@@ -9,14 +9,15 @@ export { default as useTimelineContext } from './hooks/useTimelineContext'
 export type { RowDefinition, UseRowProps } from './hooks/useRow'
 export type { ItemDefinition, UseItemProps } from './hooks/useItem'
 export type {
-  TimelineContextStandalone,
   timelineContext,
+  TimelineContextStandalone,
 } from './store/Timeline'
 export type {
   TimelineBag,
   UseTimelineProps,
   ResizeEndEvent,
-  OnItemsChanged,
+  ResizeMoveEvent,
+  ResizeStartEvent,
   OnTimeframeChanged,
   GridSizeDefinition,
   PixelsToMilliseconds,

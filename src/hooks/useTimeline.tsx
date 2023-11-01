@@ -17,15 +17,22 @@ import {
 } from '@dnd-kit/core'
 import { addMilliseconds, differenceInMilliseconds } from 'date-fns'
 
-import { DragDirection, ItemDefinition } from './useItem'
+import { DragDirection } from './useItem'
 
 import { Relevance, Timeframe } from '../types'
 
-export type ResizeEndEvent = {
+export type ResizeMoveEvent = {
   active: Omit<Active, 'rect'>
   delta: {
     x: number
   }
+  direction: DragDirection
+}
+
+export type ResizeEndEvent = ResizeMoveEvent
+
+export type ResizeStartEvent = {
+  active: Omit<Active, 'rect'>
   direction: DragDirection
 }
 
@@ -40,7 +47,11 @@ export type GetRelevanceFromDragEvent = (
 
 export type GetDateFromScreenX = (screenX: number) => Date
 
+export type OnResizeStart = (event: ResizeStartEvent) => void
+
 export type OnResizeEnd = (event: ResizeEndEvent) => void
+
+export type OnResizeMove = (event: ResizeMoveEvent) => void
 
 export type OnPanEnd = (deltaX: number, deltaY: number) => void
 
@@ -53,6 +64,8 @@ export type TimelineBag = {
   overlayed: boolean
   sidebarWidth: number
   onResizeEnd: OnResizeEnd
+  onResizeMove?: OnResizeMove
+  onResizeStart?: OnResizeStart
   timeframeGridSize?: number
   timelineDirection: CanvasDirection
   setTimelineRef: React.RefObject<HTMLDivElement>
@@ -62,11 +75,6 @@ export type TimelineBag = {
   getDateFromScreenX: GetDateFromScreenX
   getRelevanceFromDragEvent: GetRelevanceFromDragEvent
 }
-
-export type OnItemsChanged = (
-  itemId: string,
-  updateFunction: (prev: ItemDefinition) => ItemDefinition
-) => void
 
 export type OnTimeframeChanged = (
   updateFunction: (prev: Timeframe) => Timeframe
@@ -81,6 +89,8 @@ export interface UseTimelineProps {
   timeframe: Timeframe
   overlayed?: boolean
   onResizeEnd: OnResizeEnd
+  onResizeMove?: OnResizeMove
+  onResizeStart?: OnResizeStart
   onTimeframeChanged: OnTimeframeChanged
   timeframeGridSize?: number | GridSizeDefinition[]
 }
@@ -93,7 +103,12 @@ const style: CSSProperties = {
 }
 
 export default function useTimeline(props: UseTimelineProps): TimelineBag {
-  const { onTimeframeChanged, onResizeEnd: onResizeEndCallback } = props
+  const {
+    onTimeframeChanged,
+    onResizeMove,
+    onResizeStart,
+    onResizeEnd: onResizeEndCallback,
+  } = props
 
   const timelineRef = useRef<HTMLDivElement>(null)
   const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
@@ -306,6 +321,8 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     () => ({
       style,
       onResizeEnd,
+      onResizeMove,
+      onResizeStart,
       sidebarWidth,
       setSidebarWidth,
       pixelsToMilliseconds,
@@ -320,6 +337,8 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     }),
     [
       onResizeEnd,
+      onResizeMove,
+      onResizeStart,
       sidebarWidth,
       setSidebarWidth,
       pixelsToMilliseconds,

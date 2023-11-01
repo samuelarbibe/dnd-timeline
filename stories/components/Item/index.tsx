@@ -23,12 +23,7 @@ function Item(props: ItemProps) {
     itemContentStyle,
   } = useItem({
     id: props.id,
-    disabled: props.disabled,
     relevance: props.relevance,
-    background: props.background,
-    data: {
-      type: 'timeline-item',
-    },
   })
 
   const classes = useMemo(

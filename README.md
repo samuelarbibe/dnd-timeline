@@ -1,9 +1,8 @@
-# `dnd-timeline` [![npm version](https://badge.fury.io/js/dnd-timeline.svg)](https://npmjs.com/dnd-timeline)  
+# `dnd-timeline` [![npm version](https://badge.fury.io/js/dnd-timeline.svg)](https://npmjs.com/dnd-timeline)
 
-### [Example Implementation](https://github.com/samuelarbibe/timeline)  
-  
+### [Example Implementation](https://github.com/samuelarbibe/timeline)
+
 ### [Storybook](http://main--6496bc4344e173caa1c38272.chromatic.com/?path=/docs/stories-overview--docs)
-
 
 #### A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
 
@@ -13,7 +12,7 @@
 - **Based on [`dnd-kit`](https://docs.dndkit.com/):** all features exposed by the [`dnd-kit`](https://docs.dndkit.com/) library are applicable to dnd-timeline.
 - **Performant:** renders only when needed. All the intermediate states and animations are done using css transformations, and require 0 re-renders.
 - **RTL:** `dnd-timeline` nativly supports RTL. simply declare one of the parent divs as rtl with `dir="rtl"`, and thats it.
-  
+
 ![2023-07-09 20 31 30](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/d5be60a3-d06f-4950-8db6-ff78fffbce88)
 
 ## Features
@@ -61,9 +60,9 @@ This is true for all `dnd-kit` supported handlers:
 
 `dnd-timeline` adds a set of 4 more handlers, to handle the resize event:
 
-- `onResizeStart` (WIP)
+- `onResizeStart`
 - `onResizeEnd`
-- `onResizeMove` (WIP)
+- `onResizeMove`
 - `onResizeCancel` (WIP)
 
 These events act just like the `dnd-kit` event, except that the event looks a bit different:
@@ -91,15 +90,31 @@ const onResizeEnd = (event: ResizeEndEvent) => {
 }
 ```
 
+You can also pass resize event callbacks to the `useItem` hook:
+
+```tsx
+useItem({
+  id: props.id,
+  relevance: props.relevance,
+  onResizeStart,
+  onResizeMove,
+  onResizeEnd,
+  data: {
+    type: 'timeline-item',
+    // ...or any data you want to pass
+  },
+})
+```
+
 ### External items
 
-To handle external items, you will need to pass the dnd-timeline's helpers when defining your draggabale items:
+To handle external items, you will need to manually pass the dnd-timeline's helpers when defining your draggabale items:
 
 ```tsx
 const { getRelevanceFromDragEvent, millisecondsToPixels } = useTimelineContext()
 
 const { attributes, isDragging, listeners, setNodeRef, transform, transition } =
-  useItem({
+  useDraggable({
     id: props.id,
     disabled: props.disabled,
     data: {
