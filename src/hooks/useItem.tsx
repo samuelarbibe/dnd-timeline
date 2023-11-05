@@ -72,6 +72,7 @@ export default function useItem(props: UseItemProps) {
     timelineDirection,
     millisecondsToPixels,
     getRelevanceFromDragEvent,
+    getRelevanceFromResizeEvent,
   } = useTimelineContext()
 
   const onResizeEndCallback = useCallback(
@@ -100,6 +101,7 @@ export default function useItem(props: UseItemProps) {
 
   dataRef.current = {
     getRelevanceFromDragEvent,
+    getRelevanceFromResizeEvent,
     relevance: props.relevance,
     ...(props.data || {}),
   }

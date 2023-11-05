@@ -112,14 +112,16 @@ function TimelineWrapper(props: TimelineWrapperProps) {
   const onDragMove = useCallback(
     (event: DragMoveEvent) =>
       setDraggedItemTempRelevance(
-        event.active.data.current?.getRelevanceFromDragEvent(event)
+        event.active.data.current?.getRelevanceFromDragEvent?.(event)
       ),
     []
   )
 
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {
-      const updatedRelevance = event.active.data.current?.relevance
+      const updatedRelevance =
+        event.active.data.current?.getRelevanceFromResizeEvent?.(event)
+
       if (!updatedRelevance) return
 
       const activeItemId = event.active.id

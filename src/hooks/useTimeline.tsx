@@ -45,6 +45,10 @@ export type GetRelevanceFromDragEvent = (
   event: DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent
 ) => Relevance | null
 
+export type GetRelevanceFromResizeEvent = (
+  event: ResizeEndEvent | ResizeMoveEvent
+) => Relevance | null
+
 export type GetDateFromScreenX = (screenX: number) => Date
 
 export type OnResizeStart = (event: ResizeStartEvent) => void
@@ -74,6 +78,7 @@ export type TimelineBag = {
   pixelsToMilliseconds: PixelsToMilliseconds
   getDateFromScreenX: GetDateFromScreenX
   getRelevanceFromDragEvent: GetRelevanceFromDragEvent
+  getRelevanceFromResizeEvent: GetRelevanceFromResizeEvent
 }
 
 export type OnTimeframeChanged = (
@@ -103,12 +108,7 @@ const style: CSSProperties = {
 }
 
 export default function useTimeline(props: UseTimelineProps): TimelineBag {
-  const {
-    onTimeframeChanged,
-    onResizeMove,
-    onResizeStart,
-    onResizeEnd: onResizeEndCallback,
-  } = props
+  const { onTimeframeChanged, onResizeMove, onResizeStart, onResizeEnd } = props
 
   const timelineRef = useRef<HTMLDivElement>(null)
   const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
@@ -230,21 +230,26 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     [getDateFromScreenX, snapDateToTimeframeGrid, timelineDirection]
   )
 
-  const onResizeEnd = useCallback(
-    (event: ResizeEndEvent) => {
+  const getRelevanceFromResizeEvent = useCallback<GetRelevanceFromResizeEvent>(
+    (event) => {
       if (event.active.data.current?.relevance) {
-        const prevRelevance = event.active.data.current?.relevance
+        const prevRelevance = event.active.data.current.relevance
         const deltaInMilliseconds = pixelsToMilliseconds(event.delta.x)
 
-        event.active.data.current.relevance[event.direction] =
-          snapDateToTimeframeGrid(
-            addMilliseconds(prevRelevance[event.direction], deltaInMilliseconds)
-          )
+        const updatedRelevance: Relevance = {
+          ...event.active.data.current.relevance,
+        }
+
+        updatedRelevance[event.direction] = snapDateToTimeframeGrid(
+          addMilliseconds(prevRelevance[event.direction], deltaInMilliseconds)
+        )
+
+        return updatedRelevance
       }
 
-      onResizeEndCallback(event)
+      return null
     },
-    [pixelsToMilliseconds, snapDateToTimeframeGrid, onResizeEndCallback]
+    [pixelsToMilliseconds, snapDateToTimeframeGrid]
   )
 
   const onPanEnd = useCallback(
@@ -334,6 +339,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       timeframeGridSize,
       getDateFromScreenX,
       getRelevanceFromDragEvent,
+      getRelevanceFromResizeEvent,
     }),
     [
       onResizeEnd,
@@ -349,6 +355,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       timeframeGridSize,
       getDateFromScreenX,
       getRelevanceFromDragEvent,
+      getRelevanceFromResizeEvent,
     ]
   )
 
