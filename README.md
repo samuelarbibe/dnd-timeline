@@ -1,7 +1,5 @@
 # `dnd-timeline` [![npm version](https://badge.fury.io/js/dnd-timeline.svg)](https://npmjs.com/dnd-timeline)
 
-### [Example Implementation](https://github.com/samuelarbibe/timeline)
-
 ### [Storybook](http://main--6496bc4344e173caa1c38272.chromatic.com/?path=/docs/stories-overview--docs)
 
 #### A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
@@ -42,10 +40,8 @@ const onDragEnd = (event: DragEndEvent) => {
 
   const activeItemId = event.active.id
 
-  const getRelevanceFromDragEvent =
-    event.active?.data?.current?.getRelevanceFromDragEvent
-
-  const updatedRelevance = getRelevanceFromDragEvent(event)
+  const updatedRelevance =
+    event.active?.data?.current?.getRelevanceFromDragEvent(event)
 
   // update item with id activeItemId with the updatedRelevance, or the updated row using overedId
 }
@@ -77,11 +73,13 @@ type ResizeEvent = {
 }
 ```
 
-The resize events' data already contains the updated relevance.
+The resize events' data also contain a `getRelevanceFromResizeEvent` that you can use to infer the updated relevance:
 
 ```tsx
 const onResizeEnd = (event: ResizeEndEvent) => {
-  const updatedRelevance = event.active.data.current?.relevance
+  const updatedRelevance =
+    event.active.data.current?.getRelevanceFromResizeEvent(event)
+
   if (!updatedRelevance) return
 
   const activeItemId = event.active.id
