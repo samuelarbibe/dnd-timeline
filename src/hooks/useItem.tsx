@@ -292,7 +292,6 @@ export default function useItem(props: UseItemProps) {
     [side]: deltaX,
     cursor,
     height: '100%',
-    zIndex: props.disabled ? 0 : props.background ? 1 : 2,
     ...(!(draggableProps.isDragging && overlayed) && {
       transform: CSS.Translate.toString(draggableProps.transform),
     }),
