@@ -24,6 +24,9 @@ function Item(props: ItemProps) {
   } = useItem({
     id: props.id,
     relevance: props.relevance,
+    data: {
+      type: 'timeline-item',
+    },
   })
 
   const classes = useMemo(
