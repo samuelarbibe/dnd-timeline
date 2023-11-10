@@ -72,7 +72,8 @@ export type TimelineBag = {
   onResizeStart?: OnResizeStart
   timeframeGridSize?: number
   timelineDirection: CanvasDirection
-  setTimelineRef: React.RefObject<HTMLDivElement>
+  timelineRef: React.MutableRefObject<HTMLElement | null>
+  setTimelineRef: (element: HTMLElement | null) => void
   setSidebarWidth: React.Dispatch<React.SetStateAction<number>>
   millisecondsToPixels: MillisecondsToPixels
   pixelsToMilliseconds: PixelsToMilliseconds
@@ -107,16 +108,52 @@ const style: CSSProperties = {
   flexDirection: 'column',
 }
 
+function useTimelineRef() {
+  const ref = useRef<HTMLElement | null>(null)
+  const [width, setWidth] = useState(0)
+  const [direction, setDirection] = useState<CanvasDirection>('ltr')
+
+  const resizeObserver = useRef<ResizeObserver>()
+
+  const setRef = useCallback((element: HTMLElement | null) => {
+    if (element !== ref.current) {
+      resizeObserver.current?.disconnect()
+
+      if (element) {
+        resizeObserver.current = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            setWidth(entry.contentRect.width)
+          }
+        })
+
+        resizeObserver.current.observe(element)
+
+        setDirection(getComputedStyle(element).direction as CanvasDirection)
+      }
+    }
+    ref.current = element
+  }, [])
+
+  return {
+    ref,
+    setRef,
+    width,
+    direction,
+  }
+}
+
 export default function useTimeline(props: UseTimelineProps): TimelineBag {
   const { onTimeframeChanged, onResizeMove, onResizeStart, onResizeEnd } = props
 
-  const timelineRef = useRef<HTMLDivElement>(null)
+  const [sidebarWidth, setSidebarWidth] = useState(0)
   const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
 
-  const [timelineWidth, setTimelineWidth] = useState(0)
-  const [sidebarWidth, setSidebarWidth] = useState(0)
-  const [timelineDirection, setTimelineDirection] =
-    useState<CanvasDirection>('ltr')
+  const {
+    ref: timelineRef,
+    setRef: setTimelineRef,
+    width: timelineWidth,
+    direction: timelineDirection,
+  } = useTimelineRef()
 
   const timelineViewportWidth = timelineWidth - sidebarWidth
 
@@ -188,6 +225,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       )
     },
     [
+      timelineRef,
       sidebarWidth,
       timelineDirection,
       pixelsToMilliseconds,
@@ -304,23 +342,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     return () => {
       element?.removeEventListener('wheel', mouseWheelHandler)
     }
-  }, [onPanEnd])
-
-  useLayoutEffect(() => {
-    const element = timelineRef?.current
-    if (!element) return
-
-    setTimelineDirection(getComputedStyle(element).direction as CanvasDirection)
-
-    const observer = new ResizeObserver(() => {
-      setTimelineWidth(element.clientWidth)
-    })
-
-    observer.observe(element)
-    return () => {
-      observer.disconnect()
-    }
-  }, [setTimelineWidth])
+  }, [onPanEnd, timelineRef])
 
   const value = useMemo<TimelineBag>(
     () => ({
@@ -332,7 +354,8 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       setSidebarWidth,
       pixelsToMilliseconds,
       millisecondsToPixels,
-      setTimelineRef: timelineRef,
+      timelineRef,
+      setTimelineRef,
       overlayed: !!props.overlayed,
       timelineDirection,
       timeframe: props.timeframe,
@@ -346,12 +369,13 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       onResizeMove,
       onResizeStart,
       sidebarWidth,
-      setSidebarWidth,
       pixelsToMilliseconds,
       millisecondsToPixels,
+      timelineRef,
+      setTimelineRef,
+      props.overlayed,
       props.timeframe,
       timelineDirection,
-      props.overlayed,
       timeframeGridSize,
       getDateFromScreenX,
       getRelevanceFromDragEvent,
