@@ -1,6 +1,6 @@
 # `dnd-timeline` [![npm version](https://badge.fury.io/js/dnd-timeline.svg)](https://npmjs.com/dnd-timeline)
 
-### [Storybook](http://main--6496bc4344e173caa1c38272.chromatic.com/?path=/docs/stories-overview--docs)
+# [Documentation](https://samuel-arbibe.gitbook.io/dnd-timeline/)
 
 #### A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
 
