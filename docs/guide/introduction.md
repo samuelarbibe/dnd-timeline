@@ -8,7 +8,4 @@ That means that no css/html is taken care of for you! You are responsible fully 
 
 
 
-
-
-
-
+Lets get started 🚀
