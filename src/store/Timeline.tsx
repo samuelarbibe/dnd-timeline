@@ -6,7 +6,7 @@ import useTimeline, {
   TimelineBag,
 } from '../hooks/useTimeline'
 
-export interface TimelineContextStandalone
+export interface TimelineContextProps
   extends PropsWithChildren,
     UseTimelineProps,
     DndContextProps {}
@@ -15,13 +15,13 @@ export const timelineContext = createContext<TimelineBag>({} as TimelineBag)
 
 export const TimelineProvider = timelineContext.Provider
 
-const TimelineProviderInner = (props: TimelineContextStandalone) => {
+const TimelineProviderInner = (props: TimelineContextProps) => {
   const timeline = useTimeline(props)
 
   return <TimelineProvider value={timeline}>{props.children}</TimelineProvider>
 }
 
-export const Timeline = (props: TimelineContextStandalone) => {
+export const TimelineContext = (props: TimelineContextProps) => {
   return (
     <DndContext {...props}>
       <TimelineProviderInner {...props}>{props.children}</TimelineProviderInner>
