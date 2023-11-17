@@ -55,7 +55,7 @@ For example, the `onDragEnd` event is called with extra data:
 }
 </code></pre>
 
-This is true for all `dnd-kit` supported handlers:
+This is the same for all `dnd-kit` supported handlers:
 
 * `onDragStart`
 * `onDragEnd`
@@ -100,3 +100,115 @@ The resize events' data also contain a `getRelevanceFromResizeEvent` that you ca
 </code></pre>
 
 We will later understand how these function are passed, and how you can manually pass them for custom interactions.
+
+#### onResizeStart?
+
+```tsx
+onResizeMove?: (event: ResizeStartEvent) => void
+```
+
+```tsx
+type ResizeStartEvent = {
+  active: Omit<Active, 'rect'>
+  direction: DragDirection // 'start' | 'end'
+}
+```
+
+#### onResizeMove?
+
+```tsx
+onResizeMove?: (event: ResizeMoveEvent) => void
+```
+
+```tsx
+type ResizeMoveEvent = {
+  active: Omit<Active, 'rect'>
+  delta: {
+    x: number
+  }
+  direction: DragDirection // 'start' | 'end'
+}
+```
+
+#### onResizeEnd?
+
+```tsx
+onResizeMove?: (event: ResizeEndEvent) => void
+```
+
+```tsx
+type ResizeEndEvent = {
+  active: Omit<Active, 'rect'>
+  delta: {
+    x: number
+  }
+  direction: DragDirection // 'start' | 'end'
+}
+```
+
+### Usage
+
+You will need to wrap your timeline and all of its component in a `<TimelineContext>`
+
+{% code title="App.tsx" overflow="wrap" %}
+```tsx
+function App(){
+  const [row, setRow] = useRows()
+  const [items, setItems] = useItems()
+  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME)
+  
+  const onResizeEnd = useCallback((event: ResizeEndEvent) => {
+      const updatedRelevance =
+        event.active.data.current?.getRelevanceFromResizeEvent?.(event)
+  
+      if (!updatedRelevance) return
+  
+      const activeItemId = event.active.id
+  
+// Only update the changed item. This will cause only the changed items to re-render
+      setItems((prev) => prev.map((item) => {
+          if (item.id !== activeItemId) return item
+  
+          return {
+            ...item,
+            relevance: updatedRelevance,
+          }
+      }))
+    }, [setItems])
+  
+  return (
+    <TimelineContext
+      onResizeEnd={onResizeEnd}
+      timeframe={timeframe}
+      onTimeframeChanged={setTimeframe}
+    >
+      <Timeline rows={rows} items={items} />
+    </TimelineContext>
+  )
+}
+```
+{% endcode %}
+
+You will need to create a `<Timeline />` component to use the useTimelineContext inside of it.
+
+{% code title="Timeline.tsx" %}
+```tsx
+function Timeline(props: TimelineProps){
+  const { setTimelineRef, style } = useTimelineContext()
+  
+  return (
+    <div ref={setTimelineRef} style={style}>
+      {props.rows.map((row) => 
+        // Render rows here...
+      )}
+    </div>
+  )
+}
+```
+{% endcode %}
+
+You can learn how to render rows here:
+
+{% content-ref url="../row/" %}
+[row](../row/)
+{% endcontent-ref %}

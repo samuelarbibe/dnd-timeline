@@ -12,3 +12,8 @@
 
 * [TimelineContext](api-documentation/timelinecontext/README.md)
   * [useTimelineContext](api-documentation/timelinecontext/usetimelinecontext.md)
+* [Row](api-documentation/row/README.md)
+  * [useRow](api-documentation/row/userow.md)
+  * [Subrow](api-documentation/row/subrow.md)
+* [Item](api-documentation/item/README.md)
+  * [useItem](api-documentation/item/useitem.md)
