@@ -153,7 +153,7 @@ You will need to wrap your timeline and all of its component in a `<TimelineCont
 {% code title="App.tsx" overflow="wrap" %}
 ```tsx
 function App(){
-  const [row, setRow] = useRows()
+  const [rows, setRows] = useRows()
   const [items, setItems] = useItems()
   const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME)
   

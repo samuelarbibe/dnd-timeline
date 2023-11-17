@@ -9,14 +9,14 @@ Each item in that stack should be rendered inside a subrow of some kind, that wi
 <pre class="language-tsx" data-title="Timeline.tsx"><code class="lang-tsx">function Timeline(props: TimelineProps) {  
   const { setTimelineRef, style, timeframe } = useTimelineContext()
 
-  const groupedRows = useMemo(
+  const groupedSubrows = useMemo(
 <strong>    () => groupItemsToSubrows(items, timeframe),
-</strong>    [items, timeline.timeframe]
+</strong>    [items, timeframe]
   )
 
   return (
     &#x3C;div ref={setTimelineRef} style={style}>
-      {rows.map((row) => 
+      {props.rows.map((row) => 
         &#x3C;Row key={row.id} id={row.id} sidebar={&#x3C;Sidebar row={row} />}>
           {groupedSubrows[row.id]?.map((subrow, index) => 
             &#x3C;div key={`${row.id}-${index}`}>
