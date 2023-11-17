@@ -74,7 +74,6 @@ export const generateItems = (
       const row = rows[Math.ceil(Math.random() * rows.length - 1)]
       const rowId = row.id
       const disabled = row.disabled || options?.disabled
-      const background = options?.background
 
       const relevance = generateRandomRelevance(
         timeframe,
@@ -83,7 +82,6 @@ export const generateItems = (
       )
 
       let id = `item-${nanoid(4)}`
-      if (background) id += ' (bg)'
       if (disabled) id += ' (disabled)'
 
       return {
@@ -91,7 +89,6 @@ export const generateItems = (
         rowId,
         relevance,
         disabled,
-        background,
       }
     })
 }
@@ -104,10 +101,8 @@ export const generateListItems = (
     .fill(0)
     .map((): ListItemDefinition => {
       const disabled = options?.disabled
-      const background = options?.background
 
       let id = `list-item-${nanoid(4)}`
-      if (background) id += ' (bg)'
       if (disabled) id += ' (disabled)'
 
       const duration = getRandomInRange(
@@ -119,7 +114,6 @@ export const generateListItems = (
         id,
         duration,
         disabled,
-        background,
       }
     })
 }
