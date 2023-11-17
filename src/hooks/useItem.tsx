@@ -24,12 +24,11 @@ export type ItemDefinition = {
   rowId: string
   disabled?: boolean
   relevance: Relevance
-  background?: boolean
 }
 
 export type UseItemProps = Pick<
   ItemDefinition,
-  'id' | 'relevance' | 'disabled' | 'background'
+  'id' | 'relevance' | 'disabled'
 > & {
   data?: object
   onResizeEnd?: (event: ResizeEndEvent) => void

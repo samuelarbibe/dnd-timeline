@@ -10,10 +10,9 @@ export const groupItemsToSubrows = (
 
   return sortedItems.reduce((acc, item) => {
     if (
-      item.background ||
-			(timeframe &&
-				(item.relevance.start >= timeframe.end ||
-					item.relevance.end <= timeframe.start))
+      timeframe &&
+      (item.relevance.start >= timeframe.end ||
+        item.relevance.end <= timeframe.start)
     )
       return acc
 
@@ -43,8 +42,8 @@ export const groupItemsToRows = (
   return items.reduce((acc, item) => {
     if (
       timeframe &&
-			(item.relevance.start >= timeframe.end ||
-				item.relevance.end <= timeframe.start)
+      (item.relevance.start >= timeframe.end ||
+        item.relevance.end <= timeframe.start)
     )
       return acc
 
