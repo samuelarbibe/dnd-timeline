@@ -57,3 +57,53 @@ getDateFromScreenX: (screenX: number) => Date
 A helper function that x position in the client's screen, and returns a date represenation of that position, in relation to the timeline's container element.
 
 > 🧠 It can be used to infer a time value from a mouse event. For example, you can use it to extract a date from a click event on the timeline.
+
+#### `getRelevanceFromDragEvent`
+
+```typescript
+getRelevanceFromDragEvent: (event: DragEvent) => Relevance | null
+```
+
+A function that extracts relevance from a drag event. The drag event type can be one of the following:
+
+{% code overflow="wrap" %}
+```tsx
+type DragEvent = DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent
+```
+{% endcode %}
+
+This function is injected into all of dnd-kit's events, and allowes you to infer the dragged item's relevance from the event object. For example:
+
+<pre class="language-tsx"><code class="lang-tsx">const onDragEnd = (event: DragEndEvent) => {
+  const updatedRelevance =
+<strong>    event.active?.data?.current?.getRelevanceFromDragEvent(event)
+</strong>    
+  // update your state using the updated relevance.
+}
+</code></pre>
+
+#### `getRelevanceFromResizeEvent`
+
+```typescript
+getRelevanceFromResizeEvent: (event: ResizeEvent) => Relevance | null
+```
+
+A function that extracts relevance from a drag event. The drag event type can be one of the following:
+
+{% code overflow="wrap" %}
+```tsx
+type ResizeEvent = ResizeStartEvent | ResizeMoveEvent | ResizeEndEvent
+```
+{% endcode %}
+
+This function is injected into all of dnd-timeline's resize events, and allowes you to infer the dragged item's relevance from the event object. For example:
+
+<pre class="language-tsx"><code class="lang-tsx">const onResizeEnd = (event: ResizeEndEvent) => {
+  const updatedRelevance =
+<strong>    event.active?.data?.current?.getRelevanceFromResizeEvent(event)
+</strong>    
+  // update your state using the updated relevance.
+}
+</code></pre>
+
+&#x20;
