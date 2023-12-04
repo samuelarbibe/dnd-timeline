@@ -40,7 +40,8 @@ function Timeline(props: TimelineProps) {
       style={{
         ...style,
         height: 400,
-        overflow: "auto",
+        overflowY: "auto",
+        overflowX: "hidden",
         border: "1px solid white",
       }}
     >
