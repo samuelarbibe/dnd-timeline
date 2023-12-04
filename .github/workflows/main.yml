@@ -3,20 +3,10 @@ on:
     tags:
       - 'v*'
 
-name: Create Release
+name: Release
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: npm ci
-
   publish:
-    needs: build
     name: Publish to npm
     runs-on: ubuntu-latest
     steps:
