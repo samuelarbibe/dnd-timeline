@@ -49,6 +49,12 @@
       "limit": "200 KB"
     }
   ],
+  "dependencies": {
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/modifiers": "^6.0.1",
+    "date-fns": "^2.30.0",
+    "resize-observer-polyfill": "^1.5.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
@@ -95,12 +101,6 @@
     "tslib": "^2.5.3",
     "typescript": "^5.1.3",
     "vite": "^4.3.9"
-  },
-  "dependencies": {
-    "@dnd-kit/core": "^6.0.8",
-    "@dnd-kit/modifiers": "^6.0.1",
-    "date-fns": "^2.30.0",
-    "resize-observer-polyfill": "^1.5.1"
   },
   "readme": "ERROR: No README data found!"
 }
