@@ -37,6 +37,8 @@ export type ResizeStartEvent = {
 }
 
 export type PanEndEvent = {
+  clientX: number
+  clientY: number
   deltaX: number
   deltaY: number
 }
@@ -56,8 +58,6 @@ export type OnResizeStart = (event: ResizeStartEvent) => void
 export type OnResizeEnd = (event: ResizeEndEvent) => void
 
 export type OnResizeMove = (event: ResizeMoveEvent) => void
-
-export type OnPanEnd = (deltaX: number, deltaY: number) => void
 
 export type PixelsToMilliseconds = (pixels: number) => number
 export type MillisecondsToPixels = (milliseconds: number) => number
@@ -299,15 +299,38 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
         pixelsToMilliseconds(event.deltaY) *
         (timelineDirection === 'rtl' ? -1 : 1)
 
-      const startDelta = deltaYInMilliseconds + deltaXInMilliseconds
-      const endDelta = -deltaYInMilliseconds + deltaXInMilliseconds
+      const timeframeDuration = differenceInMilliseconds(
+        props.timeframe.start,
+        props.timeframe.end
+      )
+
+      const startBias =
+        differenceInMilliseconds(
+          props.timeframe.start,
+          getDateFromScreenX(event.clientX)
+        ) / timeframeDuration
+      const endBias =
+        differenceInMilliseconds(
+          getDateFromScreenX(event.clientX),
+          props.timeframe.end
+        ) / timeframeDuration
+
+      const startDelta = deltaYInMilliseconds * startBias + deltaXInMilliseconds
+      const endDelta = -deltaYInMilliseconds * endBias + deltaXInMilliseconds
 
       onTimeframeChanged((prev) => ({
         start: addMilliseconds(prev.start, startDelta),
         end: addMilliseconds(prev.end, endDelta),
       }))
     },
-    [pixelsToMilliseconds, onTimeframeChanged, timelineDirection]
+    [
+      pixelsToMilliseconds,
+      timelineDirection,
+      props.timeframe.start,
+      props.timeframe.end,
+      getDateFromScreenX,
+      onTimeframeChanged,
+    ]
   )
 
   const onDragStart = useCallback(() => {
@@ -330,6 +353,8 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       const isHorizontal = event.shiftKey
 
       const panEndEvent: PanEndEvent = {
+        clientX: event.clientX,
+        clientY: event.clientY,
         deltaX: isHorizontal ? event.deltaX || event.deltaY : 0,
         deltaY: isHorizontal ? 0 : event.deltaY,
       }
