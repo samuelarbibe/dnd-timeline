@@ -1,11 +1,4 @@
-import {
-  useRef,
-  useMemo,
-  useState,
-  useCallback,
-  CSSProperties,
-  useLayoutEffect,
-} from 'react'
+import { useRef, useMemo, useState, useCallback, CSSProperties } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
 import {
   Active,
@@ -20,6 +13,7 @@ import { addMilliseconds, differenceInMilliseconds } from 'date-fns'
 import { DragDirection } from './useItem'
 
 import { Relevance, Timeframe } from '../types'
+import { UsePanStrategy, useWheelStrategy } from '../utils/panStrategies'
 
 export type ResizeMoveEvent = {
   active: Omit<Active, 'rect'>
@@ -37,8 +31,8 @@ export type ResizeStartEvent = {
 }
 
 export type PanEndEvent = {
-  clientX: number
-  clientY: number
+  clientX?: number
+  clientY?: number
   deltaX: number
   deltaY: number
 }
@@ -58,6 +52,8 @@ export type OnResizeStart = (event: ResizeStartEvent) => void
 export type OnResizeEnd = (event: ResizeEndEvent) => void
 
 export type OnResizeMove = (event: ResizeMoveEvent) => void
+
+export type OnPanEnd = (event: PanEndEvent) => void
 
 export type PixelsToMilliseconds = (pixels: number) => number
 export type MillisecondsToPixels = (milliseconds: number) => number
@@ -97,8 +93,9 @@ export interface UseTimelineProps {
   onResizeEnd: OnResizeEnd
   onResizeMove?: OnResizeMove
   onResizeStart?: OnResizeStart
+  usePanStrategy?: UsePanStrategy
   onTimeframeChanged: OnTimeframeChanged
-  timeframeGridSize?: number | GridSizeDefinition[]
+  timeframeGridSizeDefinition?: number | GridSizeDefinition[]
 }
 
 const style: CSSProperties = {
@@ -142,11 +139,18 @@ function useTimelineRef() {
   }
 }
 
-export default function useTimeline(props: UseTimelineProps): TimelineBag {
-  const { onTimeframeChanged, onResizeMove, onResizeStart, onResizeEnd } = props
-
+export default function useTimeline({
+  timeframe,
+  onResizeEnd,
+  onResizeStart,
+  onResizeMove,
+  overlayed = false,
+  onTimeframeChanged,
+  timeframeGridSizeDefinition,
+  usePanStrategy = useWheelStrategy,
+}: UseTimelineProps): TimelineBag {
   const [sidebarWidth, setSidebarWidth] = useState(0)
-  const dragStartTimeframe = useRef<Timeframe>(props.timeframe)
+  const dragStartTimeframe = useRef<Timeframe>(timeframe)
 
   const {
     ref: timelineRef,
@@ -158,11 +162,10 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
   const timelineViewportWidth = timelineWidth - sidebarWidth
 
   const timeframeGridSize = useMemo(() => {
-    if (Array.isArray(props.timeframeGridSize)) {
-      const gridSizes = props.timeframeGridSize as GridSizeDefinition[]
+    if (Array.isArray(timeframeGridSizeDefinition)) {
+      const gridSizes = timeframeGridSizeDefinition as GridSizeDefinition[]
 
-      const timeframeSize =
-        props.timeframe.end.getTime() - props.timeframe.start.getTime()
+      const timeframeSize = timeframe.end.getTime() - timeframe.start.getTime()
 
       const sortedTimeframeGridSizes = [...gridSizes]
       sortedTimeframeGridSizes.sort((a, b) => a.value - b.value)
@@ -173,27 +176,27 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       )?.value
     }
 
-    return props.timeframeGridSize
-  }, [props.timeframe, props.timeframeGridSize])
+    return timeframeGridSizeDefinition
+  }, [timeframe, timeframeGridSizeDefinition])
 
   const millisecondsToPixels = useCallback<MillisecondsToPixels>(
     (milliseconds: number) => {
       const msToPixel =
         timelineViewportWidth /
-        differenceInMilliseconds(props.timeframe.end, props.timeframe.start)
+        differenceInMilliseconds(timeframe.end, timeframe.start)
       return milliseconds * msToPixel
     },
-    [timelineViewportWidth, props.timeframe]
+    [timelineViewportWidth, timeframe]
   )
 
   const pixelsToMilliseconds = useCallback<PixelsToMilliseconds>(
     (pixels: number) => {
       const pixelToMs =
-        differenceInMilliseconds(props.timeframe.end, props.timeframe.start) /
+        differenceInMilliseconds(timeframe.end, timeframe.start) /
         timelineViewportWidth
       return pixels * pixelToMs
     },
-    [props.timeframe, timelineViewportWidth]
+    [timeframe, timelineViewportWidth]
   )
 
   const snapDateToTimeframeGrid = useCallback(
@@ -221,7 +224,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
         pixelsToMilliseconds(deltaX) * (timelineDirection === 'rtl' ? -1 : 1)
 
       return snapDateToTimeframeGrid(
-        addMilliseconds(props.timeframe.start, deltaInMilliseconds)
+        addMilliseconds(timeframe.start, deltaInMilliseconds)
       )
     },
     [
@@ -229,7 +232,7 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       sidebarWidth,
       timelineDirection,
       pixelsToMilliseconds,
-      props.timeframe.start,
+      timeframe.start,
       snapDateToTimeframeGrid,
     ]
   )
@@ -290,8 +293,8 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     [pixelsToMilliseconds, snapDateToTimeframeGrid]
   )
 
-  const onPanEnd = useCallback(
-    (event: PanEndEvent) => {
+  const onPanEnd = useCallback<OnPanEnd>(
+    (event) => {
       const deltaXInMilliseconds =
         pixelsToMilliseconds(event.deltaX) *
         (timelineDirection === 'rtl' ? -1 : 1)
@@ -300,20 +303,22 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
         (timelineDirection === 'rtl' ? -1 : 1)
 
       const timeframeDuration = differenceInMilliseconds(
-        props.timeframe.start,
-        props.timeframe.end
+        timeframe.start,
+        timeframe.end
       )
 
-      const startBias =
-        differenceInMilliseconds(
-          props.timeframe.start,
+      const startBias = event.clientX
+        ? differenceInMilliseconds(
+          timeframe.start,
           getDateFromScreenX(event.clientX)
         ) / timeframeDuration
-      const endBias =
-        differenceInMilliseconds(
+        : 1
+      const endBias = event.clientX
+        ? differenceInMilliseconds(
           getDateFromScreenX(event.clientX),
-          props.timeframe.end
+          timeframe.end
         ) / timeframeDuration
+        : 1
 
       const startDelta = deltaYInMilliseconds * startBias + deltaXInMilliseconds
       const endDelta = -deltaYInMilliseconds * endBias + deltaXInMilliseconds
@@ -326,52 +331,29 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
     [
       pixelsToMilliseconds,
       timelineDirection,
-      props.timeframe.start,
-      props.timeframe.end,
+      timeframe.start,
+      timeframe.end,
       getDateFromScreenX,
       onTimeframeChanged,
     ]
   )
 
   const onDragStart = useCallback(() => {
-    dragStartTimeframe.current = props.timeframe
-  }, [props.timeframe])
+    dragStartTimeframe.current = timeframe
+  }, [timeframe])
 
   useDndMonitor({
     onDragStart,
   })
 
-  useLayoutEffect(() => {
-    const element = timelineRef?.current
-    if (!element) return
-
-    const mouseWheelHandler = (event: WheelEvent) => {
-      if (!event.ctrlKey && !event.metaKey) return
-
-      event.preventDefault()
-
-      const isHorizontal = event.shiftKey
-
-      const panEndEvent: PanEndEvent = {
-        clientX: event.clientX,
-        clientY: event.clientY,
-        deltaX: isHorizontal ? event.deltaX || event.deltaY : 0,
-        deltaY: isHorizontal ? 0 : event.deltaY,
-      }
-
-      onPanEnd(panEndEvent)
-    }
-
-    element.addEventListener('wheel', mouseWheelHandler)
-
-    return () => {
-      element?.removeEventListener('wheel', mouseWheelHandler)
-    }
-  }, [onPanEnd, timelineRef])
+  usePanStrategy(timelineRef, onPanEnd)
 
   const value = useMemo<TimelineBag>(
     () => ({
       style,
+      timeframe,
+      overlayed,
+      onPanEnd,
       onResizeEnd,
       onResizeMove,
       onResizeStart,
@@ -381,15 +363,16 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       millisecondsToPixels,
       timelineRef,
       setTimelineRef,
-      overlayed: !!props.overlayed,
       timelineDirection,
-      timeframe: props.timeframe,
       timeframeGridSize,
       getDateFromScreenX,
       getRelevanceFromDragEvent,
       getRelevanceFromResizeEvent,
     }),
     [
+      overlayed,
+      timeframe,
+      onPanEnd,
       onResizeEnd,
       onResizeMove,
       onResizeStart,
@@ -398,8 +381,6 @@ export default function useTimeline(props: UseTimelineProps): TimelineBag {
       millisecondsToPixels,
       timelineRef,
       setTimelineRef,
-      props.overlayed,
-      props.timeframe,
       timelineDirection,
       timeframeGridSize,
       getDateFromScreenX,

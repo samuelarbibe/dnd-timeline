@@ -180,7 +180,7 @@ export default function useItem(props: UseItemProps) {
   useLayoutEffect(() => {
     if (!dragDirection) return
 
-    const mouseUpHandler = () => {
+    const pointerupHandler = () => {
       if (!dragStartX.current || !draggableProps.node.current) return
 
       let dragDeltaX = 0
@@ -214,10 +214,10 @@ export default function useItem(props: UseItemProps) {
       draggableProps.node.current.style[side] = deltaX + 'px'
     }
 
-    window.addEventListener('mouseup', mouseUpHandler)
+    window.addEventListener('pointerup', pointerupHandler)
 
     return () => {
-      window.removeEventListener('mouseup', mouseUpHandler)
+      window.removeEventListener('pointerup', pointerupHandler)
     }
   }, [
     side,
