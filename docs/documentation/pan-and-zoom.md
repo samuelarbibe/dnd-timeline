@@ -1,3 +1,0 @@
-# Pan & Zoom
-
-🚧 Under Construction
