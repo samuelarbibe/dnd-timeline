@@ -19,7 +19,7 @@ You timeline components must be wrapped in this context.
 }
 </code></pre>
 
-### Props
+## Props
 
 ```tsx
 interface TimelineContextProps {
@@ -28,8 +28,9 @@ interface TimelineContextProps {
     onResizeEnd: OnResizeEnd
     onResizeMove?: OnResizeMove
     onResizeStart?: OnResizeStart
+    usePanStrategy?: UsePanStrategy
     onTimeframeChanged: OnTimeframeChanged
-    timeframeGridSize?: number | GridSizeDefinition[]
+    timeframeGridSizeDefinition?: number | GridSizeDefinition[]
     // ...DndContext Props
 }
 ```
@@ -101,7 +102,7 @@ The resize events' data also contain a `getRelevanceFromResizeEvent` that you ca
 
 We will later understand how these function are passed, and how you can manually pass them for custom interactions.
 
-#### onResizeStart?
+#### `onResizeStart?`
 
 ```tsx
 onResizeMove?: (event: ResizeStartEvent) => void
@@ -114,7 +115,7 @@ type ResizeStartEvent = {
 }
 ```
 
-#### onResizeMove?
+#### `onResizeMove?`
 
 ```tsx
 onResizeMove?: (event: ResizeMoveEvent) => void
@@ -130,7 +131,7 @@ type ResizeMoveEvent = {
 }
 ```
 
-#### onResizeEnd?
+#### `onResizeEnd?`
 
 ```tsx
 onResizeMove?: (event: ResizeEndEvent) => void
@@ -146,7 +147,111 @@ type ResizeEndEvent = {
 }
 ```
 
-### Usage
+### Options
+
+#### `timeframe`
+
+```tsx
+timeframe: Timeframe
+```
+
+```tsx
+type Timeframe = {
+  start: Date
+  end: Date
+}
+```
+
+An object defining the viewable timeframe in the timeline. This field is fully controlled.
+
+#### `onTimeframeChanged`
+
+```tsx
+onTimeframeChanged: OnTimeframeChanged
+```
+
+```tsx
+type OnTimeframeChanged = (
+  updateFunction: (prev: Timeframe) => Timeframe
+) => void
+```
+
+A callback that receives an update function as a prop. Use this to update your controlled state of `timeframe`.
+
+#### `overlayed?`
+
+```tsx
+overlayed?: boolean = false
+```
+
+This prop enabled/disabled rendering of items when dragging. If using `dnd-kit`'s [DragOverlay](https://docs.dndkit.com/api-documentation/draggable/drag-overlay), this should be set to `true`.
+
+#### `timeframeGridSizeDefinition?`
+
+```tsx
+timeframeGridSizeDefinition?: number | GridSizeDefinition[]
+```
+
+```tsx
+type GridSizeDefinition = {
+  value: number
+  maxTimeframeSize?: number
+}
+```
+
+Enables and configures snapping in the timeline.&#x20;
+
+If provided with a number, the value will be the snap grid size in `milliseconds`.
+
+If provided with an array of `GridSizeDefinition`, the snap grid size will be the `value` of the array member with the smallest matching `maxTimeframeSize`, in `milliseconds`.
+
+> 🧠 To create a dynamic snap grid, that is based on the timeframe size, pass in an array of `GridSizeDefinition`.
+>
+> ```tsx
+>   const timeframeGridSize: GridSizeDefinition[] = [
+>     {
+>       value: hoursToMilliseconds(1),
+>     },
+>     {
+>       value: minutesToMilliseconds(30),
+>       maxTimeframeSize: hoursToMilliseconds(24),
+>     }
+>   ]
+> ```
+>
+> For example, the `timeframeGridSize` above will cause the timeframe to have a snap grid size of 30 minutes if timeframe size is smaller than 24 hours, otherwise the grid size will be 1 hour.
+
+#### `usePanStrategy?`
+
+```tsx
+usePanStrategy?: UsePanStrategy = useWheelStrategy
+```
+
+```tsx
+type UsePanStrategy = (
+  timelineRef: React.MutableRefObject<HTMLElement | null>,
+  onPanEnd: OnPanEnd
+) => void
+
+type OnPanEnd = (event: PanEndEvent) => void
+
+type PanEndEvent = {
+  clientX?: number
+  clientY?: number
+  deltaX: number
+  deltaY: number
+}
+```
+
+Enables and configures panning and zooming the timeline.
+
+The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoom in and out, and `shift + ctrl + wheel` to pan left and right (`cmd/ctrl` on MacOS).
+
+{% content-ref url="../pan-and-zoom.md" %}
+[pan-and-zoom.md](../pan-and-zoom.md)
+{% endcontent-ref %}
+
+## Usage
 
 You will need to wrap your timeline and all of its component in a `<TimelineContext>`
 

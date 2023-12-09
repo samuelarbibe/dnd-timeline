@@ -16,6 +16,7 @@
   * [Subrow](documentation/row/subrow.md)
 * [Item](documentation/item/README.md)
   * [useItem](documentation/item/useitem.md)
+* [Pan & Zoom](documentation/pan-and-zoom.md)
 
 ## Examples
 
