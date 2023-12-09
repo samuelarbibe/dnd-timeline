@@ -1,4 +1,3 @@
-import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
@@ -9,8 +8,6 @@ export default defineConfig({
     exclude: ["dnd-timeline"],
   },
   resolve: {
-    alias: {
-      react: path.resolve("./node_modules/react"),
-    },
+    dedupe: ["react"],
   },
 });
