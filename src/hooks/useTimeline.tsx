@@ -31,8 +31,8 @@ export type ResizeStartEvent = {
 }
 
 export type PanEndEvent = {
-  clientX: number
-  clientY: number
+  clientX?: number
+  clientY?: number
   deltaX: number
   deltaY: number
 }
@@ -307,16 +307,18 @@ export default function useTimeline({
         timeframe.end
       )
 
-      const startBias =
-        differenceInMilliseconds(
+      const startBias = event.clientX
+        ? differenceInMilliseconds(
           timeframe.start,
           getDateFromScreenX(event.clientX)
         ) / timeframeDuration
-      const endBias =
-        differenceInMilliseconds(
+        : 1
+      const endBias = event.clientX
+        ? differenceInMilliseconds(
           getDateFromScreenX(event.clientX),
           timeframe.end
         ) / timeframeDuration
+        : 1
 
       const startDelta = deltaYInMilliseconds * startBias + deltaXInMilliseconds
       const endDelta = -deltaYInMilliseconds * endBias + deltaXInMilliseconds
@@ -351,6 +353,7 @@ export default function useTimeline({
       style,
       timeframe,
       overlayed,
+      onPanEnd,
       onResizeEnd,
       onResizeMove,
       onResizeStart,
@@ -369,6 +372,7 @@ export default function useTimeline({
     [
       overlayed,
       timeframe,
+      onPanEnd,
       onResizeEnd,
       onResizeMove,
       onResizeStart,
