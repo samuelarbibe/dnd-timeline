@@ -26,7 +26,7 @@ import {
   ResizeEndEvent,
   ItemDefinition,
   GridSizeDefinition,
-  Timeline as TimelineContext,
+  TimelineContext,
 } from 'dnd-timeline'
 
 const DEFAULT_TIMEFRAME: Timeframe = {
@@ -209,7 +209,7 @@ function ExternalListWrapper(props: ExternalWrapperProps) {
         onDragCancel={onDragCancel}
         timeframe={timeframe}
         onTimeframeChanged={setTimeframe}
-        timeframeGridSize={timeframeGridSize}
+        timeframeGridSizeDefinition={timeframeGridSize}
       >
         <ExternalList listItems={listItems} />
         <Timeline rows={rows} items={items} />

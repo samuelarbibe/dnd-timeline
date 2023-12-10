@@ -5,7 +5,7 @@ import {
   Timeframe,
   ResizeEndEvent,
   GridSizeDefinition,
-  Timeline as TimelineContext,
+  TimelineContext,
 } from 'dnd-timeline'
 
 import {
@@ -174,7 +174,7 @@ function TimelineWrapper(props: TimelineWrapperProps) {
       onDragCancel={onDragCancel}
       timeframe={timeframe}
       onTimeframeChanged={setTimeframe}
-      timeframeGridSize={timeframeGridSize}
+      timeframeGridSizeDefinition={timeframeGridSize}
     >
       <Timeline rows={rows} items={items} />
       <DragOverlay>
