@@ -23,3 +23,4 @@
 * [Basic](examples/basic.md)
 * [Virtual](examples/virtual.md)
 * [External](examples/external.md)
+* [Sortable](examples/sortable.md)
