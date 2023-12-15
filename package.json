@@ -10,7 +10,7 @@
     "typecheck": "turbo run typecheck",
     "changeset": "npx changeset",
     "prepare-packages": "turbo run build lint typecheck",
-    "publish-packages": "npm prepare-packages && changeset version && changeset publish",
+    "publish-packages": "npm run prepare-packages && changeset version && changeset publish",
     "prepare": "husky install"
   },
   "devDependencies": {
