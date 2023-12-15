@@ -35,16 +35,16 @@ In order to handle a change in an item's relevance, all you need to do is to han
 
 ```tsx
 const onDragEnd = (event: DragEndEvent) => {
-  const overedId = event.over?.id.toString()
-  if (!overedId) return
+  const overedId = event.over?.id.toString();
+  if (!overedId) return;
 
-  const activeItemId = event.active.id
+  const activeItemId = event.active.id;
 
   const updatedRelevance =
-    event.active?.data?.current?.getRelevanceFromDragEvent(event)
+    event.active?.data?.current?.getRelevanceFromDragEvent(event);
 
   // update item with id activeItemId with the updatedRelevance, or the updated row using overedId
-}
+};
 ```
 
 This is true for all `dnd-kit` supported handlers:
@@ -65,12 +65,12 @@ These events act just like the `dnd-kit` event, except that the event looks a bi
 
 ```ts
 type ResizeEvent = {
-  active: Omit<Active, 'rect'> // dnd-kit's Active type
+  active: Omit<Active, "rect">; // dnd-kit's Active type
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 The resize events' data also contain a `getRelevanceFromResizeEvent` that you can use to infer the updated relevance:
@@ -78,14 +78,14 @@ The resize events' data also contain a `getRelevanceFromResizeEvent` that you ca
 ```tsx
 const onResizeEnd = (event: ResizeEndEvent) => {
   const updatedRelevance =
-    event.active.data.current?.getRelevanceFromResizeEvent(event)
+    event.active.data.current?.getRelevanceFromResizeEvent(event);
 
-  if (!updatedRelevance) return
+  if (!updatedRelevance) return;
 
-  const activeItemId = event.active.id
+  const activeItemId = event.active.id;
 
   // update activeItemId's relevance with the updatedRelevance
-}
+};
 ```
 
 You can also pass resize event callbacks to the `useItem` hook:
@@ -98,10 +98,10 @@ useItem({
   onResizeMove,
   onResizeEnd,
   data: {
-    type: 'timeline-item',
+    type: "timeline-item",
     // ...or any data you want to pass
   },
-})
+});
 ```
 
 ### External items
@@ -109,7 +109,8 @@ useItem({
 To handle external items, you will need to manually pass the dnd-timeline's helpers when defining your draggabale items:
 
 ```tsx
-const { getRelevanceFromDragEvent, millisecondsToPixels } = useTimelineContext()
+const { getRelevanceFromDragEvent, millisecondsToPixels } =
+  useTimelineContext();
 
 const { attributes, isDragging, listeners, setNodeRef, transform, transition } =
   useDraggable({
@@ -119,7 +120,7 @@ const { attributes, isDragging, listeners, setNodeRef, transform, transition } =
       getRelevanceFromDragEvent,
       duration: props.duration, // the getRelevanceFromDragEvent also knows how to handle duration
     },
-  })
+  });
 ```
 
 For non-timeline items, like an external item, you will need to provide a `duration` field describing the items duration in milliseconds.  

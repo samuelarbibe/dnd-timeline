@@ -1,106 +1,32 @@
 {
-  "version": "1.2.0",
-  "license": "MIT",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
-  "module": "./dist/dnd-timeline.esm.js",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "homepage": "https://main--6496bc4344e173caa1c38272.chromatic.com/?path=/docs/stories-overview--docs",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/samuelarbibe/dnd-timeline.git"
-  },
-  "devEngines": {
-    "node": "16.x || 18.x || 19.x || 20.x"
-  },
+  "private": true,
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build src",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "eslint src",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
-  },
-  "peerDependencies": {
-    "react": ">=16.8"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "name": "dnd-timeline",
-  "author": {
-    "name": "Samuel Arbibe"
-  },
-  "size-limit": [
-    {
-      "path": "dist/dnd-timeline.cjs.production.min.js",
-      "limit": "200 KB"
-    },
-    {
-      "path": "dist/dnd-timeline.esm.js",
-      "limit": "200 KB"
-    }
-  ],
-  "dependencies": {
-    "@dnd-kit/core": "^6.0.8",
-    "@dnd-kit/modifiers": "^6.0.1",
-    "date-fns": "^2.30.0",
-    "resize-observer-polyfill": "^1.5.1"
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "changeset": "npx changeset",
+    "prepare-packages": "turbo run build lint typecheck",
+    "publish-packages": "npm prepare-packages && changeset version && changeset publish",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
-    "@babel/preset-env": "^7.22.5",
-    "@babel/preset-react": "^7.22.5",
-    "@babel/preset-typescript": "^7.22.5",
-    "@dnd-kit/sortable": "^7.0.2",
-    "@size-limit/esbuild": "^8.2.4",
-    "@size-limit/esbuild-why": "^8.2.4",
-    "@size-limit/preset-small-lib": "^8.2.4",
-    "@storybook/addon-docs": "^7.5.2",
-    "@storybook/addon-essentials": "^7.5.2",
-    "@storybook/addon-interactions": "^7.5.2",
-    "@storybook/addon-links": "^7.5.2",
-    "@storybook/addon-mdx-gfm": "^7.5.2",
-    "@storybook/blocks": "^7.5.2",
-    "@storybook/react": "^7.5.2",
-    "@storybook/react-vite": "^7.5.2",
-    "@storybook/testing-library": "^0.2.2",
-    "@types/react": "^18.2.9",
-    "@types/react-dom": "^18.2.4",
-    "@typescript-eslint/eslint-plugin": "^5.59.9",
-    "@typescript-eslint/parser": "^5.59.9",
-    "@vitejs/plugin-react": "^4.0.0",
-    "babel-loader": "^9.1.2",
-    "chromatic": "^6.19.9",
-    "classnames": "^2.3.2",
-    "eslint": "^8.42.0",
-    "eslint-config-react-app": "^7.0.1",
-    "eslint-config-react-hooks": "^1.0.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.1",
-    "eslint-plugin-storybook": "^0.6.15",
     "husky": "^8.0.3",
-    "nanoid": "^4.0.2",
-    "prettier": "^2.8.8",
-    "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-is": "^18.2.0",
-    "size-limit": "^8.2.4",
-    "storybook": "^7.5.2",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.5.3",
-    "typescript": "^5.1.3",
-    "vite": "^4.3.9"
+    "prettier": "^3.1.0",
+    "turbo": "latest"
   },
-  "readme": "ERROR: No README data found!"
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@changesets/cli": "^2.27.1"
+  }
 }

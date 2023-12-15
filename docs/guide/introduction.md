@@ -6,6 +6,4 @@
 
 That means that no css/html is taken care of for you! You are responsible fully responsible for the styling of your timeline.
 
-
-
 Lets get started 🚀

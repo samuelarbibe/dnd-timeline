@@ -1,6 +1,6 @@
 # Installation
 
-The library requires a single peer-dependency:  `react`
+The library requires a single peer-dependency: `react`
 
 To install it, run:
 

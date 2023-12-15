@@ -15,10 +15,11 @@ Please make sure you unserstand it's basic concepts before moving on.
 A basic Row component will look like this:
 
 {% code title="Row.tsx" %}
+
 ```tsx
 interface RowProps extends RowDefinition {
-  children: React.ReactNode
-  sidebar: React.ReactNode
+  children: React.ReactNode;
+  sidebar: React.ReactNode;
 }
 
 function Row(props: RowProps) {
@@ -28,7 +29,7 @@ function Row(props: RowProps) {
     rowWrapperStyle,
     rowStyle,
     rowSidebarStyle,
-  } = useRow({ id: props.id })
+  } = useRow({ id: props.id });
 
   return (
     <div style={rowWrapperStyle}>
@@ -39,17 +40,18 @@ function Row(props: RowProps) {
         {props.children}
       </div>
     </div>
-  )
+  );
 }
 ```
+
 {% endcode %}
 
 dnd-timeline also provides you with a helper type that you can extend.
 
 ```tsx
 type RowDefinition = {
-    id: string
-    disabled?: boolean
+  id: string;
+  disabled?: boolean;
 };
 ```
 
@@ -60,18 +62,19 @@ You can fully customize this component according to your needs.
 Every `<Item />` component should be rendered as a child of it's parent row.
 
 {% code title="Timeline.tsx" %}
+
 ```tsx
-const { setTimelineRef, style } = useTimelineContext()
+const { setTimelineRef, style } = useTimelineContext();
 
 return (
   <div ref={setTimelineRef} style={style}>
-    {rows.map((row) => 
+    {rows.map((row) => (
       <Row id={row.id} sidebar={<Sidebar row={row} />}>
         // render row items...
       </Row>
-    )}
+    ))}
   </div>
-)
+);
 ```
-{% endcode %}
 
+{% endcode %}

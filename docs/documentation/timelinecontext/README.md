@@ -23,15 +23,15 @@ You timeline components must be wrapped in this context.
 
 ```tsx
 interface TimelineContextProps {
-    timeframe: Timeframe // { start: Date, end: Date }
-    overlayed?: boolean
-    onResizeEnd: OnResizeEnd
-    onResizeMove?: OnResizeMove
-    onResizeStart?: OnResizeStart
-    usePanStrategy?: UsePanStrategy
-    onTimeframeChanged: OnTimeframeChanged
-    timeframeGridSizeDefinition?: number | GridSizeDefinition[]
-    // ...DndContext Props
+  timeframe: Timeframe; // { start: Date, end: Date }
+  overlayed?: boolean;
+  onResizeEnd: OnResizeEnd;
+  onResizeMove?: OnResizeMove;
+  onResizeStart?: OnResizeStart;
+  usePanStrategy?: UsePanStrategy;
+  onTimeframeChanged: OnTimeframeChanged;
+  timeframeGridSizeDefinition?: number | GridSizeDefinition[];
+  // ...DndContext Props
 }
 ```
 
@@ -58,10 +58,10 @@ For example, the `onDragEnd` event is called with extra data:
 
 This is the same for all `dnd-kit` supported handlers:
 
-* `onDragStart`
-* `onDragEnd`
-* `onDragMove`
-* `onDragCancel`
+- `onDragStart`
+- `onDragEnd`
+- `onDragMove`
+- `onDragCancel`
 
 {% hint style="info" %}
 The type definitions for these functions can be viewed in [dnd-kit's documentation](https://docs.dndkit.com/api-documentation/context-provider#props)
@@ -69,21 +69,21 @@ The type definitions for these functions can be viewed in [dnd-kit's documentati
 
 `dnd-timeline` adds a set of 4 more handlers, to handle the resize event:
 
-* `onResizeStart`
-* `onResizeEnd`
-* `onResizeMove`
-* `onResizeCancel` (WIP)
+- `onResizeStart`
+- `onResizeEnd`
+- `onResizeMove`
+- `onResizeCancel` (WIP)
 
 These events act just like the `dnd-kit` event, except that the event looks a bit different:
 
 ```ts
 type ResizeEvent = {
-  active: Omit<Active, 'rect'> // dnd-kit's Active type
+  active: Omit<Active, "rect">; // dnd-kit's Active type
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 The resize events' data also contain a `getRelevanceFromResizeEvent` that you can use to infer the updated relevance:
@@ -110,9 +110,9 @@ onResizeMove?: (event: ResizeStartEvent) => void
 
 ```tsx
 type ResizeStartEvent = {
-  active: Omit<Active, 'rect'>
-  direction: DragDirection // 'start' | 'end'
-}
+  active: Omit<Active, "rect">;
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 #### `onResizeMove?`
@@ -123,12 +123,12 @@ onResizeMove?: (event: ResizeMoveEvent) => void
 
 ```tsx
 type ResizeMoveEvent = {
-  active: Omit<Active, 'rect'>
+  active: Omit<Active, "rect">;
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 #### `onResizeEnd?`
@@ -139,12 +139,12 @@ onResizeMove?: (event: ResizeEndEvent) => void
 
 ```tsx
 type ResizeEndEvent = {
-  active: Omit<Active, 'rect'>
+  active: Omit<Active, "rect">;
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 ### Options
@@ -152,14 +152,14 @@ type ResizeEndEvent = {
 #### `timeframe`
 
 ```tsx
-timeframe: Timeframe
+timeframe: Timeframe;
 ```
 
 ```tsx
 type Timeframe = {
-  start: Date
-  end: Date
-}
+  start: Date;
+  end: Date;
+};
 ```
 
 An object defining the viewable timeframe in the timeline. This field is fully controlled.
@@ -167,13 +167,13 @@ An object defining the viewable timeframe in the timeline. This field is fully c
 #### `onTimeframeChanged`
 
 ```tsx
-onTimeframeChanged: OnTimeframeChanged
+onTimeframeChanged: OnTimeframeChanged;
 ```
 
 ```tsx
 type OnTimeframeChanged = (
-  updateFunction: (prev: Timeframe) => Timeframe
-) => void
+  updateFunction: (prev: Timeframe) => Timeframe,
+) => void;
 ```
 
 A callback that receives an update function as a prop. Use this to update your controlled state of `timeframe`.
@@ -194,9 +194,9 @@ timeframeGridSizeDefinition?: number | GridSizeDefinition[]
 
 ```tsx
 type GridSizeDefinition = {
-  value: number
-  maxTimeframeSize?: number
-}
+  value: number;
+  maxTimeframeSize?: number;
+};
 ```
 
 Enables and configures snapping in the timeline.&#x20;
@@ -208,15 +208,15 @@ If provided with an array of `GridSizeDefinition`, the snap grid size will be th
 > 🧠 To create a dynamic snap grid, that is based on the timeframe size, pass in an array of `GridSizeDefinition`.
 >
 > ```tsx
->   const timeframeGridSize: GridSizeDefinition[] = [
->     {
->       value: hoursToMilliseconds(1),
->     },
->     {
->       value: minutesToMilliseconds(30),
->       maxTimeframeSize: hoursToMilliseconds(24),
->     }
->   ]
+> const timeframeGridSize: GridSizeDefinition[] = [
+>   {
+>     value: hoursToMilliseconds(1),
+>   },
+>   {
+>     value: minutesToMilliseconds(30),
+>     maxTimeframeSize: hoursToMilliseconds(24),
+>   },
+> ];
 > ```
 >
 > For example, the `timeframeGridSize` above will cause the timeframe to have a snap grid size of 30 minutes if timeframe size is smaller than 24 hours, otherwise the grid size will be 1 hour.
@@ -230,17 +230,17 @@ usePanStrategy?: UsePanStrategy = useWheelStrategy
 ```tsx
 type UsePanStrategy = (
   timelineRef: React.MutableRefObject<HTMLElement | null>,
-  onPanEnd: OnPanEnd
-) => void
+  onPanEnd: OnPanEnd,
+) => void;
 
-type OnPanEnd = (event: PanEndEvent) => void
+type OnPanEnd = (event: PanEndEvent) => void;
 
 type PanEndEvent = {
-  clientX?: number
-  clientY?: number
-  deltaX: number
-  deltaY: number
-}
+  clientX?: number;
+  clientY?: number;
+  deltaX: number;
+  deltaY: number;
+};
 ```
 
 Enables and configures panning and zooming the timeline.
@@ -256,31 +256,37 @@ The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoo
 You will need to wrap your timeline and all of its component in a `<TimelineContext>`
 
 {% code title="App.tsx" overflow="wrap" %}
+
 ```tsx
-function App(){
-  const [rows, setRows] = useRows()
-  const [items, setItems] = useItems()
-  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME)
-  
-  const onResizeEnd = useCallback((event: ResizeEndEvent) => {
+function App() {
+  const [rows, setRows] = useRows();
+  const [items, setItems] = useItems();
+  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
+
+  const onResizeEnd = useCallback(
+    (event: ResizeEndEvent) => {
       const updatedRelevance =
-        event.active.data.current?.getRelevanceFromResizeEvent?.(event)
-  
-      if (!updatedRelevance) return
-  
-      const activeItemId = event.active.id
-  
-// Only update the changed item. This will cause only the changed items to re-render
-      setItems((prev) => prev.map((item) => {
-          if (item.id !== activeItemId) return item
-  
+        event.active.data.current?.getRelevanceFromResizeEvent?.(event);
+
+      if (!updatedRelevance) return;
+
+      const activeItemId = event.active.id;
+
+      // Only update the changed item. This will cause only the changed items to re-render
+      setItems((prev) =>
+        prev.map((item) => {
+          if (item.id !== activeItemId) return item;
+
           return {
             ...item,
             relevance: updatedRelevance,
-          }
-      }))
-    }, [setItems])
-  
+          };
+        }),
+      );
+    },
+    [setItems],
+  );
+
   return (
     <TimelineContext
       onResizeEnd={onResizeEnd}
@@ -289,27 +295,30 @@ function App(){
     >
       <Timeline rows={rows} items={items} />
     </TimelineContext>
-  )
+  );
 }
 ```
+
 {% endcode %}
 
 You will need to create a `<Timeline />` component to use the useTimelineContext inside of it.
 
 {% code title="Timeline.tsx" %}
+
 ```tsx
 function Timeline(props: TimelineProps){
   const { setTimelineRef, style } = useTimelineContext()
-  
+
   return (
     <div ref={setTimelineRef} style={style}>
-      {props.rows.map((row) => 
+      {props.rows.map((row) =>
         // Render rows here...
       )}
     </div>
   )
 }
 ```
+
 {% endcode %}
 
 You can learn how to render rows here:
