@@ -15,7 +15,7 @@ Please make sure you fully understand it's concepts before trying to use it here
 #### `id`
 
 ```tsx
-id: string;
+id: string
 ```
 
 A unique id for this row. This id will later be used to bind items to rows.
@@ -37,32 +37,30 @@ Custom data that can be passed to the row.
 > 🧠 This can be passed to rows to identify their type. This type can later be used in the event callbacks to apply different behaviors to different row types.
 >
 > {% code title="Row.tsx" %}
->
 > ```tsx
 > useRow({
 >   id: props.id,
->   data: { type: "timeline-row" },
-> });
+>   data: { type: 'timeline-row' },
+> })
 > ```
->
 > {% endcode %}
 >
 > {% code title="Timeline.tsx" %}
->
 > ```tsx
 > const onDragEnd = (event: DragEndEvent) => {
 >   const updatedRelevance =
->     event.active?.data?.current?.getRelevanceFromDragEvent(event);
+>     event.active?.data?.current?.getRelevanceFromDragEvent(event)
 >
->   const rowType = event.active?.data?.current?.type;
->
->   if (rowType === "timeline-row") {
+>   const rowType = event.active?.data?.current?.type
+>   
+>   if (rowType === 'timeline-row') {
 >     // update item with id activeItemId with the updatedRelevance, or the updated row using overedId
 >   }
-> };
+> }
 > ```
->
 > {% endcode %}
+
+
 
 ### API
 
@@ -73,7 +71,7 @@ All of dnd-kit [useDroppable](https://docs.dndkit.com/api-documentation/droppabl
 #### `rowWrapperStyle`
 
 ```tsx
-rowWrapperStyle: CSSProperties;
+rowWrapperStyle: CSSProperties
 ```
 
 Basic styles that must be applied to the row container element.
@@ -81,7 +79,7 @@ Basic styles that must be applied to the row container element.
 #### `rowStyle`
 
 ```tsx
-rowStyle: CSSProperties;
+rowStyle: CSSProperties
 ```
 
 Basic styles that must be applied to the row element.
@@ -89,7 +87,7 @@ Basic styles that must be applied to the row element.
 #### `rowSidebarStyle`
 
 ```tsx
-rowSidebarStyle: CSSProperties;
+rowSidebarStyle: CSSProperties
 ```
 
 Basic styles that must be applied to the row sidebar element.
@@ -97,7 +95,7 @@ Basic styles that must be applied to the row sidebar element.
 #### `setSidebarRef`
 
 ```tsx
-setSidebarRef: React.RefObject<HTMLDivElement>;
+setSidebarRef: React.RefObject<HTMLDivElement>
 ```
 
 A ref that must be passed to the sidebar element.

@@ -7,7 +7,7 @@ This hooks can be used to access the timeline's state, and also provides a set o
 #### `style`
 
 ```typescript
-style: CSSProperties;
+style: CSSProperties
 ```
 
 A set of mendatory style properties, that must be applied to the timeline container element.
@@ -15,7 +15,7 @@ A set of mendatory style properties, that must be applied to the timeline contai
 #### `timelineRef`
 
 ```typescript
-timelineRef: React.MutableRefObject<HTMLElement | null>;
+timelineRef: React.MutableRefObject<HTMLElement | null>
 ```
 
 The timeline container element's ref.
@@ -31,7 +31,7 @@ A ref setter that must be passed to the timeline's container element.
 #### `millisecondsToPixels`
 
 ```typescript
-millisecondsToPixels: (milliseconds: number) => number;
+millisecondsToPixels: (milliseconds: number) => number
 ```
 
 A helper function that receives milliseconds, and returns the pixel representation in relation to the timeline's container element.&#x20;
@@ -41,7 +41,7 @@ A helper function that receives milliseconds, and returns the pixel representati
 #### `pixelsToMilliseconds`
 
 ```typescript
-pixelsToMilliseconds: (pixels: number) => number;
+pixelsToMilliseconds: (pixels: number) => number
 ```
 
 A helper function that receives pixels, and returns the equivalent duration for it in milliseconds, in relation to the timeline's container element.
@@ -51,7 +51,7 @@ A helper function that receives pixels, and returns the equivalent duration for 
 #### `getDateFromScreenX`
 
 ```typescript
-getDateFromScreenX: (screenX: number) => Date;
+getDateFromScreenX: (screenX: number) => Date
 ```
 
 A helper function that x position in the client's screen, and returns a date represenation of that position, in relation to the timeline's container element.
@@ -61,21 +61,15 @@ A helper function that x position in the client's screen, and returns a date rep
 #### `getRelevanceFromDragEvent`
 
 ```typescript
-getRelevanceFromDragEvent: (event: DragEvent) => Relevance | null;
+getRelevanceFromDragEvent: (event: DragEvent) => Relevance | null
 ```
 
 A function that extracts relevance from a drag event. The drag event type can be one of the following:
 
 {% code overflow="wrap" %}
-
 ```tsx
-type DragEvent =
-  | DragStartEvent
-  | DragEndEvent
-  | DragCancelEvent
-  | DragMoveEvent;
+type DragEvent = DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent
 ```
-
 {% endcode %}
 
 This function is injected into all of dnd-kit's events, and allowes you to infer the dragged item's relevance from the event object. For example:
@@ -91,17 +85,15 @@ This function is injected into all of dnd-kit's events, and allowes you to infer
 #### `getRelevanceFromResizeEvent`
 
 ```typescript
-getRelevanceFromResizeEvent: (event: ResizeEvent) => Relevance | null;
+getRelevanceFromResizeEvent: (event: ResizeEvent) => Relevance | null
 ```
 
 A function that extracts relevance from a drag event. The drag event type can be one of the following:
 
 {% code overflow="wrap" %}
-
 ```tsx
-type ResizeEvent = ResizeStartEvent | ResizeMoveEvent | ResizeEndEvent;
+type ResizeEvent = ResizeStartEvent | ResizeMoveEvent | ResizeEndEvent
 ```
-
 {% endcode %}
 
 This function is injected into all of dnd-timeline's resize events, and allowes you to infer the dragged item's relevance from the event object. For example:
