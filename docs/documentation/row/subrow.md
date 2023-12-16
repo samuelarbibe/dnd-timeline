@@ -57,11 +57,12 @@ The function receives and returns items of a certain type. If your items are of 
 ### API
 
 ```tsx
-groupItemsToSubrows: (items: ItemDefinition[], timeframe?: Relevance) =>
-  Record<string, ItemDefinition[][]>;
+groupItemsToSubrows: 
+    (items: ItemDefinition[], timeframe?: Relevance) =>
+    Record<string, ItemDefinition[][]>
 ```
 
-The function returns an object where the key is a `rowId`, and the value is a matrix of items, where the first index is the subrow index, and the second index the the index of an item inside of that subrow.&#x20;
+The function returns an object where the key is a `rowId`, and the value is a matrix of items, where the first index is the subrow index,  and the second index the the index of an item inside of that subrow.&#x20;
 
 ### Props
 
@@ -75,11 +76,11 @@ An array of items in the shape of `ItemDefinition`
 
 ```tsx
 type ItemDefinition = {
-  id: string;
-  rowId: string;
-  relevance: Relevance;
-  disabled?: boolean;
-};
+    id: string
+    rowId: string
+    relevance: Relevance
+    disabled?: boolean
+}
 ```
 
 #### `timeframe?`
@@ -89,3 +90,4 @@ timeframe?: Relevance
 ```
 
 An optional timeframe object to filter out items that do not intersect with the current timeframe. This is to reduce the amount of items rendered at a time.
+
