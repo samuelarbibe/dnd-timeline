@@ -11,13 +11,11 @@
   "tasks": {
     "build": {
       "name": "build",
-      "command": "npm run build",
-      "runAtStart": false
+      "command": "npm run build"
     },
     "clean": {
       "name": "clean",
-      "command": "npm run clean",
-      "runAtStart": false
+      "command": "npm run clean"
     },
     "dev": {
       "name": "dev",
@@ -26,43 +24,35 @@
     },
     "format": {
       "name": "format",
-      "command": "npm run format",
-      "runAtStart": false
+      "command": "npm run format"
     },
     "lint": {
       "name": "lint",
-      "command": "npm run lint",
-      "runAtStart": false
+      "command": "npm run lint"
     },
     "test": {
       "name": "test",
-      "command": "npm run test",
-      "runAtStart": false
+      "command": "npm run test"
     },
     "typecheck": {
       "name": "typecheck",
-      "command": "npm run typecheck",
-      "runAtStart": false
+      "command": "npm run typecheck"
     },
     "changeset": {
       "name": "changeset",
-      "command": "npm run changeset",
-      "runAtStart": false
+      "command": "npm run changeset"
     },
     "prepare-packages": {
       "name": "prepare-packages",
-      "command": "npm run prepare-packages",
-      "runAtStart": false
+      "command": "npm run prepare-packages"
     },
     "publish-packages": {
       "name": "publish-packages",
-      "command": "npm run publish-packages",
-      "runAtStart": false
+      "command": "npm run publish-packages"
     },
     "prepare": {
       "name": "prepare",
-      "command": "npm run prepare",
-      "runAtStart": false
+      "command": "npm run prepare"
     }
   }
 }

@@ -5,6 +5,10 @@
   "main": "./dist/index",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/samuelarbibe/dnd-timeline"
+  },
+  "homepage": "https://samuel-arbibe.gitbook.io/dnd-timeline/",
   "files": [
     "dist",
     "src"
