@@ -311,15 +311,15 @@ export default function useTimeline({
 
       const startBias = event.clientX
         ? differenceInMilliseconds(
-            timeframe.start,
-            getDateFromScreenX(event.clientX),
-          ) / timeframeDuration
+          timeframe.start,
+          getDateFromScreenX(event.clientX),
+        ) / timeframeDuration
         : 1;
       const endBias = event.clientX
         ? differenceInMilliseconds(
-            getDateFromScreenX(event.clientX),
-            timeframe.end,
-          ) / timeframeDuration
+          getDateFromScreenX(event.clientX),
+          timeframe.end,
+        ) / timeframeDuration
         : 1;
 
       const startDelta =
