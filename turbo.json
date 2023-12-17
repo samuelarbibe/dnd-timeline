@@ -1,11 +1,5 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
-  "globalEnv": [
-    "PORT"
-  ],
   "pipeline": {
     "build": {
       "dependsOn": [
@@ -34,6 +28,15 @@
       ],
       "cache": false,
       "persistent": true
+    },
+    "release": {
+      "dependsOn": [
+        "^release",
+        "^lint",
+        "^typecheck",
+        "^build"
+      ],
+      "outputMode": "new-only"
     },
     "clean": {
       "cache": false

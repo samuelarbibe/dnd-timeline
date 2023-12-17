@@ -18,11 +18,13 @@
     "clean": "rm -rf dist",
     "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "release": "release-it --ci"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
+    "@repo/release-it-config": "*",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.45",
     "tsup": "^8.0.1",

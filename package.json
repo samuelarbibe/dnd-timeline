@@ -8,14 +8,16 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "changeset": "npx changeset",
-    "prepare-packages": "turbo run build lint typecheck",
-    "publish-packages": "npm run prepare-packages && changeset version && changeset publish",
+    "release": "turbo release --concurrency=1",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@release-it/conventional-changelog": "^8.0.1",
     "husky": "^8.0.3",
     "prettier": "^3.1.0",
+    "release-it": "^17.0.1",
     "turbo": "latest"
   },
   "engines": {
@@ -25,8 +27,5 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ],
-  "dependencies": {
-    "@changesets/cli": "^2.27.1"
-  }
+  ]
 }
