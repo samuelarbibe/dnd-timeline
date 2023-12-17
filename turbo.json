@@ -1,6 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "release": {
+      "dependsOn": [
+        "^release",
+        "^lint",
+        "^typecheck"
+      ],
+      "outputMode": "new-only"
+    },
     "build": {
       "dependsOn": [
         "^build"
@@ -28,15 +36,6 @@
       ],
       "cache": false,
       "persistent": true
-    },
-    "release": {
-      "dependsOn": [
-        "^release",
-        "^lint",
-        "^typecheck",
-        "^build"
-      ],
-      "outputMode": "new-only"
     },
     "clean": {
       "cache": false
