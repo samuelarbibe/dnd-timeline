@@ -18,7 +18,7 @@ module.exports = {
     tagName: `${packageName}@${version}`,
     pushRepo: 'git@github.com:samuelarbibe/dnd-timeline.git',
     commitsPath: '.',
-    commitMessage: `feat(${scope}): released version v${version} [no ci]`,
+    commitMessage: `feat: released version v${version} [no ci]`,
     requireCommits: true,
     requireCommitsFail: false,
   },
