@@ -1,3 +1,7 @@
+
+
+## [1.2.3](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.2.2...dnd-timeline@1.2.3) (2023-12-17)
+
 # dnd-timeline
 
 ## 1.2.2
