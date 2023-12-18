@@ -1,33 +1,17 @@
-import type { PointerEvent, CSSProperties } from "react";
-import { useRef, useState, useCallback, useLayoutEffect } from "react";
-import { CSS } from "@dnd-kit/utilities";
+import type { CSSProperties, PointerEvent } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
-import type { Relevance } from "../types";
-import useTimelineContext from "./useTimelineContext";
+import { CSS } from "@dnd-kit/utilities";
+
 import type {
+  DragDirection,
   ResizeEndEvent,
   ResizeMoveEvent,
   ResizeStartEvent,
-} from "./useTimeline";
+  UseItemProps,
+} from "../types";
 
-export type DragDirection = "start" | "end";
-
-export interface ItemDefinition {
-  id: string;
-  rowId: string;
-  disabled?: boolean;
-  relevance: Relevance;
-}
-
-export type UseItemProps = Pick<
-  ItemDefinition,
-  "id" | "relevance" | "disabled"
-> & {
-  data?: object;
-  onResizeEnd?: (event: ResizeEndEvent) => void;
-  onResizeMove?: (event: ResizeMoveEvent) => void;
-  onResizeStart?: (event: ResizeStartEvent) => void;
-};
+import useTimelineContext from "./useTimelineContext";
 
 const getDragDirection = (
   mouseX: number,
@@ -45,6 +29,7 @@ const getDragDirection = (
   ) {
     return "end";
   }
+
   return null;
 };
 

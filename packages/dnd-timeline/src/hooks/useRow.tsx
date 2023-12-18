@@ -2,16 +2,10 @@ import type { CSSProperties } from "react";
 import { useLayoutEffect, useRef } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import ResizeObserver from "resize-observer-polyfill";
+
+import type { UseRowProps } from "../types";
+
 import useTimelineContext from "./useTimelineContext";
-
-export interface RowDefinition {
-  id: string;
-  disabled?: boolean;
-}
-
-export type UseRowProps = RowDefinition & {
-  data?: object;
-};
 
 export default function useRow(props: UseRowProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);

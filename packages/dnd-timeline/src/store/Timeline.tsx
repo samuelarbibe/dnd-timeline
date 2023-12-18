@@ -1,14 +1,8 @@
-import type { PropsWithChildren } from "react";
-import React, { createContext } from "react";
-import type { DndContextProps } from "@dnd-kit/core";
+import { createContext } from "react";
 import { DndContext } from "@dnd-kit/core";
-import type { UseTimelineProps, TimelineBag } from "../hooks/useTimeline";
-import useTimeline from "../hooks/useTimeline";
 
-export interface TimelineContextProps
-  extends PropsWithChildren,
-    UseTimelineProps,
-    DndContextProps {}
+import useTimeline from "../hooks/useTimeline";
+import type { TimelineBag, TimelineContextProps } from "../types";
 
 export const timelineContext = createContext<TimelineBag | undefined>(
   undefined,

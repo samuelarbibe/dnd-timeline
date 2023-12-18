@@ -23,8 +23,8 @@ module.exports = {
     },
   },
   ignorePatterns: ["node_modules/", "dist/", ".eslintrc.js", "**/*.css"],
-  // add rules configurations here
   rules: {
+    "import/order": "off",
     "no-nested-ternary": "off",
     "react/hook-use-state": "off",
     "react/no-array-index-key": "off",

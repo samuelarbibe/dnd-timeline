@@ -1,4 +1,5 @@
 import { useContext } from "react";
+
 import { timelineContext } from "../store/Timeline";
 
 export default function useTimelineContext() {

@@ -1,4 +1,5 @@
 import { differenceInMilliseconds } from "date-fns";
+
 import type { Timeframe } from "../types";
 
 export const millisecondsToPixels = (

@@ -15,7 +15,7 @@ Please make sure you fully understand it's concepts before trying to use it here
 #### `id`
 
 ```tsx
-id: string
+id: string;
 ```
 
 A unique id to identify this item.
@@ -23,7 +23,7 @@ A unique id to identify this item.
 #### relevance
 
 ```tsx
-id: string
+id: string;
 ```
 
 A unique id to identify this item.
@@ -47,32 +47,36 @@ Custom data that can be passed to the row.
 > 🧠 This can be passed to rows to identify their type. This type can later be used in the event callbacks to apply different behaviors to different row types.
 >
 > {% code title="Item.tsx" %}
+>
 > ```tsx
 > useItem({
 >   id: props.id,
 >   relevance: props.relevance,
->   data: { type: 'timeline-item' },
-> })
+>   data: { type: "timeline-item" },
+> });
 > ```
+>
 > {% endcode %}
 >
 > {% code title="Timeline.tsx" %}
+>
 > ```tsx
 > const onDragEnd = (event: DragEndEvent) => {
 >   const updatedRelevance =
->     event.active?.data?.current?.getRelevanceFromDragEvent(event)
+>     event.active?.data?.current?.getRelevanceFromDragEvent(event);
 >
->   const rowType = event.active?.data?.current?.type
->   
->   if (rowType === 'timeline-row' && itemType === 'timeline-item') {
+>   const rowType = event.active?.data?.current?.type;
+>
+>   if (rowType === "timeline-row" && itemType === "timeline-item") {
 >     // update
 >   }
->     
->   if (rowType === 'timeline-disabled-row' && itemType === 'timeline-item') {
+>
+>   if (rowType === "timeline-disabled-row" && itemType === "timeline-item") {
 >     // don't update, and pop an error message
 >   }
-> }
+> };
 > ```
+>
 > {% endcode %}
 
 ### Events
@@ -84,16 +88,16 @@ For example:
 ```tsx
 const onResizeMove = useCallback(() => {
   const updatedRelevance =
-    event.active.data.current?.getRelevanceFromResizeEvent(event)
+    event.active.data.current?.getRelevanceFromResizeEvent(event);
 
   // update some local state with the updated-relevance
-}, [])
+}, []);
 
 useItem({
   id: props.id,
   relevance: props.relevance,
   onResizeMove,
-})
+});
 ```
 
 #### onResizeStart?
@@ -104,9 +108,9 @@ onResizeMove?: (event: ResizeStartEvent) => void
 
 ```tsx
 type ResizeStartEvent = {
-  active: Omit<Active, 'rect'>
-  direction: DragDirection // 'start' | 'end'
-}
+  active: Omit<Active, "rect">;
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 #### onResizeMove?
@@ -117,12 +121,12 @@ onResizeMove?: (event: ResizeMoveEvent) => void
 
 ```tsx
 type ResizeMoveEvent = {
-  active: Omit<Active, 'rect'>
+  active: Omit<Active, "rect">;
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 #### onResizeEnd?
@@ -133,12 +137,12 @@ onResizeMove?: (event: ResizeEndEvent) => void
 
 ```tsx
 type ResizeEndEvent = {
-  active: Omit<Active, 'rect'>
+  active: Omit<Active, "rect">;
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 ### API
@@ -150,7 +154,7 @@ All of dnd-kit [useDraggable](https://docs.dndkit.com/api-documentation/draggabl
 #### `itemStyle`
 
 ```tsx
-itemStyle: CSSProperties
+itemStyle: CSSProperties;
 ```
 
 Basic style properties that must be passed to the item wrapper element.
@@ -158,7 +162,7 @@ Basic style properties that must be passed to the item wrapper element.
 #### `itemContentStyle`
 
 ```tsx
-itemContentStyle: CSSProperties
+itemContentStyle: CSSProperties;
 ```
 
 Basic style properties that must be passed to the item's children wrapper element.

@@ -1,5 +1,4 @@
-import type { Timeframe } from "../types";
-import type { ItemDefinition } from "../hooks/useItem";
+import type { ItemDefinition, Timeframe } from "../types";
 
 export const groupItemsToSubrows = (
   items: ItemDefinition[],

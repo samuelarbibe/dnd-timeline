@@ -1,102 +1,22 @@
 import type { CSSProperties } from "react";
-import { useRef, useMemo, useState, useCallback } from "react";
-import ResizeObserver from "resize-observer-polyfill";
-import type {
-  Active,
-  DragEndEvent,
-  DragMoveEvent,
-  DragStartEvent,
-  DragCancelEvent,
-} from "@dnd-kit/core";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useDndMonitor } from "@dnd-kit/core";
 import { addMilliseconds, differenceInMilliseconds } from "date-fns";
-import type { Relevance, Timeframe } from "../types";
-import type { UsePanStrategy } from "../utils/panStrategies";
+import ResizeObserver from "resize-observer-polyfill";
+
+import type {
+  GetDateFromScreenX,
+  GetRelevanceFromDragEvent,
+  GetRelevanceFromResizeEvent,
+  MillisecondsToPixels,
+  OnPanEnd,
+  PixelsToMilliseconds,
+  Relevance,
+  Timeframe,
+  TimelineBag,
+  UseTimelineProps,
+} from "../types";
 import { useWheelStrategy } from "../utils/panStrategies";
-import type { DragDirection } from "./useItem";
-
-export interface ResizeMoveEvent {
-  active: Omit<Active, "rect">;
-  delta: {
-    x: number;
-  };
-  direction: DragDirection;
-}
-
-export type ResizeEndEvent = ResizeMoveEvent;
-
-export interface ResizeStartEvent {
-  active: Omit<Active, "rect">;
-  direction: DragDirection;
-}
-
-export interface PanEndEvent {
-  clientX?: number;
-  clientY?: number;
-  deltaX: number;
-  deltaY: number;
-}
-
-export type GetRelevanceFromDragEvent = (
-  event: DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent,
-) => Relevance | null;
-
-export type GetRelevanceFromResizeEvent = (
-  event: ResizeEndEvent,
-) => Relevance | null;
-
-export type GetDateFromScreenX = (screenX: number) => Date;
-
-export type OnResizeStart = (event: ResizeStartEvent) => void;
-
-export type OnResizeEnd = (event: ResizeEndEvent) => void;
-
-export type OnResizeMove = (event: ResizeMoveEvent) => void;
-
-export type OnPanEnd = (event: PanEndEvent) => void;
-
-export type PixelsToMilliseconds = (pixels: number) => number;
-export type MillisecondsToPixels = (milliseconds: number) => number;
-
-export interface TimelineBag {
-  style: CSSProperties;
-  timeframe: Timeframe;
-  overlayed: boolean;
-  sidebarWidth: number;
-  onResizeEnd: OnResizeEnd;
-  onResizeMove?: OnResizeMove;
-  onResizeStart?: OnResizeStart;
-  timeframeGridSize?: number;
-  timelineDirection: CanvasDirection;
-  timelineRef: React.MutableRefObject<HTMLElement | null>;
-  setTimelineRef: (element: HTMLElement | null) => void;
-  setSidebarWidth: React.Dispatch<React.SetStateAction<number>>;
-  millisecondsToPixels: MillisecondsToPixels;
-  pixelsToMilliseconds: PixelsToMilliseconds;
-  getDateFromScreenX: GetDateFromScreenX;
-  getRelevanceFromDragEvent: GetRelevanceFromDragEvent;
-  getRelevanceFromResizeEvent: GetRelevanceFromResizeEvent;
-}
-
-export type OnTimeframeChanged = (
-  updateFunction: (prev: Timeframe) => Timeframe,
-) => void;
-
-export interface GridSizeDefinition {
-  value: number;
-  maxTimeframeSize?: number;
-}
-
-export interface UseTimelineProps {
-  timeframe: Timeframe;
-  overlayed?: boolean;
-  onResizeEnd: OnResizeEnd;
-  onResizeMove?: OnResizeMove;
-  onResizeStart?: OnResizeStart;
-  usePanStrategy?: UsePanStrategy;
-  onTimeframeChanged: OnTimeframeChanged;
-  timeframeGridSizeDefinition?: number | GridSizeDefinition[];
-}
 
 const style: CSSProperties = {
   display: "flex",
@@ -311,15 +231,15 @@ export default function useTimeline({
 
       const startBias = event.clientX
         ? differenceInMilliseconds(
-          timeframe.start,
-          getDateFromScreenX(event.clientX),
-        ) / timeframeDuration
+            timeframe.start,
+            getDateFromScreenX(event.clientX),
+          ) / timeframeDuration
         : 1;
       const endBias = event.clientX
         ? differenceInMilliseconds(
-          getDateFromScreenX(event.clientX),
-          timeframe.end,
-        ) / timeframeDuration
+            getDateFromScreenX(event.clientX),
+            timeframe.end,
+          ) / timeframeDuration
         : 1;
 
       const startDelta =
@@ -350,8 +270,6 @@ export default function useTimeline({
   });
 
   usePanStrategy(timelineRef, onPanEnd);
-
-  console.log("hello")
 
   const value = useMemo<TimelineBag>(
     () => ({

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
-import type { OnPanEnd, PanEndEvent } from "../hooks/useTimeline";
+
+import type { OnPanEnd, PanEndEvent } from "../types";
 
 export type UsePanStrategy = (
   timelineRef: React.MutableRefObject<HTMLElement | null>,

@@ -21,12 +21,13 @@ To install it, run:
 
 ```sh
 npm install react
-```  
+```
+
 Then, you can install the library itself:
+
 ```sh
 npm install dnd-timeline
 ```
-
 
 ## Features
 
@@ -41,15 +42,17 @@ npm install dnd-timeline
 - **Integration with external DnD:** The timeline can be used in conjunction with other DnD interactions in you app, to drag items into and outside of the timeline.
   ![2023-07-09 20 30 25](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/bd354d06-415a-4561-9476-1b9b8463cdd1)
 
-
 ## Contribute
-This project uses turborepo to manage the monorepo.  
 
-If you want to develop on your local machine, simply close the project, and run 
+This project uses turborepo to manage the monorepo.
+
+If you want to develop on your local machine, simply close the project, and run
+
 ```sh
 npm install
 npm run dev
 ```
+
 And all the examples will run on your local machine, likned to the local instance of the library.
-  
+
 Any changes made to the library will be reflected in the examples.
