@@ -351,6 +351,8 @@ export default function useTimeline({
 
   usePanStrategy(timelineRef, onPanEnd);
 
+  console.log("hello")
+
   const value = useMemo<TimelineBag>(
     () => ({
       style,
