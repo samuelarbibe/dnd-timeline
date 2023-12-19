@@ -2,8 +2,8 @@
 
 `dnd-timeline` provides a default interaction that works as following:
 
-- `ctrl + scroll`: zoom in and out, biased by cursor position.
-- `ctrl + shift + scroll`: pan right and left.
+* `ctrl + scroll`: zoom in and out, biased by cursor position.
+* `ctrl + shift + scroll`: pan right and left.
 
 (`cmd` instead of `ctrl` on macOS)
 
@@ -24,17 +24,17 @@ The hook is of the following structure:
 ```tsx
 type UsePanStrategy = (
   timelineRef: React.MutableRefObject<HTMLElement | null>,
-  onPanEnd: OnPanEnd,
-) => void;
+  onPanEnd: OnPanEnd
+) => void
 
-type OnPanEnd = (event: PanEndEvent) => void;
+type OnPanEnd = (event: PanEndEvent) => void
 
 type PanEndEvent = {
-  clientX?: number;
-  clientY?: number;
-  deltaX: number;
-  deltaY: number;
-};
+  clientX?: number
+  clientY?: number
+  deltaX: number
+  deltaY: number
+}
 ```
 
 #### `deltaX`
@@ -57,7 +57,7 @@ If `clientX` and `clientY` are provided, a `deltaY` will be translated into simi
 
 This will create the effect of zooming in and out of the timeline.
 
----
+***
 
 ## Example
 
