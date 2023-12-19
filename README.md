@@ -2,7 +2,7 @@
 
 # [Documentation](https://samuel-arbibe.gitbook.io/dnd-timeline/)
 
-# A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
+## dnd-timeline: A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
 
 - **Headless:** `dnd-timeline` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
 - **Hook-based:** exposes simple hooks like `useItem` and `useRow`, that should integrate seamlessly into your existing architecture.
@@ -46,7 +46,7 @@ npm install dnd-timeline
 
 This project uses turborepo to manage the monorepo.
 
-If you want to develop on your local machine, simply close the project, and run
+If you want to develop on your local machine, simply clone the project, and run
 
 ```sh
 npm install

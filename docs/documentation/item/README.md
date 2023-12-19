@@ -13,29 +13,39 @@ Please make sure you unserstand it's basic concepts before moving on.
 A basic Item component will look like this:
 
 {% code title="Item.tsx" %}
-
 ```tsx
 interface ItemProps {
-  id: string;
-  relevance: Relevance;
-  children: ReactNode;
+  id: string
+  relevance: Relevance
+  children: ReactNode
 }
 
 function Item(props: ItemProps) {
-  const { setNodeRef, attributes, listeners, itemStyle, itemContentStyle } =
-    useItem({
-      id: props.id,
-      relevance: props.relevance,
-    });
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    itemStyle,
+    itemContentStyle,
+  } = useItem({
+    id: props.id,
+    relevance: props.relevance,
+  })
 
   return (
-    <div ref={setNodeRef} style={itemStyle} {...listeners} {...attributes}>
-      <div style={itemContentStyle}>{props.children}</div>
+    <div
+      ref={setNodeRef}
+      style={itemStyle}
+      {...listeners}
+      {...attributes}
+    >
+      <div style={itemContentStyle}>
+        {props.children}
+      </div>
     </div>
-  );
+  )
 }
 ```
-
 {% endcode %}
 
 You can fully customize this component according to your needs.
@@ -45,15 +55,13 @@ You can fully customize this component according to your needs.
 Every `<Item />` component should be rendered as a child of it's parent row.
 
 {% code title="Timeline.tsx" %}
-
 ```tsx
 <Row id={row.id}>
-  {groupedItems[row.id].map((item) => (
+  {groupedItems[row.id].map((item) => 
     <Item id={item.id} relevance={item.relevance}>
       // item content...
     </Item>
-  ))}
+  )}
 </Row>
 ```
-
 {% endcode %}
