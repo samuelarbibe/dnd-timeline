@@ -1,4 +1,4 @@
-import type { CSSProperties, PointerEvent } from "react";
+import type { CSSProperties, PointerEventHandler } from "react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
@@ -108,7 +108,7 @@ export default function useItem(props: UseItemProps) {
   useLayoutEffect(() => {
     if (!dragDirection) return;
 
-    const mouseMoveHandler = (event: MouseEvent) => {
+    const pointermoveHandler = (event: PointerEvent) => {
       if (!dragStartX.current || !draggableProps.node.current) return;
 
       const dragDeltaX =
@@ -139,10 +139,10 @@ export default function useItem(props: UseItemProps) {
       });
     };
 
-    window.addEventListener("mousemove", mouseMoveHandler);
+    window.addEventListener("pointermove", pointermoveHandler);
 
     return () => {
-      window.removeEventListener("mousemove", mouseMoveHandler);
+      window.removeEventListener("pointermove", pointermoveHandler);
     };
   }, [
     side,
@@ -207,8 +207,8 @@ export default function useItem(props: UseItemProps) {
     onResizeEndCallback,
   ]);
 
-  const onPointerMove = useCallback(
-    (event: PointerEvent) => {
+  const onPointerMove = useCallback<PointerEventHandler>(
+    (event) => {
       if (!draggableProps.node.current || props.disabled) return;
 
       const newDragDirection = getDragDirection(
@@ -226,8 +226,8 @@ export default function useItem(props: UseItemProps) {
     [draggableProps.node, props.disabled, timelineDirection, cursor],
   );
 
-  const onPointerDown = useCallback(
-    (event: PointerEvent) => {
+  const onPointerDown = useCallback<PointerEventHandler>(
+    (event) => {
       if (!draggableProps.node.current || props.disabled) return;
 
       const newDragDirection = getDragDirection(
@@ -271,7 +271,7 @@ export default function useItem(props: UseItemProps) {
     [side]: deltaX,
     cursor,
     height: "100%",
-    touchAction: 'manipulation',
+    touchAction: "none",
     ...(!(draggableProps.isDragging && overlayed) && {
       transform: CSS.Translate.toString(draggableProps.transform),
     }),
