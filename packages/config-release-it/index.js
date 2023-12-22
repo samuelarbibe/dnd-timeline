@@ -4,13 +4,13 @@ const scope = packageName.split('/')[1];
 
 module.exports = {
   hooks: {
-    "after:bump": "npm install && git add package-lock.json",
+    "after:bump": "npm install",
   },
   plugins: {
     '@release-it/conventional-changelog': {
       path: '.',
       infile: 'CHANGELOG.md',
-      preset: 'conventionalcommits'
+      preset: 'conventionalcommits',
     },
   },
   git: {
