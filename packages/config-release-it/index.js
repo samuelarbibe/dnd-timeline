@@ -4,7 +4,7 @@ const scope = packageName.split('/')[1];
 
 module.exports = {
   hooks: {
-    "after:bump": "npm install"
+    "after:bump": "npm install && git add package-lock.json",
   },
   plugins: {
     '@release-it/conventional-changelog': {
@@ -24,6 +24,7 @@ module.exports = {
     commitMessage: `feat: released version v${version} [no ci]`,
     requireCommits: true,
     requireCommitsFail: false,
+    requireCleanWorkingDir: true
   },
   npm: {
     publish: true,
