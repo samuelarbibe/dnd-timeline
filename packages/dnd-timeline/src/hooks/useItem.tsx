@@ -271,6 +271,7 @@ export default function useItem(props: UseItemProps) {
     [side]: deltaX,
     cursor,
     height: "100%",
+    touchAction: 'manipulation',
     ...(!(draggableProps.isDragging && overlayed) && {
       transform: CSS.Translate.toString(draggableProps.transform),
     }),
