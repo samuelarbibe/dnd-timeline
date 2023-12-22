@@ -4,7 +4,7 @@ const scope = packageName.split('/')[1];
 
 module.exports = {
   hooks: {
-    "after:bump": "npm install",
+    "before:git:release": ["npm install", "git add --all"]
   },
   plugins: {
     '@release-it/conventional-changelog': {
