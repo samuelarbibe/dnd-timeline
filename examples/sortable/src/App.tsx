@@ -59,9 +59,9 @@ function App() {
     const activeItemType = event.active.data.current?.type as ItemType;
 
     const getRelevanceFromDragEvent = event.active.data.current
-      ?.getRelevanceFromDragEvent as GetRelevanceFromDragEvent;
+      ?.getRelevanceFromDragEvent as GetRelevanceFromDragEvent | undefined;
 
-    const updatedRelevance = getRelevanceFromDragEvent(event);
+    const updatedRelevance = getRelevanceFromDragEvent?.(event);
 
     if (updatedRelevance && activeItemType === ItemType.ListItem) {
       setItems((prev) =>
