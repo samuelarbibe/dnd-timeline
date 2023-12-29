@@ -1,9 +1,9 @@
 # Examples
 
 {% hint style="info" %}
-The code of these examples is included in the repository.
+Only a small part of the examples are hosted.
 
-Check it out: [https://github.com/samuelarbibe/dnd-timeline/tree/main/examples](https://github.com/samuelarbibe/dnd-timeline/tree/main/examples)
+The reset of the examples are in the repository, check it out: [https://github.com/samuelarbibe/dnd-timeline/tree/main/examples](https://github.com/samuelarbibe/dnd-timeline/tree/main/examples)
 {% endhint %}
 
 ## Virtual
@@ -40,3 +40,12 @@ Just like this example, you can implement a couple other things:
 And any other drag-and-drop interaction you can think of.
 
 {% embed url="https://dnd-timeline-external.vercel.app" %}
+
+## Time Axis
+
+This examples adds a time axis and time cursor to indicate the current time and the timeframe represented in the timeline.
+
+These components are external to the library, and are an example of how to use `dnd-timeline`'s context to create custom components.
+
+{% embed url="https://dnd-timeline-timeaxis.vercel.app" %}
+
