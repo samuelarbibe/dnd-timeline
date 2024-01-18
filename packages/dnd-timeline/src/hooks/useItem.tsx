@@ -89,15 +89,21 @@ export default function useItem(props: UseItemProps) {
     disabled: props.disabled,
   });
 
-  const deltaX = millisecondsToPixels(
+  const deltaXStart = millisecondsToPixels(
     props.relevance.start.getTime() - timeframe.start.getTime(),
+  );
+
+  const deltaXEnd = millisecondsToPixels(
+    timeframe.end.getTime() - props.relevance.end.getTime(),
   );
 
   const width = millisecondsToPixels(
     props.relevance.end.getTime() - props.relevance.start.getTime(),
   );
 
-  const side = timelineDirection === "rtl" ? "right" : "left";
+  const sideStart = timelineDirection === "rtl" ? "right" : "left";
+
+  const sideEnd = timelineDirection === "rtl" ? "left" : "right";
 
   const cursor = props.disabled
     ? "inherit"
@@ -116,14 +122,14 @@ export default function useItem(props: UseItemProps) {
         (timelineDirection === "rtl" ? -1 : 1);
 
       if (dragDirection === "start") {
-        const newSideDelta = deltaX + dragDeltaX;
-        draggableProps.node.current.style[side] = `${newSideDelta}px`;
+        const newSideDelta = deltaXStart + dragDeltaX;
+        draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
 
-        const newWidth = width + deltaX - newSideDelta;
+        const newWidth = width + deltaXStart - newSideDelta;
         draggableProps.node.current.style.width = `${newWidth}px`;
       } else {
-        const otherSideDelta = deltaX + width + dragDeltaX;
-        const newWidth = otherSideDelta - deltaX;
+        const otherSideDelta = deltaXStart + width + dragDeltaX;
+        const newWidth = otherSideDelta - deltaXStart;
         draggableProps.node.current.style.width = `${newWidth}px`;
       }
 
@@ -145,9 +151,9 @@ export default function useItem(props: UseItemProps) {
       window.removeEventListener("pointermove", pointermoveHandler);
     };
   }, [
-    side,
+    sideStart,
     width,
-    deltaX,
+    deltaXStart,
     props.id,
     dragDirection,
     timelineDirection,
@@ -165,9 +171,9 @@ export default function useItem(props: UseItemProps) {
 
       if (dragDirection === "start") {
         const currentSideDelta = parseInt(
-          draggableProps.node.current.style[side].slice(0, -2),
+          draggableProps.node.current.style[sideStart].slice(0, -2),
         );
-        dragDeltaX = currentSideDelta - deltaX;
+        dragDeltaX = currentSideDelta - deltaXStart;
       } else {
         const currentWidth = parseInt(
           draggableProps.node.current.style.width.slice(0, -2),
@@ -189,7 +195,7 @@ export default function useItem(props: UseItemProps) {
       setDragDirection(null);
 
       draggableProps.node.current.style.width = `${width}px`;
-      draggableProps.node.current.style[side] = `${deltaX}px`;
+      draggableProps.node.current.style[sideStart] = `${deltaXStart}px`;
     };
 
     window.addEventListener("pointerup", pointerupHandler);
@@ -198,9 +204,9 @@ export default function useItem(props: UseItemProps) {
       window.removeEventListener("pointerup", pointerupHandler);
     };
   }, [
-    side,
+    sideStart,
     width,
-    deltaX,
+    deltaXStart,
     props.id,
     dragDirection,
     draggableProps.node,
@@ -261,14 +267,18 @@ export default function useItem(props: UseItemProps) {
     ],
   );
 
-  const paddingSide =
+  const paddingStart =
     timelineDirection === "rtl" ? "paddingRight" : "paddingLeft";
+  
+  const paddingEnd =
+    timelineDirection === "rtl" ? "paddingLeft" : "paddingRight";
 
   const itemStyle: CSSProperties = {
     position: "absolute",
     top: 0,
     width,
-    [side]: deltaX,
+    [sideStart]: deltaXStart,
+    [sideEnd]: deltaXEnd,
     cursor,
     height: "100%",
     touchAction: "none",
@@ -282,7 +292,8 @@ export default function useItem(props: UseItemProps) {
     display: "flex",
     overflow: "hidden",
     alignItems: "stretch",
-    [paddingSide]: Math.max(0, -parseInt(itemStyle[side]?.toString() || "0")),
+    [paddingStart]: Math.max(0, -parseInt(itemStyle[sideStart]?.toString() || "0")),
+    [paddingEnd]: Math.max(0, -parseInt(itemStyle[sideEnd]?.toString() || "0")),
   };
 
   return {
