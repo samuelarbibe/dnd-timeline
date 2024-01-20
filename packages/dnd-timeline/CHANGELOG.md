@@ -1,5 +1,14 @@
 
 
+## [1.4.4](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.4.3...dnd-timeline@1.4.4) (2024-01-20)
+
+
+### Bug Fixes
+
+* comments ([b7fb89a](https://github.com/samuelarbibe/dnd-timeline/commit/b7fb89a899ceb2414dd7f4a6cf6f7701a826df36))
+* overflowX in virtual example ([9b79cdc](https://github.com/samuelarbibe/dnd-timeline/commit/9b79cdcbd5ffb05d3c4ffe1b89d2c2ff86708269))
+* set padding-end if item goes out of timeframe from its end ([97592fd](https://github.com/samuelarbibe/dnd-timeline/commit/97592fd11c2d85af5500141ffa60da30698a3d26))
+
 ## [1.4.3](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.4.2...dnd-timeline@1.4.3) (2023-12-22)
 
 ## [1.4.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.4.0...dnd-timeline@1.4.2) (2023-12-22)
