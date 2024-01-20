@@ -292,8 +292,8 @@ export default function useItem(props: UseItemProps) {
     display: "flex",
     overflow: "hidden",
     alignItems: "stretch",
-    [paddingStart]: Math.max(0, -parseInt(itemStyle[sideStart]?.toString() || "0")),
-    [paddingEnd]: Math.max(0, -parseInt(itemStyle[sideEnd]?.toString() || "0")),
+    [paddingStart]: Math.max(0, -deltaXStart),
+    [paddingEnd]: Math.max(0, -deltaXEnd),
   };
 
   return {
