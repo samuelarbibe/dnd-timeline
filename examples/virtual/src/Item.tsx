@@ -18,7 +18,13 @@ function Item(props: ItemProps) {
   return (
     <div ref={setNodeRef} style={itemStyle} {...listeners} {...attributes}>
       <div style={itemContentStyle}>
-        <div style={{ border: "1px solid white", width: "100%" }}>
+        <div
+          style={{
+            border: "1px solid white",
+            width: "100%",
+            overflow: "hidden",
+          }}
+        >
           {props.children}
         </div>
       </div>
