@@ -1,13 +1,13 @@
 import type { ItemDefinition, Timeframe } from "../types";
 
-export const groupItemsToSubrows = <Item extends ItemDefinition = ItemDefinition>(
-  items: Item[],
+export const groupItemsToSubrows = <T extends ItemDefinition = ItemDefinition>(
+  items: T[],
   timeframe?: Timeframe,
 ) => {
   const sortedItems = [...items];
   sortedItems.sort((a, b) => (a.relevance.start > b.relevance.start ? 1 : -1));
 
-  return sortedItems.reduce<Record<string, Item[][]>>((acc, item) => {
+  return sortedItems.reduce<Record<string, T[][]>>((acc, item) => {
     if (
       timeframe &&
       (item.relevance.start >= timeframe.end ||
@@ -34,11 +34,11 @@ export const groupItemsToSubrows = <Item extends ItemDefinition = ItemDefinition
   }, {});
 };
 
-export const groupItemsToRows = <Item extends ItemDefinition = ItemDefinition>(
-  items: Item[],
+export const groupItemsToRows = <T extends ItemDefinition = ItemDefinition>(
+  items: T[],
   timeframe?: Timeframe,
 ) => {
-  return items.reduce<Record<string, Item[]>>((acc, item) => {
+  return items.reduce<Record<string, T[]>>((acc, item) => {
     if (
       timeframe &&
       (item.relevance.start >= timeframe.end ||
