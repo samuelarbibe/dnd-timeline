@@ -1,6 +1,6 @@
 import type { ItemDefinition, Timeframe } from "../types";
 
-export const groupItemsToSubrows = <Item extends ItemDefinition>(
+export const groupItemsToSubrows = <Item extends ItemDefinition = ItemDefinition>(
   items: Item[],
   timeframe?: Timeframe,
 ) => {
@@ -34,7 +34,7 @@ export const groupItemsToSubrows = <Item extends ItemDefinition>(
   }, {});
 };
 
-export const groupItemsToRows = <Item extends ItemDefinition>(
+export const groupItemsToRows = <Item extends ItemDefinition = ItemDefinition>(
   items: Item[],
   timeframe?: Timeframe,
 ) => {
