@@ -17,23 +17,19 @@ const getDragDirection = (
   mouseX: number,
   clientRect: DOMRect,
   direction: CanvasDirection,
+  resizeHandleWidth: number,
 ): DragDirection | null => {
   const startSide = direction === "rtl" ? "right" : "left";
   const endSide = direction === "rtl" ? "left" : "right";
 
-  if (Math.abs(mouseX - clientRect[startSide]) <= RESIZE_HANDLER_WIDTH / 2) {
+  if (Math.abs(mouseX - clientRect[startSide]) <= resizeHandleWidth / 2) {
     return "start";
-  } else if (
-    Math.abs(mouseX - clientRect[endSide]) <=
-    RESIZE_HANDLER_WIDTH / 2
-  ) {
+  } else if (Math.abs(mouseX - clientRect[endSide]) <= resizeHandleWidth / 2) {
     return "end";
   }
 
   return null;
 };
-
-const RESIZE_HANDLER_WIDTH = 20;
 
 export default function useItem(props: UseItemProps) {
   const dataRef = useRef<object>();
@@ -47,6 +43,7 @@ export default function useItem(props: UseItemProps) {
     onResizeMove,
     onResizeStart,
     timelineDirection,
+    resizeHandleWidth,
     millisecondsToPixels,
     getRelevanceFromDragEvent,
     getRelevanceFromResizeEvent,
@@ -221,6 +218,7 @@ export default function useItem(props: UseItemProps) {
         event.clientX,
         draggableProps.node.current.getBoundingClientRect(),
         timelineDirection,
+        resizeHandleWidth,
       );
 
       if (newDragDirection) {
@@ -229,7 +227,13 @@ export default function useItem(props: UseItemProps) {
         draggableProps.node.current.style.cursor = cursor;
       }
     },
-    [draggableProps.node, props.disabled, timelineDirection, cursor],
+    [
+      draggableProps.node,
+      props.disabled,
+      timelineDirection,
+      cursor,
+      resizeHandleWidth,
+    ],
   );
 
   const onPointerDown = useCallback<PointerEventHandler>(
@@ -240,6 +244,7 @@ export default function useItem(props: UseItemProps) {
         event.clientX,
         draggableProps.node.current.getBoundingClientRect(),
         timelineDirection,
+        resizeHandleWidth,
       );
 
       if (newDragDirection) {
@@ -261,6 +266,7 @@ export default function useItem(props: UseItemProps) {
       props.id,
       props.disabled,
       timelineDirection,
+      resizeHandleWidth,
       draggableProps.node,
       onResizeStartCallback,
       draggableProps.listeners,
@@ -269,7 +275,7 @@ export default function useItem(props: UseItemProps) {
 
   const paddingStart =
     timelineDirection === "rtl" ? "paddingRight" : "paddingLeft";
-  
+
   const paddingEnd =
     timelineDirection === "rtl" ? "paddingLeft" : "paddingRight";
 

@@ -25,6 +25,7 @@ You timeline components must be wrapped in this context.
 interface TimelineContextProps {
     timeframe: Timeframe // { start: Date, end: Date }
     overlayed?: boolean
+    resizeHandleWidth?: number
     onResizeEnd: OnResizeEnd
     onResizeMove?: OnResizeMove
     onResizeStart?: OnResizeStart
@@ -183,8 +184,15 @@ A callback that receives an update function as a prop. Use this to update your c
 ```tsx
 overlayed?: boolean = false
 ```
+If true, disables the item's position transform. Can be set to true when you use `dnd-kit`'s [`DragOverlay`](https://docs.dndkit.com/api-documentation/draggable/drag-overlay).
 
-This prop enabled/disabled rendering of items when dragging. If using `dnd-kit`'s [DragOverlay](https://docs.dndkit.com/api-documentation/draggable/drag-overlay), this should be set to `true`.
+#### `resizeHandleWidth?`
+
+```tsx
+resizeHandleWidth?: number = 20
+```
+
+Sets the items' resize handle width in `px`. The default value is `20px`.
 
 #### `timeframeGridSizeDefinition?`
 

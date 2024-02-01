@@ -44,7 +44,7 @@ function Timeline(props: TimelineProps) {
         style={{
           minHeight: `${rowVirtualizer.getTotalSize()}px`,
           width: "100%",
-          overflow: 'hidden',
+          overflow: "hidden",
           position: "relative",
         }}
       >

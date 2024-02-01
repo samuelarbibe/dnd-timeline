@@ -63,6 +63,7 @@ export interface TimelineBag {
   onResizeEnd: OnResizeEnd;
   onResizeMove?: OnResizeMove;
   onResizeStart?: OnResizeStart;
+  resizeHandleWidth: number;
   timeframeGridSize?: number;
   timelineDirection: CanvasDirection;
   timelineRef: React.MutableRefObject<HTMLElement | null>;
@@ -88,6 +89,7 @@ export interface UseTimelineProps {
   timeframe: Timeframe;
   overlayed?: boolean;
   onResizeEnd: OnResizeEnd;
+  resizeHandleWidth?: number;
   onResizeMove?: OnResizeMove;
   onResizeStart?: OnResizeStart;
   usePanStrategy?: UsePanStrategy;

@@ -25,6 +25,8 @@ const style: CSSProperties = {
   flexDirection: "column",
 };
 
+const DEFAULT_RESIZE_HANDLE_WIDTH = 20;
+
 function useTimelineRef() {
   const ref = useRef<HTMLElement | null>(null);
   const [width, setWidth] = useState(0);
@@ -68,6 +70,7 @@ export default function useTimeline({
   onTimeframeChanged,
   timeframeGridSizeDefinition,
   usePanStrategy = useWheelStrategy,
+  resizeHandleWidth = DEFAULT_RESIZE_HANDLE_WIDTH,
 }: UseTimelineProps): TimelineBag {
   const [sidebarWidth, setSidebarWidth] = useState(0);
   const dragStartTimeframe = useRef<Timeframe>(timeframe);
@@ -282,6 +285,7 @@ export default function useTimeline({
       onResizeStart,
       sidebarWidth,
       setSidebarWidth,
+      resizeHandleWidth,
       pixelsToMilliseconds,
       millisecondsToPixels,
       timelineRef,
@@ -293,13 +297,14 @@ export default function useTimeline({
       getRelevanceFromResizeEvent,
     }),
     [
-      overlayed,
       timeframe,
+      overlayed,
       onPanEnd,
       onResizeEnd,
       onResizeMove,
       onResizeStart,
       sidebarWidth,
+      resizeHandleWidth,
       pixelsToMilliseconds,
       millisecondsToPixels,
       timelineRef,
