@@ -1,5 +1,20 @@
 
 
+## [1.5.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.4.4...dnd-timeline@1.5.0) (2024-02-01)
+
+
+### Features
+
+* accept broader item type in grouping util functions ([fdc68d6](https://github.com/samuelarbibe/dnd-timeline/commit/fdc68d6aa292ef3e98bf9d4e3662e91ef07de579))
+* add resizeHandleWidth prop ([239ff9e](https://github.com/samuelarbibe/dnd-timeline/commit/239ff9ee7a038de127a6f20295f7075dcfc018f4))
+
+
+### Bug Fixes
+
+* add default type ([c7d9f5d](https://github.com/samuelarbibe/dnd-timeline/commit/c7d9f5defdf7f69488982daf2d6704e0f09bba4c))
+* example items' end border is visible on content overflow ([9ab70ec](https://github.com/samuelarbibe/dnd-timeline/commit/9ab70ec194188ca8441e921b0fc2c9c96060451b))
+* rename type ([c3969b7](https://github.com/samuelarbibe/dnd-timeline/commit/c3969b7aa291f45781cacb1470d3f601c5c743e3))
+
 ## [1.4.4](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.4.3...dnd-timeline@1.4.4) (2024-01-20)
 
 
