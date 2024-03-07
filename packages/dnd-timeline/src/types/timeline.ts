@@ -52,8 +52,8 @@ export type OnResizeMove = (event: ResizeMoveEvent) => void;
 
 export type OnPanEnd = (event: PanEndEvent) => void;
 
-export type PixelsToMilliseconds = (pixels: number) => number;
-export type MillisecondsToPixels = (milliseconds: number) => number;
+export type PixelsToMilliseconds = (pixels: number, timeframe?: Timeframe) => number;
+export type MillisecondsToPixels = (milliseconds: number, timeframe?: Timeframe) => number;
 
 export interface TimelineBag {
   style: CSSProperties;

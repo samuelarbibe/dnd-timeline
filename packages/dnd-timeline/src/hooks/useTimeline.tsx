@@ -103,19 +103,23 @@ export default function useTimeline({
   }, [timeframe, timeframeGridSizeDefinition]);
 
   const millisecondsToPixels = useCallback<MillisecondsToPixels>(
-    (milliseconds: number) => {
+    (milliseconds: number, customTimeframe?: Timeframe) => {
+      const { start, end } = customTimeframe || timeframe;
+
       const msToPixel =
         timelineViewportWidth /
-        differenceInMilliseconds(timeframe.end, timeframe.start);
+        differenceInMilliseconds(end, start);
       return milliseconds * msToPixel;
     },
     [timelineViewportWidth, timeframe],
   );
 
   const pixelsToMilliseconds = useCallback<PixelsToMilliseconds>(
-    (pixels: number) => {
+    (pixels: number, customTimeframe?: Timeframe) => {
+      const { start, end } = customTimeframe || timeframe;
+
       const pixelToMs =
-        differenceInMilliseconds(timeframe.end, timeframe.start) /
+        differenceInMilliseconds(end, start) /
         timelineViewportWidth;
       return pixels * pixelToMs;
     },
@@ -234,15 +238,15 @@ export default function useTimeline({
 
       const startBias = event.clientX
         ? differenceInMilliseconds(
-            timeframe.start,
-            getDateFromScreenX(event.clientX),
-          ) / timeframeDuration
+          timeframe.start,
+          getDateFromScreenX(event.clientX),
+        ) / timeframeDuration
         : 1;
       const endBias = event.clientX
         ? differenceInMilliseconds(
-            getDateFromScreenX(event.clientX),
-            timeframe.end,
-          ) / timeframeDuration
+          getDateFromScreenX(event.clientX),
+          timeframe.end,
+        ) / timeframeDuration
         : 1;
 
       const startDelta =
