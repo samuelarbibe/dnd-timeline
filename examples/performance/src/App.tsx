@@ -1,5 +1,5 @@
 import "./index.css";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useDeferredValue, useState } from "react";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
 import type {
@@ -22,7 +22,8 @@ const DEFAULT_TIMEFRAME: Timeframe = {
 enum TimeframeType {
   NORMAL = 'Normal',
   DEBOUNCED = 'Debounced',
-  THROTTLED = 'Throttled'
+  THROTTLED = 'Throttled',
+  DEFERRED = 'Deferred',
 }
 
 function App() {
@@ -31,11 +32,16 @@ function App() {
   const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
   const debouncedTimeframe = useDebounce(timeframe, 300)
   const throttledTimeframe = useThrottle(timeframe, 300)
+  const deferredTimeframe = useDeferredValue(timeframe)
 
-  const selectedTimeframe = timeframeType === TimeframeType.NORMAL
-    ? timeframe
-    : timeframeType === TimeframeType.DEBOUNCED
-      ? debouncedTimeframe : throttledTimeframe
+  const timeframeByType = {
+    [TimeframeType.NORMAL]: timeframe,
+    [TimeframeType.DEBOUNCED]: debouncedTimeframe,
+    [TimeframeType.THROTTLED]: throttledTimeframe,
+    [TimeframeType.DEFERRED]: deferredTimeframe,
+  }
+
+  const selectedTimeframe = timeframeByType[timeframeType]
 
   const [rows] = useState(generateRows(1));
   const [items, setItems] = useState(generateItems(500, selectedTimeframe, rows));
@@ -92,22 +98,20 @@ function App() {
     [setItems],
   );
 
-  const handleOnTimeframeChanged: OnTimeframeChanged = (updateFunction) => {
-    setTimeframe(updateFunction)
-  }
-
   return (
     <>
-      <input checked={timeframeType === TimeframeType.NORMAL} id={TimeframeType.NORMAL} onClick={() => { setTimeframeType(TimeframeType.NORMAL) }} type='radio' value={timeframeType} />
-      <label htmlFor={TimeframeType.NORMAL}>{TimeframeType.NORMAL}</label>
-      <input checked={timeframeType === TimeframeType.DEBOUNCED} id={TimeframeType.DEBOUNCED} onClick={() => { setTimeframeType(TimeframeType.DEBOUNCED) }} type='radio' value={timeframeType} />
-      <label htmlFor={TimeframeType.DEBOUNCED}>{TimeframeType.DEBOUNCED}</label>
-      <input checked={timeframeType === TimeframeType.THROTTLED} id={TimeframeType.THROTTLED} onClick={() => { setTimeframeType(TimeframeType.THROTTLED) }} type='radio' value={timeframeType} />
-      <label htmlFor={TimeframeType.THROTTLED}>{TimeframeType.THROTTLED}</label>
+      {
+        Object.values(TimeframeType).map((timeframeTypeOption) => (
+          <>
+            <input checked={timeframeType === timeframeTypeOption} id={timeframeTypeOption} onClick={() => { setTimeframeType(timeframeTypeOption) }} type='radio' value={timeframeType} />
+            <label htmlFor={timeframeTypeOption}>{timeframeTypeOption}</label>
+          </>
+        ))
+      }
       <TimelineContext
         onDragEnd={onDragEnd}
         onResizeEnd={onResizeEnd}
-        onTimeframeChanged={handleOnTimeframeChanged}
+        onTimeframeChanged={setTimeframe}
         timeframe={selectedTimeframe}
       >
         <Timeline items={items} rows={rows} timeframe={timeframe} />
