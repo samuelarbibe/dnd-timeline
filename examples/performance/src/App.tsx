@@ -7,7 +7,6 @@ import type {
   Timeframe,
   GetRelevanceFromResizeEvent,
   GetRelevanceFromDragEvent,
-  OnTimeframeChanged,
 } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import Timeline from "./Timeline";
