@@ -31,20 +31,24 @@ A ref setter that must be passed to the timeline's container element.
 #### `millisecondsToPixels`
 
 ```typescript
-millisecondsToPixels: (milliseconds: number) => number
+millisecondsToPixels: (milliseconds: number, timeframe?: Timeframe) => number
 ```
 
-A helper function that receives milliseconds, and returns the pixel representation in relation to the timeline's container element.&#x20;
+A helper function that receives milliseconds, and returns the pixel representation in relation to the timeline's container element.
+  
+If provided, the calculation will be performed on the given timeframe. 
 
 > 🧠 It can be used to infer elements' size and position in pixels, based on their duration. It is internally used in order to position items on the timeline.
 
 #### `pixelsToMilliseconds`
 
 ```typescript
-pixelsToMilliseconds: (pixels: number) => number
+pixelsToMilliseconds: (pixels: number, timeframe?: Timeframe) => number
 ```
 
 A helper function that receives pixels, and returns the equivalent duration for it in milliseconds, in relation to the timeline's container element.
+  
+If provided, the calculation will be performed on the given timeframe. 
 
 > 🧠 It can be used to convert size and position to a time value. It is internally used to infer items' update relevances according to their updated position/width, in relation to the timeline's container element.
 
