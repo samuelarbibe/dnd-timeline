@@ -49,3 +49,11 @@ These components are external to the library, and are an example of how to use `
 
 {% embed url="https://dnd-timeline-timeaxis.vercel.app" %}
 
+## Performance
+
+This example adds a `debounce` or a `throttle` mechanism to the timeframe, in order to greatly improve the zoom and pan performance. &#x20;
+
+Play around with the different options to see how they feel!
+
+{% embed url="https://dnd-timeline-performance.vercel.app" %}
+

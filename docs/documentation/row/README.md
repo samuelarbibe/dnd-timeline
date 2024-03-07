@@ -2,7 +2,7 @@
 
 A row is a container for items.
 
-The timeline is constructed of many rows, stacked on top of each other, where each row containes all the items related to it.
+The timeline is constructed of many rows, stacked on top of each other, where each row contains all the items related to it.
 
 {% hint style="info" %}
 Row is an extension of dnd-kits's [Droppable](https://docs.dndkit.com/api-documentation/droppable).&#x20;
@@ -57,7 +57,7 @@ You can fully customize this component according to your needs.
 
 ### Usage
 
-Every `<Item />` component should be rendered as a child of it's parent row.
+Every `<Row />` component should be rendered as a child of it's parent row.
 
 {% code title="Timeline.tsx" %}
 ```tsx

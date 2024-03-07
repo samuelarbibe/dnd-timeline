@@ -303,6 +303,6 @@ Enables and configures panning and zooming the timeline.
 
 The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoom in and out, and `shift + ctrl + wheel` to pan left and right (`cmd/ctrl` on MacOS).
 
-{% content-ref url="../zoom-and-pan.md" %}
-[zoom-and-pan.md](../zoom-and-pan.md)
+{% content-ref url="../zoom-and-pan/" %}
+[zoom-and-pan](../zoom-and-pan/)
 {% endcontent-ref %}
