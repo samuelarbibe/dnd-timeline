@@ -11,8 +11,8 @@
 
 You can do so by passing you custom pan strategy to the `usePanStrategy` prop on the `TimelineContext`.
 
-{% content-ref url="timelinecontext/" %}
-[timelinecontext](timelinecontext/)
+{% content-ref url="../timelinecontext/" %}
+[timelinecontext](../timelinecontext/)
 {% endcontent-ref %}
 
 ## Custom Zoom & Pan Strategy

@@ -16,7 +16,8 @@
   * [Subrow](documentation/row/subrow.md)
 * [Item](documentation/item/README.md)
   * [useItem](documentation/item/useitem.md)
-* [Zoom & Pan](documentation/zoom-and-pan.md)
+* [Zoom & Pan](documentation/zoom-and-pan/README.md)
+  * [Performance](documentation/zoom-and-pan/performance.md)
 
 ***
 
