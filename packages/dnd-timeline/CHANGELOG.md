@@ -1,5 +1,13 @@
 
 
+## [1.5.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.5.0...dnd-timeline@1.5.1) (2024-03-07)
+
+
+### Bug Fixes
+
+* add performence example ([e30daff](https://github.com/samuelarbibe/dnd-timeline/commit/e30daff24fab157b63303ea092af3a2a61adece4))
+* add useDeferredValue example to performance ([2fd07d3](https://github.com/samuelarbibe/dnd-timeline/commit/2fd07d3a38cf5ae730f305cef77b62cc837d5897))
+
 ## [1.5.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.4.4...dnd-timeline@1.5.0) (2024-02-01)
 
 
