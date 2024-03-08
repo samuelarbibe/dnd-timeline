@@ -1,4 +1,4 @@
-# `dnd-timeline` [![npm version](https://badge.fury.io/js/dnd-timeline.svg)](https://npmjs.com/dnd-timeline)
+![Screenshot 2024-03-09 at 0 28 29](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/d7639942-0727-4f0f-91c3-eef43cb7f40b)
 
 # [Documentation](https://samuel-arbibe.gitbook.io/dnd-timeline/)
 
@@ -11,7 +11,7 @@
 - **Performant:** renders only when needed. All the intermediate states and animations are done using css transformations, and require 0 re-renders.
 - **RTL:** `dnd-timeline` nativly supports RTL. simply declare one of the parent divs as rtl with `dir="rtl"`, and thats it.
 
-![2023-07-09 20 31 30](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/d5be60a3-d06f-4950-8db6-ff78fffbce88)
+![2024-03-09 00 35 27](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/39e1e0c7-22ac-4286-8f35-58dc7380b7eb)
 
 ## Installation
 
