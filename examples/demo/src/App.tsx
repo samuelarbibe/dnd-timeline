@@ -10,10 +10,10 @@ function App() {
       <div className="p-10 xl:p-20 gap-10 flex flex-1 flex-col xl:flex-row items-center justify-evenly xl:justify-around">
         <div className="flex flex-col min-w-fit">
           <div className="flex w-full flex-col justify-center items-center xl:items-start gap-3">
-            <h1 className="text-3xl font-bold tracking-tight lg:text-6xl">🎉&nbsp; dnd-timeline</h1>
-            <span className="text-xl text-muted-foreground">
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl xl:text-6xl">🎉&nbsp; dnd-timeline</h1>
+            <span className="text-xl text-muted-foreground max-md:text-center">
               A headless timeline library for React, based on
-              <a className='text-xl font-bold px-2 hover:underline underline-offset-4' href='https://dndkit.com/' target='#'>dnd-kit</a>
+              <a className='text-xl font-bold px-2 hover:underline-offset-8 underline-offset-4 underline transition-all' href='https://dndkit.com/' target='#'>dnd-kit</a>
             </span>
             <div className='flex flex-row items-center justify-start mt-5 gap-4'>
               <Button
@@ -40,10 +40,10 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="flex max-w-7xl flex-col w-full max-md:hidden">
+        <div className="flex max-w-7xl flex-col w-full max-sm:hidden">
           <Timeline />
         </div>
-        <div className="flex flex-col items-center w-full md:hidden gap-3">
+        <div className="flex flex-col items-center w-full sm:hidden gap-3">
           <RotateCounterClockwiseIcon className="size-10" />
           <span className="text-xl">Rotate device to landscape</span>
         </div>
