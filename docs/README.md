@@ -15,6 +15,8 @@ layout:
 
 # 🎊 dnd-timeline
 
+## [Try it out!](https://dnd-timeline-demo.vercel.app/)
+
 {% content-ref url="guide/introduction.md" %}
 [introduction.md](guide/introduction.md)
 {% endcontent-ref %}
