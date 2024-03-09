@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
  
-#root {
+html, body {
   height: 100vh;
   width: 100vw;
+  padding: 0;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--card));
 }
 
 @layer base {

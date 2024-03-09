@@ -17,7 +17,12 @@ function Row(props: RowProps) {
   } = useRow({ id: props.id });
 
   return (
-    <div className="border" style={{ ...rowWrapperStyle, minHeight: 50 }}>
+    <div
+      className="border-b w-full"
+      style={{
+        ...rowWrapperStyle,
+        minHeight: 50
+      }}>
       <div ref={setSidebarRef} style={rowSidebarStyle}>
         {props.sidebar}
       </div>
