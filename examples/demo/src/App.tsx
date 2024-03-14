@@ -1,4 +1,4 @@
-import React, { } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import TimelineWrapper from "./components/timeline/timeline-wrapper";
 import Timeline from "./components/timeline/timeline";

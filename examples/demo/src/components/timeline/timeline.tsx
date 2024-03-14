@@ -37,7 +37,7 @@ function Timeline() {
   return (
     <div className="flex max-w-7xl flex-col w-full gap-3">
       <div
-        className="select-none rounded-lg border"
+        className="select-none rounded-lg border shadow-2xl shadow-slate-900"
         ref={setTimelineRef}
         style={{
           ...style,
