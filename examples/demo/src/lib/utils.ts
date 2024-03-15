@@ -1,5 +1,5 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 import { minutesToMilliseconds } from "date-fns";
 import { nanoid } from "nanoid";
 import type {
@@ -10,9 +10,8 @@ import type {
 } from "dnd-timeline";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
-
 
 interface GenerateRowsOptions {
   disabled?: boolean;

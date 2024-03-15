@@ -1,9 +1,9 @@
-import './index.css'
-import '@radix-ui/themes/styles.css';
+import "./index.css";
+import "@radix-ui/themes/styles.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import { Theme } from '@radix-ui/themes';
+import { Theme } from "@radix-ui/themes";
 
 const el = document.getElementById("root");
 if (el) {

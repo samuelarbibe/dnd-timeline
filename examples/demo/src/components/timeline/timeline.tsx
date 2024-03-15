@@ -13,13 +13,14 @@ import { InlineCode } from "../ui/Inline-code";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 function Timeline() {
-  const rows = useAtomValue(rowsAtom)
-  const [items, setItems] = useAtom(itemsAtom)
-  const { setTimelineRef, style, timeframe, timelineRef } = useTimelineContext();
+  const rows = useAtomValue(rowsAtom);
+  const [items, setItems] = useAtom(itemsAtom);
+  const { setTimelineRef, style, timeframe, timelineRef } =
+    useTimelineContext();
 
   const regenerateItems = () => {
-    setItems(generateItems(50, timeframe, rows))
-  }
+    setItems(generateItems(50, timeframe, rows));
+  };
 
   const groupedSubrows = useMemo(
     () => groupItemsToSubrows(items, timeframe),
@@ -30,8 +31,7 @@ function Timeline() {
     count: rows.length,
     getItemKey: (index) => rows[index].id,
     getScrollElement: () => timelineRef.current,
-    estimateSize: (index) =>
-      (groupedSubrows[rows[index].id]?.length || 1) * 50,
+    estimateSize: (index) => (groupedSubrows[rows[index].id]?.length || 1) * 50,
   });
 
   return (
@@ -73,7 +73,11 @@ function Timeline() {
                 {groupedSubrows[virtualRow.key]?.map((subrow, index) => (
                   <Subrow key={`${virtualRow.key}-${index}`}>
                     {subrow.map((item) => (
-                      <Item id={item.id} key={item.id} relevance={item.relevance}>
+                      <Item
+                        id={item.id}
+                        key={item.id}
+                        relevance={item.relevance}
+                      >
                         {`Item ${item.id}`}
                       </Item>
                     ))}
@@ -83,12 +87,20 @@ function Timeline() {
             </div>
           ))}
         </div>
-      </div >
+      </div>
       <div className="flex flex-row items-center gap-2">
-        Zoom In / Out:<InlineCode>⌘</InlineCode> + <InlineCode>scroll</InlineCode>
-        Move Right / Left:<InlineCode>⌘</InlineCode> + <InlineCode>⇧</InlineCode> + <InlineCode>scroll</InlineCode>
+        Zoom In / Out:<InlineCode>⌘</InlineCode> +{" "}
+        <InlineCode>scroll</InlineCode>
+        Move Right / Left:<InlineCode>⌘</InlineCode> +{" "}
+        <InlineCode>⇧</InlineCode> + <InlineCode>scroll</InlineCode>
         <div className="flex-1" />
-        <Button className='self-end gap-2' onClick={() => { regenerateItems() }} variant='outline'>
+        <Button
+          className="self-end gap-2"
+          onClick={() => {
+            regenerateItems();
+          }}
+          variant="outline"
+        >
           <ReloadIcon />
           Regenerate
         </Button>

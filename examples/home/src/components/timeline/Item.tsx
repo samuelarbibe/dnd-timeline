@@ -17,18 +17,17 @@ function Item(props: ItemProps) {
     });
 
   return (
-    <Box
-      ref={setNodeRef}
-      style={itemStyle}
-      {...listeners}
-      {...attributes}
-    >
+    <Box ref={setNodeRef} style={itemStyle} {...listeners} {...attributes}>
       <div style={itemContentStyle}>
         <Flex
-          align='center'
+          align="center"
           px="1"
-          style={{ userSelect: 'none', border: '2px solid var(--accent-9)', borderRadius: 'var(--radius-2)' }}
-          width='100%'
+          style={{
+            userSelect: "none",
+            border: "2px solid var(--accent-9)",
+            borderRadius: "var(--radius-2)",
+          }}
+          width="100%"
         >
           {props.children}
         </Flex>

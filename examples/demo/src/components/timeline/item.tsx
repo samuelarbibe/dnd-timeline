@@ -9,16 +9,16 @@ interface ItemProps {
 }
 
 const COLORS = [
-  'border-red-400',
-  'border-amber-400',
-  'border-lime-400',
-  'border-emerald-400',
-  'border-cyan-400',
-  'border-blue-400',
-  'border-violet-400',
-  'border-fuchsia-400',
-  'border-rose-400',
-]
+  "border-red-400",
+  "border-amber-400",
+  "border-lime-400",
+  "border-emerald-400",
+  "border-cyan-400",
+  "border-blue-400",
+  "border-violet-400",
+  "border-fuchsia-400",
+  "border-rose-400",
+];
 
 function hashCode(str: string) {
   let hash = 0;
@@ -34,9 +34,8 @@ function hashCode(str: string) {
   return hash;
 }
 
-
 function Item(props: ItemProps) {
-  const [bgColor] = useState(COLORS[hashCode(props.id) % COLORS.length])
+  const [bgColor] = useState(COLORS[hashCode(props.id) % COLORS.length]);
 
   const { setNodeRef, attributes, listeners, itemStyle, itemContentStyle } =
     useItem({
@@ -47,7 +46,9 @@ function Item(props: ItemProps) {
   return (
     <div ref={setNodeRef} style={itemStyle} {...listeners} {...attributes}>
       <div style={itemContentStyle}>
-        <div className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 items-center ${bgColor}`}>
+        <div
+          className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 items-center ${bgColor}`}
+        >
           {props.children}
         </div>
       </div>

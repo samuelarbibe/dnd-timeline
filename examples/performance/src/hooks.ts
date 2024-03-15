@@ -17,7 +17,7 @@ export function useThrottle<T>(value: T, interval = 500) {
       }, interval);
 
       return () => {
-        window.clearTimeout(id)
+        window.clearTimeout(id);
       };
     }
   }, [value, interval]);

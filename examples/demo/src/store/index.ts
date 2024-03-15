@@ -8,9 +8,9 @@ const DEFAULT_TIMEFRAME: Timeframe = {
   end: endOfDay(new Date()),
 };
 
-const DEFAULT_ROWS = generateRows(20)
-const DEFAULT_ITEMS = generateItems(50, DEFAULT_TIMEFRAME, DEFAULT_ROWS)
+const DEFAULT_ROWS = generateRows(20);
+const DEFAULT_ITEMS = generateItems(50, DEFAULT_TIMEFRAME, DEFAULT_ROWS);
 
-export const timeframeAtom = atom<Timeframe>(DEFAULT_TIMEFRAME)
-export const rowsAtom = atom<RowDefinition[]>(DEFAULT_ROWS)
-export const itemsAtom = atom<ItemDefinition[]>(DEFAULT_ITEMS)
+export const timeframeAtom = atom<Timeframe>(DEFAULT_TIMEFRAME);
+export const rowsAtom = atom<RowDefinition[]>(DEFAULT_ROWS);
+export const itemsAtom = atom<ItemDefinition[]>(DEFAULT_ITEMS);

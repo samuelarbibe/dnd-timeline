@@ -18,8 +18,8 @@ function Item(props: ItemProps) {
 
   const style: CSSProperties = {
     ...itemStyle,
-    transition: 'left .2s linear, width .2s linear',
-  }
+    transition: "left .2s linear, width .2s linear",
+  };
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>

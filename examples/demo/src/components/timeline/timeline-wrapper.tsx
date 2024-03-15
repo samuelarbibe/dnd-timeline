@@ -20,7 +20,7 @@ const DEFAULT_TIMEFRAME: Timeframe = {
 function TimelineWrapper(props: PropsWithChildren) {
   const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
 
-  const setItems = useSetAtom(itemsAtom)
+  const setItems = useSetAtom(itemsAtom);
 
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {

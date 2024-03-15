@@ -21,8 +21,9 @@ function Row(props: RowProps) {
       className="border-b w-full"
       style={{
         ...rowWrapperStyle,
-        minHeight: 50
-      }}>
+        minHeight: 50,
+      }}
+    >
       <div ref={setSidebarRef} style={rowSidebarStyle}>
         {props.sidebar}
       </div>

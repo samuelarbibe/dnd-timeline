@@ -19,31 +19,35 @@ const DEFAULT_TIMEFRAME: Timeframe = {
 };
 
 enum TimeframeType {
-  NORMAL = 'Normal',
-  DEBOUNCED = 'Debounced',
-  THROTTLED = 'Throttled',
-  DEFERRED = 'Deferred',
+  NORMAL = "Normal",
+  DEBOUNCED = "Debounced",
+  THROTTLED = "Throttled",
+  DEFERRED = "Deferred",
 }
 
 function App() {
-  const [timeframeType, setTimeframeType] = useState<TimeframeType>(TimeframeType.NORMAL)
+  const [timeframeType, setTimeframeType] = useState<TimeframeType>(
+    TimeframeType.NORMAL,
+  );
 
   const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
-  const debouncedTimeframe = useDebounce(timeframe, 300)
-  const throttledTimeframe = useThrottle(timeframe, 300)
-  const deferredTimeframe = useDeferredValue(timeframe)
+  const debouncedTimeframe = useDebounce(timeframe, 300);
+  const throttledTimeframe = useThrottle(timeframe, 300);
+  const deferredTimeframe = useDeferredValue(timeframe);
 
   const timeframeByType = {
     [TimeframeType.NORMAL]: timeframe,
     [TimeframeType.DEBOUNCED]: debouncedTimeframe,
     [TimeframeType.THROTTLED]: throttledTimeframe,
     [TimeframeType.DEFERRED]: deferredTimeframe,
-  }
+  };
 
-  const selectedTimeframe = timeframeByType[timeframeType]
+  const selectedTimeframe = timeframeByType[timeframeType];
 
   const [rows] = useState(generateRows(1));
-  const [items, setItems] = useState(generateItems(500, selectedTimeframe, rows));
+  const [items, setItems] = useState(
+    generateItems(500, selectedTimeframe, rows),
+  );
 
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {
@@ -99,14 +103,20 @@ function App() {
 
   return (
     <>
-      {
-        Object.values(TimeframeType).map((timeframeTypeOption) => (
-          <>
-            <input checked={timeframeType === timeframeTypeOption} id={timeframeTypeOption} onClick={() => { setTimeframeType(timeframeTypeOption) }} type='radio' value={timeframeType} />
-            <label htmlFor={timeframeTypeOption}>{timeframeTypeOption}</label>
-          </>
-        ))
-      }
+      {Object.values(TimeframeType).map((timeframeTypeOption) => (
+        <>
+          <input
+            checked={timeframeType === timeframeTypeOption}
+            id={timeframeTypeOption}
+            onClick={() => {
+              setTimeframeType(timeframeTypeOption);
+            }}
+            type="radio"
+            value={timeframeType}
+          />
+          <label htmlFor={timeframeTypeOption}>{timeframeTypeOption}</label>
+        </>
+      ))}
       <TimelineContext
         onDragEnd={onDragEnd}
         onResizeEnd={onResizeEnd}
@@ -120,4 +130,3 @@ function App() {
 }
 
 export default App;
-

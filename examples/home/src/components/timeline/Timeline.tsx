@@ -11,13 +11,13 @@ import { Button, Card, Flex, Inset, Kbd, Text } from "@radix-ui/themes";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 function Timeline() {
-  const rows = useAtomValue(rowsAtom)
-  const [items, setItems] = useAtom(itemsAtom)
+  const rows = useAtomValue(rowsAtom);
+  const [items, setItems] = useAtom(itemsAtom);
   const { setTimelineRef, style, timeframe } = useTimelineContext();
 
   const regenerateItems = () => {
-    setItems(generateItems(10, timeframe, rows))
-  }
+    setItems(generateItems(10, timeframe, rows));
+  };
 
   const groupedSubrows = useMemo(
     () => groupItemsToSubrows(items, timeframe),
@@ -25,18 +25,19 @@ function Timeline() {
   );
 
   return (
-    <Flex direction='column' gap='3'>
-      <Flex direction='row' justify='end'>
-        <Button onClick={() => { regenerateItems() }} variant='ghost'>
+    <Flex direction="column" gap="3">
+      <Flex direction="row" justify="end">
+        <Button
+          onClick={() => {
+            regenerateItems();
+          }}
+          variant="ghost"
+        >
           <ReloadIcon /> Regenrate
         </Button>
       </Flex>
-      <Card variant='surface'>
-        <Inset
-          className="select-none"
-          ref={setTimelineRef}
-          style={style}
-        >
+      <Card variant="surface">
+        <Inset className="select-none" ref={setTimelineRef} style={style}>
           {rows.map((row) => (
             <Row id={row.id} key={row.id} sidebar={<Sidebar row={row} />}>
               {groupedSubrows[row.id]?.map((subrow, index) => (
@@ -49,17 +50,16 @@ function Timeline() {
                 </Subrow>
               ))}
             </Row>
-          ))
-          }
+          ))}
         </Inset>
       </Card>
-      <Flex direction='row' gap='4' justify='start'>
-        <Flex align='end' direction='row' gap='2'>
-          <Text color='gray'>Zoom In / Out:</Text>
+      <Flex direction="row" gap="4" justify="start">
+        <Flex align="end" direction="row" gap="2">
+          <Text color="gray">Zoom In / Out:</Text>
           <Kbd>⌘</Kbd>+<Kbd>Wheel</Kbd>
         </Flex>
-        <Flex align='end' direction='row' gap='2'>
-          <Text color='gray'>Move Right / Left:</Text>
+        <Flex align="end" direction="row" gap="2">
+          <Text color="gray">Move Right / Left:</Text>
           <Kbd>⌘</Kbd>+<Kbd>⇧</Kbd>+<Kbd>Wheel</Kbd>
         </Flex>
       </Flex>

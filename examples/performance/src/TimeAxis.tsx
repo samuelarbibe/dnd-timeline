@@ -23,7 +23,8 @@ interface TimeAxisProps {
 }
 
 function TimeAxis(props: TimeAxisProps) {
-  const { timelineDirection, sidebarWidth, millisecondsToPixels } = useTimelineContext();
+  const { timelineDirection, sidebarWidth, millisecondsToPixels } =
+    useTimelineContext();
 
   const side = timelineDirection === "rtl" ? "right" : "left";
 
@@ -33,9 +34,11 @@ function TimeAxis(props: TimeAxisProps) {
 
     const delta = sortedMarkers[sortedMarkers.length - 1].value;
 
-    const timeframeSize = props.timeframe.end.getTime() - props.timeframe.start.getTime();
+    const timeframeSize =
+      props.timeframe.end.getTime() - props.timeframe.start.getTime();
 
-    const startTime = Math.floor(props.timeframe.start.getTime() / delta) * delta;
+    const startTime =
+      Math.floor(props.timeframe.start.getTime() / delta) * delta;
 
     const endTime = props.timeframe.end.getTime();
     const timezoneOffset = minutesToMilliseconds(
@@ -63,7 +66,10 @@ function TimeAxis(props: TimeAxisProps) {
       markerSideDeltas.push({
         label,
         heightMultiplier: 1 / (multiplierIndex + 1),
-        sideDelta: millisecondsToPixels(time - props.timeframe.start.getTime(), props.timeframe),
+        sideDelta: millisecondsToPixels(
+          time - props.timeframe.start.getTime(),
+          props.timeframe,
+        ),
       });
     }
 
