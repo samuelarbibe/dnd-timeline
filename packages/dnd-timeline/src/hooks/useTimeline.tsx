@@ -1,8 +1,7 @@
 import type { CSSProperties } from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useDndMonitor } from "@dnd-kit/core";
 import { addMilliseconds, differenceInMilliseconds } from "date-fns";
-import ResizeObserver from "resize-observer-polyfill";
 
 import type {
   GetDateFromScreenX,
@@ -18,6 +17,8 @@ import type {
 } from "../types";
 import { useWheelStrategy } from "../utils/panStrategies";
 
+import useElementRef from "./useElementRef";
+
 const style: CSSProperties = {
   display: "flex",
   overflow: "hidden",
@@ -26,40 +27,6 @@ const style: CSSProperties = {
 };
 
 const DEFAULT_RESIZE_HANDLE_WIDTH = 20;
-
-function useTimelineRef() {
-  const ref = useRef<HTMLElement | null>(null);
-  const [width, setWidth] = useState(0);
-  const [direction, setDirection] = useState<CanvasDirection>("ltr");
-
-  const resizeObserver = useRef<ResizeObserver>();
-
-  const setRef = useCallback((element: HTMLElement | null) => {
-    if (element !== ref.current) {
-      resizeObserver.current?.disconnect();
-
-      if (element) {
-        resizeObserver.current = new ResizeObserver((entries) => {
-          for (const entry of entries) {
-            setWidth(entry.contentRect.width);
-          }
-        });
-
-        resizeObserver.current.observe(element);
-
-        setDirection(getComputedStyle(element).direction as CanvasDirection);
-      }
-    }
-    ref.current = element;
-  }, []);
-
-  return {
-    ref,
-    setRef,
-    width,
-    direction,
-  };
-}
 
 export default function useTimeline({
   timeframe,
@@ -72,7 +39,6 @@ export default function useTimeline({
   usePanStrategy = useWheelStrategy,
   resizeHandleWidth = DEFAULT_RESIZE_HANDLE_WIDTH,
 }: UseTimelineProps): TimelineBag {
-  const [sidebarWidth, setSidebarWidth] = useState(0);
   const dragStartTimeframe = useRef<Timeframe>(timeframe);
 
   const {
@@ -80,7 +46,13 @@ export default function useTimeline({
     setRef: setTimelineRef,
     width: timelineWidth,
     direction: timelineDirection,
-  } = useTimelineRef();
+  } = useElementRef();
+
+  const {
+    ref: sidebarRef,
+    setRef: setSidebarRef,
+    width: sidebarWidth,
+  } = useElementRef();
 
   const timelineViewportWidth = timelineWidth - sidebarWidth;
 
@@ -107,8 +79,7 @@ export default function useTimeline({
       const { start, end } = customTimeframe || timeframe;
 
       const msToPixel =
-        timelineViewportWidth /
-        differenceInMilliseconds(end, start);
+        timelineViewportWidth / differenceInMilliseconds(end, start);
       return milliseconds * msToPixel;
     },
     [timelineViewportWidth, timeframe],
@@ -119,8 +90,7 @@ export default function useTimeline({
       const { start, end } = customTimeframe || timeframe;
 
       const pixelToMs =
-        differenceInMilliseconds(end, start) /
-        timelineViewportWidth;
+        differenceInMilliseconds(end, start) / timelineViewportWidth;
       return pixels * pixelToMs;
     },
     [timeframe, timelineViewportWidth],
@@ -287,8 +257,9 @@ export default function useTimeline({
       onResizeEnd,
       onResizeMove,
       onResizeStart,
+      sidebarRef,
+      setSidebarRef,
       sidebarWidth,
-      setSidebarWidth,
       resizeHandleWidth,
       pixelsToMilliseconds,
       millisecondsToPixels,
@@ -307,6 +278,8 @@ export default function useTimeline({
       onResizeEnd,
       onResizeMove,
       onResizeStart,
+      sidebarRef,
+      setSidebarRef,
       sidebarWidth,
       resizeHandleWidth,
       pixelsToMilliseconds,

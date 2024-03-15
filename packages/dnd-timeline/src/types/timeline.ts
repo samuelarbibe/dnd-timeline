@@ -52,14 +52,19 @@ export type OnResizeMove = (event: ResizeMoveEvent) => void;
 
 export type OnPanEnd = (event: PanEndEvent) => void;
 
-export type PixelsToMilliseconds = (pixels: number, timeframe?: Timeframe) => number;
-export type MillisecondsToPixels = (milliseconds: number, timeframe?: Timeframe) => number;
+export type PixelsToMilliseconds = (
+  pixels: number,
+  timeframe?: Timeframe,
+) => number;
+export type MillisecondsToPixels = (
+  milliseconds: number,
+  timeframe?: Timeframe,
+) => number;
 
 export interface TimelineBag {
   style: CSSProperties;
   timeframe: Timeframe;
   overlayed: boolean;
-  sidebarWidth: number;
   onResizeEnd: OnResizeEnd;
   onResizeMove?: OnResizeMove;
   onResizeStart?: OnResizeStart;
@@ -68,7 +73,9 @@ export interface TimelineBag {
   timelineDirection: CanvasDirection;
   timelineRef: React.MutableRefObject<HTMLElement | null>;
   setTimelineRef: (element: HTMLElement | null) => void;
-  setSidebarWidth: React.Dispatch<React.SetStateAction<number>>;
+  sidebarWidth: number;
+  sidebarRef: React.MutableRefObject<HTMLElement | null>;
+  setSidebarRef: (element: HTMLElement | null) => void;
   millisecondsToPixels: MillisecondsToPixels;
   pixelsToMilliseconds: PixelsToMilliseconds;
   getDateFromScreenX: GetDateFromScreenX;

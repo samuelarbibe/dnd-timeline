@@ -1,35 +1,18 @@
 import type { CSSProperties } from "react";
-import { useLayoutEffect, useRef } from "react";
 import { useDroppable } from "@dnd-kit/core";
-import ResizeObserver from "resize-observer-polyfill";
 
 import type { UseRowProps } from "../types";
 
 import useTimelineContext from "./useTimelineContext";
 
 export default function useRow(props: UseRowProps) {
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const { setSidebarWidth } = useTimelineContext();
+  const { setSidebarRef } = useTimelineContext();
 
   const droppableProps = useDroppable({
     id: props.id,
     data: props.data,
     disabled: props.disabled,
   });
-
-  useLayoutEffect(() => {
-    const element = sidebarRef.current;
-    if (!element) return;
-
-    const observer = new ResizeObserver(() => {
-      setSidebarWidth((prev) => Math.max(element.clientWidth, prev));
-    });
-
-    observer.observe(element);
-    return () => {
-      observer.disconnect();
-    };
-  }, [setSidebarWidth]);
 
   const rowWrapperStyle: CSSProperties = {
     display: "inline-flex",
@@ -53,7 +36,7 @@ export default function useRow(props: UseRowProps) {
     rowStyle,
     rowWrapperStyle,
     rowSidebarStyle,
-    setSidebarRef: sidebarRef,
+    setSidebarRef,
     ...droppableProps,
   };
 }
