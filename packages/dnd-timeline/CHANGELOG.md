@@ -1,5 +1,18 @@
 
 
+## [1.6.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.5.1...dnd-timeline@1.6.0) (2024-03-15)
+
+
+### Features
+
+* replace sidebarWidth with sidebarRef ([0d7b4cf](https://github.com/samuelarbibe/dnd-timeline/commit/0d7b4cf89b78aaa485321450430cfe4f77364e0f))
+
+
+### Bug Fixes
+
+* add demo page ([5004002](https://github.com/samuelarbibe/dnd-timeline/commit/50040027d29081734dda8b33d113ceb0e1398d15))
+* initialize demo example ([c8357a3](https://github.com/samuelarbibe/dnd-timeline/commit/c8357a393ed596039ab8cbc2f5c97582f6c0b441))
+
 ## [1.5.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.5.0...dnd-timeline@1.5.1) (2024-03-07)
 
 
