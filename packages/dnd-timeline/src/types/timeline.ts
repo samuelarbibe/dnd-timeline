@@ -1,6 +1,5 @@
 import type { CSSProperties, PropsWithChildren } from "react";
 import type {
-  Active,
   DndContextProps,
   DragCancelEvent,
   DragEndEvent,
@@ -10,22 +9,12 @@ import type {
 
 import type { UsePanStrategy } from "..";
 
-import type { DragDirection, Relevance, Timeframe } from ".";
-
-export interface ResizeMoveEvent {
-  active: Omit<Active, "rect">;
-  delta: {
-    x: number;
-  };
-  direction: DragDirection;
-}
-
-export type ResizeEndEvent = ResizeMoveEvent;
-
-export interface ResizeStartEvent {
-  active: Omit<Active, "rect">;
-  direction: DragDirection;
-}
+import type { Relevance, Timeframe } from ".";
+import type {
+  ResizeEndEvent,
+  ResizeMoveEvent,
+  ResizeStartEvent,
+} from "./resize";
 
 export interface PanEndEvent {
   clientX?: number;
