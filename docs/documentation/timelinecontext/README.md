@@ -128,7 +128,7 @@ For example, the `onDragEnd` event is called with extra data:
 Every event contains a helper function that can be used to infer the item's updated relevance.
 
 {% hint style="warning" %}
-Do not try to calculate the item's updated relevance on your own. You should call the `getRelevanceFromDragEvent` or `getRelevanceFromResizeEvent to get the updated relevance right before using it to update you own state.`
+Do not try to calculate the item's updated relevance on your own. You should call the `getRelevanceFromDragEvent` or `getRelevanceFromResizeEvent` to get the updated relevance right before using it to update you own state.
 {% endhint %}
 
 #### `onDonDragStart? | onDragEnd? | onDragMove? | onDragCancel?`

@@ -72,11 +72,11 @@ type DragEvent = DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent
 ```
 {% endcode %}
 
-This function is injected into all the drag events, and allowes you to infer the dragged item's relevance from the event object. For example:
+This function is injected into all of dnd-kit's events, and allowes you to infer the dragged item's relevance from the event object. For example:
 
 <pre class="language-tsx"><code class="lang-tsx">const onDragEnd = (event: DragEndEvent) => {
   const updatedRelevance =
-<strong>    event.active.data.current.getRelevanceFromDragEvent(event)
+<strong>    event.active?.data?.current?.getRelevanceFromDragEvent(event)
 </strong>    
   // update your state using the updated relevance.
 }
@@ -96,7 +96,7 @@ type ResizeEvent = ResizeStartEvent | ResizeMoveEvent | ResizeEndEvent
 ```
 {% endcode %}
 
-This function is injected into all of the resize events, and allowes you to infer the dragged item's relevance from the event object. For example:
+This function is injected into all of dnd-timeline's resize events, and allowes you to infer the dragged item's relevance from the event object. For example:
 
 <pre class="language-tsx"><code class="lang-tsx">const onResizeEnd = (event: ResizeEndEvent) => {
   const updatedRelevance =
