@@ -1,5 +1,12 @@
 
 
+## [1.6.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.0...dnd-timeline@1.6.1) (2024-03-16)
+
+
+### Bug Fixes
+
+* refactor drag and resize events types ([1009d35](https://github.com/samuelarbibe/dnd-timeline/commit/1009d35e3d36fef1692ea2b55ca5de9fab53a0e2))
+
 ## [1.6.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.5.1...dnd-timeline@1.6.0) (2024-03-15)
 
 
