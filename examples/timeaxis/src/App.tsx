@@ -1,13 +1,7 @@
 import "./index.css";
 import React, { useCallback, useState } from "react";
-import type { DragEndEvent } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
-import type {
-  ResizeEndEvent,
-  Timeframe,
-  GetRelevanceFromResizeEvent,
-  GetRelevanceFromDragEvent,
-} from "dnd-timeline";
+import type { ResizeEndEvent, DragEndEvent, Timeframe } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import Timeline from "./Timeline";
 import { generateItems, generateRows } from "./utils";
@@ -25,10 +19,8 @@ function App() {
 
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {
-      const getRelevanceFromResizeEvent = event.active.data.current
-        ?.getRelevanceFromResizeEvent as GetRelevanceFromResizeEvent;
-
-      const updatedRelevance = getRelevanceFromResizeEvent(event);
+      const updatedRelevance =
+        event.active.data.current.getRelevanceFromResizeEvent(event);
 
       if (!updatedRelevance) return;
 
@@ -50,11 +42,8 @@ function App() {
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const activeRowId = event.over?.id as string;
-
-      const getRelevanceFromDragEvent = event.active.data.current
-        ?.getRelevanceFromDragEvent as GetRelevanceFromDragEvent;
-
-      const updatedRelevance = getRelevanceFromDragEvent(event);
+      const updatedRelevance =
+        event.active.data.current.getRelevanceFromDragEvent(event);
 
       if (!updatedRelevance || !activeRowId) return;
 

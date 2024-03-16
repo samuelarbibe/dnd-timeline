@@ -1,14 +1,8 @@
 import "./index.css";
 import React, { useCallback, useState } from "react";
-import type { DragEndEvent } from "@dnd-kit/core";
 import { closestCenter } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
-import type {
-  GetRelevanceFromDragEvent,
-  GetRelevanceFromResizeEvent,
-  ResizeEndEvent,
-  Timeframe,
-} from "dnd-timeline";
+import type { DragEndEvent, ResizeEndEvent, Timeframe } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import { arrayMove } from "@dnd-kit/sortable";
 import Timeline from "./Timeline";
@@ -27,10 +21,8 @@ function App() {
 
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {
-      const getRelevanceFromResizeEvent = event.active.data.current
-        ?.getRelevanceFromResizeEvent as GetRelevanceFromResizeEvent;
-
-      const updatedRelevance = getRelevanceFromResizeEvent(event);
+      const updatedRelevance =
+        event.active.data.current.getRelevanceFromResizeEvent(event);
 
       if (!updatedRelevance) return;
 
@@ -58,10 +50,8 @@ function App() {
     const activeId = event.active.id;
     const activeItemType = event.active.data.current?.type as ItemType;
 
-    const getRelevanceFromDragEvent = event.active.data.current
-      ?.getRelevanceFromDragEvent as GetRelevanceFromDragEvent | undefined;
-
-    const updatedRelevance = getRelevanceFromDragEvent?.(event);
+    const updatedRelevance =
+      event.active.data.current.getRelevanceFromDragEvent(event);
 
     if (updatedRelevance && activeItemType === ItemType.ListItem) {
       setItems((prev) =>

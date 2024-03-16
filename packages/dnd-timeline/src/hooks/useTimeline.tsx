@@ -173,7 +173,7 @@ export default function useTimeline({
   const getRelevanceFromResizeEvent = useCallback<GetRelevanceFromResizeEvent>(
     (event) => {
       if (event.active.data.current?.relevance) {
-        const prevRelevance = event.active.data.current.relevance as Relevance;
+        const prevRelevance = event.active.data.current.relevance;
         const deltaInMilliseconds = pixelsToMilliseconds(event.delta.x);
 
         const updatedRelevance: Relevance = {
