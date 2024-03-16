@@ -32,7 +32,7 @@ function App(){
   
   const onResizeEnd = useCallback((event: ResizeEndEvent) => {
       const updatedRelevance =
-        event.active.data.current?.getRelevanceFromResizeEvent?.(event)
+        event.active.data.current.getRelevanceFromResizeEvent(event)
   
       if (!updatedRelevance) return
   
@@ -119,7 +119,7 @@ For example, the `onDragEnd` event is called with extra data:
   const activeItemId = event.active.id
 
 <strong>  const updatedRelevance =
-</strong><strong>    event.active?.data?.current?.getRelevanceFromDragEvent(event)
+</strong><strong>    event.active.data.current.getRelevanceFromDragEvent(event)
 </strong>    
   // update your state using the updated relevance.
 }
@@ -130,17 +130,6 @@ Every event contains a helper function that can be used to infer the item's upda
 {% hint style="warning" %}
 Do not try to calculate the item's updated relevance on your own. You should call the `getRelevanceFromDragEvent` or `getRelevanceFromResizeEvent to get the updated relevance right before using it to update you own state.`
 {% endhint %}
-
-> 🧠 **Pro Tip:** use the provided `GetRelevanceFromDragEvent` type to help you use its return value.
->
-> ```tsx
-> const getRelevanceFromDragEvent = event.active.data.current
->   ?.getRelevanceFromDragEvent as GetRelevanceFromDragEvent;
->
-> const updatedRelevance = getRelevanceFromDragEvent(event);
->
-> // continue to update your state...
-> ```
 
 #### `onDonDragStart? | onDragEnd? | onDragMove? | onDragCancel?`
 

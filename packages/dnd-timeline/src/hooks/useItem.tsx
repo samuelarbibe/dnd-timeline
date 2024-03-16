@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import type {
   DragDirection,
+  ItemData,
   ResizeEndEvent,
   ResizeMoveEvent,
   ResizeStartEvent,
@@ -32,7 +33,7 @@ const getDragDirection = (
 };
 
 export default function useItem(props: UseItemProps) {
-  const dataRef = useRef<object>();
+  const dataRef = useRef<ItemData>({} as ItemData);
   const dragStartX = useRef<number>();
   const [dragDirection, setDragDirection] = useState<DragDirection | null>();
 

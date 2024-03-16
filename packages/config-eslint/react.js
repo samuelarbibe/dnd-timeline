@@ -24,6 +24,7 @@ module.exports = {
   },
   ignorePatterns: ["node_modules/", "dist/", ".eslintrc.js", "**/*.css"],
   rules: {
+    "no-bitwise": "off",
     "import/order": "off",
     "no-nested-ternary": "off",
     "react/hook-use-state": "off",
