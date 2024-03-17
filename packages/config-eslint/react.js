@@ -22,7 +22,13 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ["node_modules/", "dist/", ".eslintrc.js", "**/*.css"],
+  ignorePatterns: [
+    "vite.config.ts",
+    "node_modules/",
+    "dist/",
+    ".eslintrc.js",
+    "**/*.css"
+  ],
   rules: {
     "no-bitwise": "off",
     "import/order": "off",
