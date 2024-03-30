@@ -11,7 +11,7 @@ import {
 function App() {
   return (
     <TimelineWrapper>
-      <div className="p-10 xl:p-20 gap-10 flex flex-1 flex-col xl:flex-row items-center justify-evenly xl:justify-around">
+      <div className="background p-10 xl:p-20 gap-10 flex flex-1 flex-col xl:flex-row items-center justify-evenly xl:justify-around">
         <div className="flex flex-col min-w-fit">
           <div className="flex w-full flex-col justify-center items-center xl:items-start gap-3">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl xl:text-6xl">
