@@ -18,7 +18,7 @@
     "husky": "^8.0.3",
     "prettier": "^3.1.0",
     "release-it": "^17.0.1",
-    "turbo": "^1.13.0"
+    "turbo": "^1.13.3"
   },
   "engines": {
     "node": ">=18"
