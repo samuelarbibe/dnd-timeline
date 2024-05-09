@@ -1,5 +1,12 @@
 
 
+## [1.6.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.1...dnd-timeline@1.6.2) (2024-05-09)
+
+
+### Bug Fixes
+
+* make getRelevanceFromResizeEvent and getRelevanceFromDragEvent optional ([34ae591](https://github.com/samuelarbibe/dnd-timeline/commit/34ae59172a88c7f8391928ee7191adabcee390e1))
+
 ## [1.6.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.0...dnd-timeline@1.6.1) (2024-03-16)
 
 
