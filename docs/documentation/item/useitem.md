@@ -60,9 +60,9 @@ Custom data that can be passed to the row.
 > ```tsx
 > const onDragEnd = (event: DragEndEvent) => {
 >   const updatedRelevance =
->     event.active.data.current.getRelevanceFromDragEvent(event)
+>     event.active.data.current.getRelevanceFromDragEvent?.(event)
 >
->   const rowType = event.active?.data?.current?.type
+>   const rowType = event.active.data.current.type
 >   
 >   if (rowType === 'timeline-row' && itemType === 'timeline-item') {
 >     // update
@@ -84,7 +84,7 @@ For example:
 ```tsx
 const onResizeMove = useCallback(() => {
   const updatedRelevance =
-    event.active.data.current.getRelevanceFromResizeEvent(event)
+    event.active.data.current.getRelevanceFromResizeEvent?.(event)
 
   // update some local state with the updated-relevance
 }, [])

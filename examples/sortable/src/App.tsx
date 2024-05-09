@@ -22,7 +22,7 @@ function App() {
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {
       const updatedRelevance =
-        event.active.data.current.getRelevanceFromResizeEvent(event);
+        event.active.data.current.getRelevanceFromResizeEvent?.(event);
 
       if (!updatedRelevance) return;
 
@@ -48,10 +48,10 @@ function App() {
     if (!overedId) return;
 
     const activeId = event.active.id;
-    const activeItemType = event.active.data.current?.type as ItemType;
+    const activeItemType = event.active.data.current.type as ItemType;
 
     const updatedRelevance =
-      event.active.data.current.getRelevanceFromDragEvent(event);
+      event.active.data.current.getRelevanceFromDragEvent?.(event);
 
     if (updatedRelevance && activeItemType === ItemType.ListItem) {
       setItems((prev) =>

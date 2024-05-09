@@ -32,7 +32,7 @@ function App(){
   
   const onResizeEnd = useCallback((event: ResizeEndEvent) => {
       const updatedRelevance =
-        event.active.data.current.getRelevanceFromResizeEvent(event)
+        event.active.data.current.getRelevanceFromResizeEvent?.(event)
   
       if (!updatedRelevance) return
   
@@ -119,7 +119,7 @@ For example, the `onDragEnd` event is called with extra data:
   const activeItemId = event.active.id
 
 <strong>  const updatedRelevance =
-</strong><strong>    event.active.data.current.getRelevanceFromDragEvent(event)
+</strong><strong>    event.active.data.current.getRelevanceFromDragEvent?.(event)
 </strong>    
   // update your state using the updated relevance.
 }

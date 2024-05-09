@@ -29,7 +29,7 @@ function App() {
   const onResizeEnd = useCallback(
     (event: ResizeEndEvent) => {
       const updatedRelevance =
-        event.active.data.current.getRelevanceFromResizeEvent(event);
+        event.active.data.current.getRelevanceFromResizeEvent?.(event);
 
       if (!updatedRelevance) return;
 
@@ -53,7 +53,7 @@ function App() {
     (event: DragEndEvent) => {
       const activeRowId = event.over?.id as string;
       const updatedRelevance =
-        event.active.data.current.getRelevanceFromDragEvent(event);
+        event.active.data.current.getRelevanceFromDragEvent?.(event);
 
       if (!updatedRelevance || !activeRowId) return;
 

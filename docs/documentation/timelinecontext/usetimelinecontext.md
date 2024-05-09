@@ -76,7 +76,7 @@ This function is injected into all of dnd-kit's events, and allowes you to infer
 
 <pre class="language-tsx"><code class="lang-tsx">const onDragEnd = (event: DragEndEvent) => {
   const updatedRelevance =
-<strong>    event.active?.data?.current?.getRelevanceFromDragEvent(event)
+<strong>    event.active.data.current.getRelevanceFromDragEvent?.(event)
 </strong>    
   // update your state using the updated relevance.
 }
@@ -100,7 +100,7 @@ This function is injected into all of dnd-timeline's resize events, and allowes 
 
 <pre class="language-tsx"><code class="lang-tsx">const onResizeEnd = (event: ResizeEndEvent) => {
   const updatedRelevance =
-<strong>    event.active.data.current.getRelevanceFromResizeEvent(event)
+<strong>    event.active.data.current.getRelevanceFromResizeEvent?.(event)
 </strong>    
   // update your state using the updated relevance.
 }

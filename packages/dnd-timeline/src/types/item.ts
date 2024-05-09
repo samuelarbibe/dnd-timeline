@@ -32,11 +32,11 @@ interface ItemDataBase extends Data {
 }
 
 export interface DragItemData extends ItemDataBase {
-  getRelevanceFromDragEvent: GetRelevanceFromDragEvent;
+  getRelevanceFromDragEvent?: GetRelevanceFromDragEvent;
 }
 
 export interface ResizeItemData extends ItemDataBase {
-  getRelevanceFromResizeEvent: GetRelevanceFromResizeEvent;
+  getRelevanceFromResizeEvent?: GetRelevanceFromResizeEvent;
 }
 
 export interface ItemData extends DragItemData, ResizeItemData {}
