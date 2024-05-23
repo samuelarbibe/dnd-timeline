@@ -1,5 +1,12 @@
 
 
+## [1.6.3](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.2...dnd-timeline@1.6.3) (2024-05-23)
+
+
+### Performance Improvements
+
+* use number instead of Date internally ([028fa4b](https://github.com/samuelarbibe/dnd-timeline/commit/028fa4b9e154af4d9f328904b6b85713f0a22d1f))
+
 ## [1.6.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.1...dnd-timeline@1.6.2) (2024-05-09)
 
 
