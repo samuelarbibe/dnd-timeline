@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
-import { useCallback, useMemo, useRef } from "react";
-import { useDndMonitor } from "@dnd-kit/core";
+import { useCallback, useMemo } from "react";
 import { addMilliseconds, differenceInMilliseconds } from "date-fns";
 
 import type {
@@ -39,7 +38,8 @@ export default function useTimeline({
   usePanStrategy = useWheelStrategy,
   resizeHandleWidth = DEFAULT_RESIZE_HANDLE_WIDTH,
 }: UseTimelineProps): TimelineBag {
-  const dragStartTimeframe = useRef<Timeframe>(timeframe);
+  const timeframeStart = timeframe.start.getTime();
+  const timeframeEnd = timeframe.end.getTime();
 
   const {
     ref: timelineRef,
@@ -60,7 +60,7 @@ export default function useTimeline({
     if (Array.isArray(timeframeGridSizeDefinition)) {
       const gridSizes = timeframeGridSizeDefinition;
 
-      const timeframeSize = timeframe.end.getTime() - timeframe.start.getTime();
+      const timeframeSize = timeframeEnd - timeframeStart;
 
       const sortedTimeframeGridSizes = [...gridSizes];
       sortedTimeframeGridSizes.sort((a, b) => a.value - b.value);
@@ -72,28 +72,30 @@ export default function useTimeline({
     }
 
     return timeframeGridSizeDefinition;
-  }, [timeframe, timeframeGridSizeDefinition]);
+  }, [timeframeStart, timeframeEnd, timeframeGridSizeDefinition]);
 
   const millisecondsToPixels = useCallback<MillisecondsToPixels>(
     (milliseconds: number, customTimeframe?: Timeframe) => {
-      const { start, end } = customTimeframe || timeframe;
+      const start = customTimeframe?.start ?? timeframeStart;
+      const end = customTimeframe?.end ?? timeframeEnd;
 
       const msToPixel =
         timelineViewportWidth / differenceInMilliseconds(end, start);
       return milliseconds * msToPixel;
     },
-    [timelineViewportWidth, timeframe],
+    [timeframeStart, timeframeEnd, timelineViewportWidth],
   );
 
   const pixelsToMilliseconds = useCallback<PixelsToMilliseconds>(
     (pixels: number, customTimeframe?: Timeframe) => {
-      const { start, end } = customTimeframe || timeframe;
+      const start = customTimeframe?.start ?? timeframeStart;
+      const end = customTimeframe?.end ?? timeframeEnd;
 
       const pixelToMs =
         differenceInMilliseconds(end, start) / timelineViewportWidth;
       return pixels * pixelToMs;
     },
-    [timeframe, timelineViewportWidth],
+    [timeframeStart, timeframeEnd, timelineViewportWidth],
   );
 
   const snapDateToTimeframeGrid = useCallback(
@@ -121,15 +123,15 @@ export default function useTimeline({
         pixelsToMilliseconds(deltaX) * (timelineDirection === "rtl" ? -1 : 1);
 
       return snapDateToTimeframeGrid(
-        addMilliseconds(timeframe.start, deltaInMilliseconds),
+        addMilliseconds(timeframeStart, deltaInMilliseconds),
       );
     },
     [
       timelineRef,
       sidebarWidth,
+      timeframeStart,
       timelineDirection,
       pixelsToMilliseconds,
-      timeframe.start,
       snapDateToTimeframeGrid,
     ],
   );
@@ -201,21 +203,18 @@ export default function useTimeline({
         pixelsToMilliseconds(event.deltaY) *
         (timelineDirection === "rtl" ? -1 : 1);
 
-      const timeframeDuration = differenceInMilliseconds(
-        timeframe.start,
-        timeframe.end,
-      );
+      const timeframeDuration = timeframeEnd - timeframeStart;
 
       const startBias = event.clientX
         ? differenceInMilliseconds(
-            timeframe.start,
+            timeframeStart,
             getDateFromScreenX(event.clientX),
           ) / timeframeDuration
         : 1;
       const endBias = event.clientX
         ? differenceInMilliseconds(
             getDateFromScreenX(event.clientX),
-            timeframe.end,
+            timeframeEnd,
           ) / timeframeDuration
         : 1;
 
@@ -229,22 +228,14 @@ export default function useTimeline({
       }));
     },
     [
-      pixelsToMilliseconds,
+      timeframeEnd,
+      timeframeStart,
       timelineDirection,
-      timeframe.start,
-      timeframe.end,
       getDateFromScreenX,
       onTimeframeChanged,
+      pixelsToMilliseconds,
     ],
   );
-
-  const onDragStart = useCallback(() => {
-    dragStartTimeframe.current = timeframe;
-  }, [timeframe]);
-
-  useDndMonitor({
-    onDragStart,
-  });
 
   usePanStrategy(timelineRef, onPanEnd);
 

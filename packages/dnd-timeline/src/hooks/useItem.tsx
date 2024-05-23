@@ -50,28 +50,32 @@ export default function useItem(props: UseItemProps) {
     getRelevanceFromResizeEvent,
   } = useTimelineContext();
 
+  const propsOnResizeEnd = props.onResizeEnd;
+  const propsOnResizeStart = props.onResizeStart;
+  const propsOnResizeMove = props.onResizeMove;
+
   const onResizeEndCallback = useCallback(
     (event: ResizeEndEvent) => {
       onResizeEnd(event);
-      props.onResizeEnd?.(event);
+      propsOnResizeEnd?.(event);
     },
-    [onResizeEnd, props],
+    [onResizeEnd, propsOnResizeEnd],
   );
 
   const onResizeStartCallback = useCallback(
     (event: ResizeStartEvent) => {
       onResizeStart?.(event);
-      props.onResizeStart?.(event);
+      propsOnResizeStart?.(event);
     },
-    [onResizeStart, props],
+    [onResizeStart, propsOnResizeStart],
   );
 
   const onResizeMoveCallback = useCallback(
     (event: ResizeMoveEvent) => {
       onResizeMove?.(event);
-      props.onResizeMove?.(event);
+      propsOnResizeMove?.(event);
     },
-    [onResizeMove, props],
+    [onResizeMove, propsOnResizeMove],
   );
 
   dataRef.current = {
