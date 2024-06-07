@@ -23,7 +23,7 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "npm@10.1.0",
+  "packageManager": "pnpm@9.2.0",
   "workspaces": [
     "examples/*",
     "packages/*"

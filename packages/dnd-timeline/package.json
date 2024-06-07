@@ -22,9 +22,9 @@
     "release": "release-it --ci"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
-    "@repo/release-it-config": "*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/release-it-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.45",
     "tsup": "^8.0.1",

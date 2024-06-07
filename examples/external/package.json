@@ -12,14 +12,14 @@
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
     "date-fns": "^2.30.0",
-    "dnd-timeline": "*",
+    "dnd-timeline": "workspace:*",
     "nanoid": "^5.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.0",
