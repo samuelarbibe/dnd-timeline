@@ -1,1 +1,1 @@
-module.exports = require('@repo/release-it-config')
+module.exports = require("@repo/release-it-config");

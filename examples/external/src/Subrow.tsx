@@ -1,13 +1,13 @@
-import React from "react";
+import type React from "react";
 
 interface SubrowProps {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 function Subrow(props: SubrowProps) {
-  return (
-    <div style={{ height: 50, position: "relative" }}>{props.children}</div>
-  );
+	return (
+		<div style={{ height: 50, position: "relative" }}>{props.children}</div>
+	);
 }
 
 export default Subrow;

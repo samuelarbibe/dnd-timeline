@@ -1,10 +1,10 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
-  "compilerOptions": {
-    "lib": ["dom", "ES2015"],
-    "outDir": "./dist",
-    "types": ["node"]
-  },
-  "include": ["."],
-  "exclude": ["node_modules", "dist"],
+	"extends": "@repo/typescript-config/react-library.json",
+	"compilerOptions": {
+		"lib": ["dom", "ES2015"],
+		"outDir": "./dist",
+		"types": ["node"]
+	},
+	"include": ["."],
+	"exclude": ["node_modules", "dist"]
 }

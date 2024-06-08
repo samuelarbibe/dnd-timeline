@@ -1,11 +1,11 @@
-import { atom } from "jotai";
-import type { ItemDefinition, RowDefinition, Timeframe } from "dnd-timeline";
 import { endOfDay, startOfDay } from "date-fns";
+import type { ItemDefinition, RowDefinition, Timeframe } from "dnd-timeline";
+import { atom } from "jotai";
 import { generateItems, generateRows } from "../utils";
 
 const DEFAULT_TIMEFRAME: Timeframe = {
-  start: startOfDay(new Date()),
-  end: endOfDay(new Date()),
+	start: startOfDay(new Date()),
+	end: endOfDay(new Date()),
 };
 
 const DEFAULT_ROWS = generateRows(5);

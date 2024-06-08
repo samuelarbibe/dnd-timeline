@@ -4,7 +4,6 @@
     "build": "turbo run build",
     "clean": "turbo run clean",
     "dev": "turbo run dev --parallel",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
@@ -12,11 +11,11 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "@release-it/conventional-changelog": "^8.0.1",
     "husky": "^8.0.3",
-    "prettier": "^3.1.0",
     "release-it": "^17.0.1",
     "turbo": "^1.13.3"
   },

@@ -47,7 +47,7 @@ function App(){
             relevance: updatedRelevance,
           }
       }))
-    }, [setItems])
+    }, [])
   
   return (
     <TimelineContext
