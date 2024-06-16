@@ -29,7 +29,7 @@ export const useWheelStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
 			onPanEnd(panEndEvent);
 		};
 
-		element.addEventListener("wheel", pointerWheelHandler);
+		element.addEventListener("wheel", pointerWheelHandler, { passive: false });
 
 		return () => {
 			element.removeEventListener("wheel", pointerWheelHandler);
@@ -61,7 +61,7 @@ export const useDragStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
 			onPanEnd(panEndEvent);
 		};
 
-		element.addEventListener("wheel", pointerWheelHandler);
+		element.addEventListener("wheel", pointerWheelHandler, { passive: false });
 
 		return () => {
 			element.removeEventListener("wheel", pointerWheelHandler);
