@@ -15,16 +15,15 @@ import Subrow from "./subrow";
 function Timeline() {
 	const rows = useAtomValue(rowsAtom);
 	const [items, setItems] = useAtom(itemsAtom);
-	const { setTimelineRef, style, timeframe, timelineRef } =
-		useTimelineContext();
+	const { setTimelineRef, style, range, timelineRef } = useTimelineContext();
 
 	const regenerateItems = () => {
-		setItems(generateItems(50, timeframe, rows));
+		setItems(generateItems(50, range, rows));
 	};
 
 	const groupedSubrows = useMemo(
-		() => groupItemsToSubrows(items, timeframe),
-		[items, timeframe],
+		() => groupItemsToSubrows(items, range),
+		[items, range],
 	);
 
 	const rowVirtualizer = useVirtualizer({
@@ -73,11 +72,7 @@ function Timeline() {
 								{groupedSubrows[virtualRow.key]?.map((subrow, index) => (
 									<Subrow key={`${virtualRow.key}-${index}`}>
 										{subrow.map((item) => (
-											<Item
-												id={item.id}
-												key={item.id}
-												relevance={item.relevance}
-											>
+											<Item id={item.id} key={item.id} span={item.span}>
 												{`Item ${item.id}`}
 											</Item>
 										))}

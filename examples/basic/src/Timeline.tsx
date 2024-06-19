@@ -12,11 +12,11 @@ interface TimelineProps {
 }
 
 function Timeline(props: TimelineProps) {
-	const { setTimelineRef, style, timeframe } = useTimelineContext();
+	const { setTimelineRef, style, range } = useTimelineContext();
 
 	const groupedSubrows = useMemo(
-		() => groupItemsToSubrows(props.items, timeframe),
-		[props.items, timeframe],
+		() => groupItemsToSubrows(props.items, range),
+		[props.items, range],
 	);
 
 	return (
@@ -26,7 +26,7 @@ function Timeline(props: TimelineProps) {
 					{groupedSubrows[row.id]?.map((subrow, index) => (
 						<Subrow key={`${row.id}-${index}`}>
 							{subrow.map((item) => (
-								<Item id={item.id} key={item.id} relevance={item.relevance}>
+								<Item id={item.id} key={item.id} span={item.span}>
 									{`Item ${item.id}`}
 								</Item>
 							))}

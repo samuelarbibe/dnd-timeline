@@ -11,8 +11,8 @@ interface Marker {
 
 export interface MarkerDefinition {
 	value: number;
-	maxTimeframeSize?: number;
-	minTimeframeSize?: number;
+	maxRangeSize?: number;
+	minRangeSize?: number;
 	getLabel?: (time: Date) => string;
 }
 
@@ -21,10 +21,10 @@ interface TimeAxisProps {
 }
 
 function TimeAxis(props: TimeAxisProps) {
-	const { timeframe, timelineDirection, sidebarWidth, millisecondsToPixels } =
+	const { range, direction, sidebarWidth, valueToPixels } =
 		useTimelineContext();
 
-	const side = timelineDirection === "rtl" ? "right" : "left";
+	const side = direction === "rtl" ? "right" : "left";
 
 	const markers = useMemo(() => {
 		const sortedMarkers = [...props.markers];
@@ -32,11 +32,11 @@ function TimeAxis(props: TimeAxisProps) {
 
 		const delta = sortedMarkers[sortedMarkers.length - 1].value;
 
-		const timeframeSize = timeframe.end.getTime() - timeframe.start.getTime();
+		const rangeSize = range.end - range.start;
 
-		const startTime = Math.floor(timeframe.start.getTime() / delta) * delta;
+		const startTime = Math.floor(range.start / delta) * delta;
 
-		const endTime = timeframe.end.getTime();
+		const endTime = range.end;
 		const timezoneOffset = minutesToMilliseconds(
 			new Date().getTimezoneOffset(),
 		);
@@ -47,10 +47,8 @@ function TimeAxis(props: TimeAxisProps) {
 			const multiplierIndex = sortedMarkers.findIndex(
 				(marker) =>
 					(time - timezoneOffset) % marker.value === 0 &&
-					(!marker.maxTimeframeSize ||
-						timeframeSize <= marker.maxTimeframeSize) &&
-					(!marker.minTimeframeSize ||
-						timeframeSize >= marker.minTimeframeSize),
+					(!marker.maxRangeSize || rangeSize <= marker.maxRangeSize) &&
+					(!marker.minRangeSize || rangeSize >= marker.minRangeSize),
 			);
 
 			if (multiplierIndex === -1) continue;
@@ -62,12 +60,12 @@ function TimeAxis(props: TimeAxisProps) {
 			markerSideDeltas.push({
 				label,
 				heightMultiplier: 1 / (multiplierIndex + 1),
-				sideDelta: millisecondsToPixels(time - timeframe.start.getTime()),
+				sideDelta: valueToPixels(time - range.start),
 			});
 		}
 
 		return markerSideDeltas;
-	}, [timeframe, millisecondsToPixels, props.markers]);
+	}, [range, valueToPixels, props.markers]);
 
 	return (
 		<div

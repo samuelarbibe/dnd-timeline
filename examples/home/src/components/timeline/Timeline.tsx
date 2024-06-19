@@ -13,15 +13,15 @@ import Subrow from "./Subrow";
 function Timeline() {
 	const rows = useAtomValue(rowsAtom);
 	const [items, setItems] = useAtom(itemsAtom);
-	const { setTimelineRef, style, timeframe } = useTimelineContext();
+	const { setTimelineRef, style, range } = useTimelineContext();
 
 	const regenerateItems = () => {
-		setItems(generateItems(10, timeframe, rows));
+		setItems(generateItems(10, range, rows));
 	};
 
 	const groupedSubrows = useMemo(
-		() => groupItemsToSubrows(items, timeframe),
-		[items, timeframe],
+		() => groupItemsToSubrows(items, range),
+		[items, range],
 	);
 
 	return (
@@ -43,7 +43,7 @@ function Timeline() {
 							{groupedSubrows[row.id]?.map((subrow, index) => (
 								<Subrow key={`${row.id}-${index}`}>
 									{subrow.map((item) => (
-										<Item id={item.id} key={item.id} relevance={item.relevance}>
+										<Item id={item.id} key={item.id} span={item.span}>
 											<Text>{item.id}</Text>
 										</Item>
 									))}

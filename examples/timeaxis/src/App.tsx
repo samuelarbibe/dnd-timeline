@@ -1,27 +1,27 @@
 import "./index.css";
 import { endOfDay, startOfDay } from "date-fns";
-import type { DragEndEvent, ResizeEndEvent, Timeframe } from "dnd-timeline";
+import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import React, { useCallback, useState } from "react";
 import Timeline from "./Timeline";
 import { generateItems, generateRows } from "./utils";
 
-const DEFAULT_TIMEFRAME: Timeframe = {
-	start: startOfDay(new Date()),
-	end: endOfDay(new Date()),
+const DEFAULT_RANGE: Range = {
+	start: startOfDay(new Date()).getTime(),
+	end: endOfDay(new Date()).getTime(),
 };
 
 function App() {
-	const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
+	const [range, setRange] = useState(DEFAULT_RANGE);
 
 	const [rows] = useState(generateRows(5));
-	const [items, setItems] = useState(generateItems(10, timeframe, rows));
+	const [items, setItems] = useState(generateItems(10, range, rows));
 
 	const onResizeEnd = useCallback((event: ResizeEndEvent) => {
-		const updatedRelevance =
-			event.active.data.current.getRelevanceFromResizeEvent?.(event);
+		const updatedSpan =
+			event.active.data.current.getSpanFromResizeEvent?.(event);
 
-		if (!updatedRelevance) return;
+		if (!updatedSpan) return;
 
 		const activeItemId = event.active.id;
 
@@ -31,17 +31,16 @@ function App() {
 
 				return {
 					...item,
-					relevance: updatedRelevance,
+					span: updatedSpan,
 				};
 			}),
 		);
 	}, []);
 	const onDragEnd = useCallback((event: DragEndEvent) => {
 		const activeRowId = event.over?.id as string;
-		const updatedRelevance =
-			event.active.data.current.getRelevanceFromDragEvent?.(event);
+		const updatedSpan = event.active.data.current.getSpanFromDragEvent?.(event);
 
-		if (!updatedRelevance || !activeRowId) return;
+		if (!updatedSpan || !activeRowId) return;
 
 		const activeItemId = event.active.id;
 
@@ -52,7 +51,7 @@ function App() {
 				return {
 					...item,
 					rowId: activeRowId,
-					relevance: updatedRelevance,
+					span: updatedSpan,
 				};
 			}),
 		);
@@ -60,10 +59,10 @@ function App() {
 
 	return (
 		<TimelineContext
+			range={range}
 			onDragEnd={onDragEnd}
 			onResizeEnd={onResizeEnd}
-			onTimeframeChanged={setTimeframe}
-			timeframe={timeframe}
+			onRangeChanged={setRange}
 		>
 			<Timeline items={items} rows={rows} />
 		</TimelineContext>

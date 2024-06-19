@@ -2,28 +2,28 @@ import "./index.css";
 import { closestCenter } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { endOfDay, startOfDay } from "date-fns";
-import type { DragEndEvent, ResizeEndEvent, Timeframe } from "dnd-timeline";
+import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import React, { useCallback, useState } from "react";
 import Timeline from "./Timeline";
 import { ItemType, generateItems, generateRows } from "./utils";
 
-const DEFAULT_TIMEFRAME: Timeframe = {
-	start: startOfDay(new Date()),
-	end: endOfDay(new Date()),
+const DEFAULT_RANGE: Range = {
+	start: startOfDay(new Date()).getTime(),
+	end: endOfDay(new Date()).getTime(),
 };
 
 function App() {
-	const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
+	const [range, setRange] = useState(DEFAULT_RANGE);
 
 	const [rows, setRows] = useState(generateRows(5));
-	const [items, setItems] = useState(generateItems(10, timeframe, rows));
+	const [items, setItems] = useState(generateItems(10, range, rows));
 
 	const onResizeEnd = useCallback((event: ResizeEndEvent) => {
-		const updatedRelevance =
-			event.active.data.current.getRelevanceFromResizeEvent?.(event);
+		const updatedSpan =
+			event.active.data.current.getSpanFromResizeEvent?.(event);
 
-		if (!updatedRelevance) return;
+		if (!updatedSpan) return;
 
 		const activeItemId = event.active.id;
 
@@ -33,7 +33,7 @@ function App() {
 
 				return {
 					...item,
-					relevance: updatedRelevance,
+					span: updatedSpan,
 				};
 			}),
 		);
@@ -47,10 +47,9 @@ function App() {
 		const activeId = event.active.id;
 		const activeItemType = event.active.data.current.type as ItemType;
 
-		const updatedRelevance =
-			event.active.data.current.getRelevanceFromDragEvent?.(event);
+		const updatedSpan = event.active.data.current.getSpanFromDragEvent?.(event);
 
-		if (updatedRelevance && activeItemType === ItemType.ListItem) {
+		if (updatedSpan && activeItemType === ItemType.ListItem) {
 			setItems((prev) =>
 				prev.map((item) => {
 					if (item.id !== activeId) return item;
@@ -58,7 +57,7 @@ function App() {
 					return {
 						...item,
 						rowId: overedId,
-						relevance: updatedRelevance,
+						span: updatedSpan,
 					};
 				}),
 			);
@@ -74,11 +73,11 @@ function App() {
 
 	return (
 		<TimelineContext
-			collisionDetection={closestCenter}
+			range={range}
 			onDragEnd={onDragEnd}
 			onResizeEnd={onResizeEnd}
-			onTimeframeChanged={setTimeframe}
-			timeframe={timeframe}
+			onRangeChanged={setRange}
+			collisionDetection={closestCenter}
 		>
 			<Timeline items={items} rows={rows} />
 		</TimelineContext>
