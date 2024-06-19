@@ -1,15 +1,9 @@
-import type {
-	DndContextProps,
-	DragCancelEvent,
-	DragEndEvent,
-	DragMoveEvent,
-	DragStartEvent,
-} from "@dnd-kit/core";
+import type { DndContextProps, DragCancelEvent } from "@dnd-kit/core";
 import type { CSSProperties, PropsWithChildren } from "react";
 
 import type { UsePanStrategy } from "..";
 
-import type { Relevance, Timeframe } from ".";
+import type { DragEndEvent, DragMoveEvent, DragStartEvent, Range } from ".";
 import type {
 	ResizeEndEvent,
 	ResizeMoveEvent,
@@ -23,15 +17,13 @@ export interface PanEndEvent {
 	deltaY: number;
 }
 
-export type GetRelevanceFromDragEvent = (
+export type GetSpanFromDragEvent = (
 	event: DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent,
-) => Relevance | null;
+) => Range | null;
 
-export type GetRelevanceFromResizeEvent = (
-	event: ResizeEndEvent,
-) => Relevance | null;
+export type GetSpanFromResizeEvent = (event: ResizeEndEvent) => Range | null;
 
-export type GetDateFromScreenX = (screenX: number) => Date;
+export type GetValueFromScreenX = (screenX: number) => number;
 
 export type OnResizeStart = (event: ResizeStartEvent) => void;
 
@@ -41,56 +33,48 @@ export type OnResizeMove = (event: ResizeMoveEvent) => void;
 
 export type OnPanEnd = (event: PanEndEvent) => void;
 
-export type PixelsToMilliseconds = (
-	pixels: number,
-	timeframe?: Timeframe,
-) => number;
-export type MillisecondsToPixels = (
-	milliseconds: number,
-	timeframe?: Timeframe,
-) => number;
+export type PixelsToValue = (pixels: number, range?: Range) => number;
+export type ValueToPixels = (value: number, range?: Range) => number;
 
 export interface TimelineBag {
 	style: CSSProperties;
-	timeframe: Timeframe;
+	range: Range;
 	overlayed: boolean;
 	onResizeEnd: OnResizeEnd;
 	onResizeMove?: OnResizeMove;
 	onResizeStart?: OnResizeStart;
 	resizeHandleWidth: number;
-	timeframeGridSize?: number;
-	timelineDirection: CanvasDirection;
+	rangeGridSize?: number;
+	direction: CanvasDirection;
 	timelineRef: React.MutableRefObject<HTMLElement | null>;
 	setTimelineRef: (element: HTMLElement | null) => void;
 	sidebarWidth: number;
 	sidebarRef: React.MutableRefObject<HTMLElement | null>;
 	setSidebarRef: (element: HTMLElement | null) => void;
-	millisecondsToPixels: MillisecondsToPixels;
-	pixelsToMilliseconds: PixelsToMilliseconds;
-	getDateFromScreenX: GetDateFromScreenX;
-	getRelevanceFromDragEvent: GetRelevanceFromDragEvent;
-	getRelevanceFromResizeEvent: GetRelevanceFromResizeEvent;
+	valueToPixels: ValueToPixels;
+	pixelsToValue: PixelsToValue;
+	getValueFromScreenX: GetValueFromScreenX;
+	getSpanFromDragEvent: GetSpanFromDragEvent;
+	getSpanFromResizeEvent: GetSpanFromResizeEvent;
 }
 
-export type OnTimeframeChanged = (
-	updateFunction: (prev: Timeframe) => Timeframe,
-) => void;
+export type OnRangeChanged = (updateFunction: (prev: Range) => Range) => void;
 
 export interface GridSizeDefinition {
 	value: number;
-	maxTimeframeSize?: number;
+	maxRangeSize?: number;
 }
 
 export interface UseTimelineProps {
-	timeframe: Timeframe;
+	range: Range;
 	overlayed?: boolean;
 	onResizeEnd: OnResizeEnd;
 	resizeHandleWidth?: number;
 	onResizeMove?: OnResizeMove;
 	onResizeStart?: OnResizeStart;
 	usePanStrategy?: UsePanStrategy;
-	onTimeframeChanged: OnTimeframeChanged;
-	timeframeGridSizeDefinition?: number | GridSizeDefinition[];
+	onRangeChanged: OnRangeChanged;
+	rangeGridSizeDefinition?: number | GridSizeDefinition[];
 }
 
 export interface TimelineContextProps
