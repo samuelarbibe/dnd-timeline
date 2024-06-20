@@ -1,5 +1,7 @@
 
 
+## [2.0.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.0-beta.0...dnd-timeline@2.0.0) (2024-06-20)
+
 ## [2.0.0-beta.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.3...dnd-timeline@2.0.0-beta.0) (2024-06-20)
 
 
