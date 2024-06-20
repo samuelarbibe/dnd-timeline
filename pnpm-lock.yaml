@@ -40,7 +40,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       nanoid:
         specifier: ^5.0.4
         version: 5.0.7
@@ -98,7 +98,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       jotai:
         specifier: ^2.7.0
         version: 2.8.3(@types/react@18.3.3)(react@18.3.1)
@@ -165,7 +165,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       nanoid:
         specifier: ^5.0.4
         version: 5.0.7
@@ -217,7 +217,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       jotai:
         specifier: ^2.7.0
         version: 2.8.3(@types/react@18.3.3)(react@18.3.1)
@@ -263,7 +263,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       nanoid:
         specifier: ^5.0.4
         version: 5.0.7
@@ -309,7 +309,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       nanoid:
         specifier: ^5.0.4
         version: 5.0.7
@@ -352,7 +352,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       nanoid:
         specifier: ^5.0.4
         version: 5.0.7
@@ -398,7 +398,7 @@ importers:
         version: 2.30.0
       dnd-timeline:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/dnd-timeline
       nanoid:
         specifier: ^5.0.4
         version: 5.0.7
