@@ -43,7 +43,7 @@ And any other drag-and-drop interaction you can think of.
 
 ## Time Axis
 
-This examples adds a time axis and time cursor to indicate the current time and the timeframe represented in the timeline.
+This examples adds a time axis and time cursor to indicate the current time and the range represented in the timeline.
 
 These components are external to the library, and are an example of how to use `dnd-timeline`'s context to create custom components.
 
@@ -51,7 +51,7 @@ These components are external to the library, and are an example of how to use `
 
 ## Performance
 
-This example adds a `debounce` or a `throttle` mechanism to the timeframe, in order to greatly improve the zoom and pan performance. &#x20;
+This example adds a `debounce` or a `throttle` mechanism to the range, in order to greatly improve the zoom and pan performance. &#x20;
 
 Play around with the different options to see how they feel!
 

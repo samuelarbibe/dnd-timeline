@@ -28,43 +28,43 @@ setTimelineRef: (element: HTMLElement | null) => void
 
 A ref setter that must be passed to the timeline's container element.
 
-#### `millisecondsToPixels`
+#### `valueToPixels`
 
 ```typescript
-millisecondsToPixels: (milliseconds: number) => number
+valueToPixels: (value: number) => number
 ```
 
-A helper function that receives milliseconds, and returns the pixel representation in relation to the timeline's container element.&#x20;
+A helper function that receives a value, and returns the pixel representation in relation to the timeline's container element.&#x20;
 
 > 🧠 It can be used to infer elements' size and position in pixels, based on their duration. It is internally used in order to position items on the timeline.
 
-#### `pixelsToMilliseconds`
+#### `pixelsToValue`
 
 ```typescript
-pixelsToMilliseconds: (pixels: number) => number
+pixelsToValue: (pixels: number) => number
 ```
 
-A helper function that receives pixels, and returns the equivalent duration for it in milliseconds, in relation to the timeline's container element.
+A helper function that receives pixels, and returns the equivalent duration for it, in relation to the timeline's container element.
 
-> 🧠 It can be used to convert size and position to a time value. It is internally used to infer items' update relevances according to their updated position/width, in relation to the timeline's container element.
+> 🧠 It can be used to convert size and position to a value. It is internally used to infer items' update spans according to their updated position/width, in relation to the timeline's container element.
 
-#### `getDateFromScreenX`
+#### `getValueFromScreenX`
 
 ```typescript
-getDateFromScreenX: (screenX: number) => Date
+getValueFromScreenX: (screenX: number) => Value
 ```
 
 A helper function that x position in the client's screen, and returns a date represenation of that position, in relation to the timeline's container element.
 
 > 🧠 It can be used to infer a time value from a mouse event. For example, you can use it to extract a date from a click event on the timeline.
 
-#### `getRelevanceFromDragEvent`
+#### `getSpanFromDragEvent`
 
 ```typescript
-getRelevanceFromDragEvent: (event: DragEvent) => Relevance | null
+getSpanFromDragEvent: (event: DragEvent) => Span | null
 ```
 
-A function that extracts relevance from a drag event. The drag event type can be one of the following:
+A function that extracts span from a drag event. The drag event type can be one of the following:
 
 {% code overflow="wrap" %}
 ```tsx
@@ -72,23 +72,23 @@ type DragEvent = DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent
 ```
 {% endcode %}
 
-This function is injected into all of dnd-kit's events, and allowes you to infer the dragged item's relevance from the event object. For example:
+This function is injected into all of dnd-kit's events, and allowes you to infer the dragged item's span from the event object. For example:
 
 <pre class="language-tsx"><code class="lang-tsx">const onDragEnd = (event: DragEndEvent) => {
-  const updatedRelevance =
-<strong>    event.active.data.current.getRelevanceFromDragEvent?.(event)
+  const updatedSpan =
+<strong>    event.active.data.current.getSpanFromDragEvent?.(event)
 </strong>    
-  // update your state using the updated relevance.
+  // update your state using the updated span.
 }
 </code></pre>
 
-#### `getRelevanceFromResizeEvent`
+#### `getSpanFromResizeEvent`
 
 ```typescript
-getRelevanceFromResizeEvent: (event: ResizeEvent) => Relevance | null
+getSpanFromResizeEvent: (event: ResizeEvent) => Span | null
 ```
 
-A function that extracts relevance from a drag event. The drag event type can be one of the following:
+A function that extracts span from a drag event. The drag event type can be one of the following:
 
 {% code overflow="wrap" %}
 ```tsx
@@ -96,13 +96,13 @@ type ResizeEvent = ResizeStartEvent | ResizeMoveEvent | ResizeEndEvent
 ```
 {% endcode %}
 
-This function is injected into all of dnd-timeline's resize events, and allowes you to infer the dragged item's relevance from the event object. For example:
+This function is injected into all of dnd-timeline's resize events, and allowes you to infer the dragged item's span from the event object. For example:
 
 <pre class="language-tsx"><code class="lang-tsx">const onResizeEnd = (event: ResizeEndEvent) => {
-  const updatedRelevance =
-<strong>    event.active.data.current.getRelevanceFromResizeEvent?.(event)
+  const updatedSpan =
+<strong>    event.active.data.current.getSpanFromResizeEvent?.(event)
 </strong>    
-  // update your state using the updated relevance.
+  // update your state using the updated span.
 }
 </code></pre>
 

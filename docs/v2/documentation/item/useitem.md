@@ -20,15 +20,15 @@ id: string
 
 A unique id to identify this item.
 
-#### relevance
+#### `span`
 
 ```tsx
-id: string
+span: Span
 ```
 
-A unique id to identify this item.
+An object representing the start and end values of the item.
 
-#### disabled?
+#### `disabled?`
 
 ```tsx
 disabled?: boolean
@@ -36,7 +36,7 @@ disabled?: boolean
 
 An optional boolean to disable the interactivity of the item.
 
-#### data?
+#### `data?`
 
 ```tsx
 data?: object
@@ -50,7 +50,7 @@ Custom data that can be passed to the row.
 > ```tsx
 > useItem({
 >   id: props.id,
->   relevance: props.relevance,
+>   span: props.span,
 >   data: { type: 'timeline-item' },
 > })
 > ```
@@ -59,8 +59,8 @@ Custom data that can be passed to the row.
 > {% code title="Timeline.tsx" %}
 > ```tsx
 > const onDragEnd = (event: DragEndEvent) => {
->   const updatedRelevance =
->     event.active.data.current.getRelevanceFromDragEvent?.(event)
+>   const updatedSpan =
+>     event.active.data.current.getSpanFromDragEvent?.(event)
 >
 >   const rowType = event.active.data.current.type
 >   
@@ -83,15 +83,15 @@ For example:
 
 ```tsx
 const onResizeMove = useCallback(() => {
-  const updatedRelevance =
-    event.active.data.current.getRelevanceFromResizeEvent?.(event)
+  const updatedSpan =
+    event.active.data.current.getSpanFromResizeEvent?.(event)
 
-  // update some local state with the updated-relevance
+  // update some local state with the updated-span
 }, [])
 
 useItem({
   id: props.id,
-  relevance: props.relevance,
+  span: props.span,
   onResizeMove,
 })
 ```

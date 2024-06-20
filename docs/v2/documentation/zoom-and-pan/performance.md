@@ -1,12 +1,12 @@
 # Performance
 
-Whenever the `timeframe` changes, a recalculation of all the item's width and position must be performed.
+Whenever the `range` changes, a recalculation of all the item's width and position must be performed.
 
 When performing operations that require a high amount of sequential changes, like zooming in or panning, the resulted re-renders might cause stuttering and frame-drops.
 
 This **"frequent change"** problem is quite common in reactive frontend applications, and there are multiple solutions to it.
 
-As you are in full control of the `timeframe` state, you can  apply a chosen mechanism of debouncing to the `timeframe` state.
+As you are in full control of the `range` state, you can  apply a chosen mechanism of debouncing to the `range` state.
 
 This will reduce the amount changes registered in the timeline, and in return reduce the amount of renders required when zooming an panning, resulting in a great improvement in performance.
 
@@ -23,8 +23,8 @@ If you use **React 18+**, you should make use of the [`useDeferredValue`](https:
 {% tabs %}
 {% tab title="App.tsx" %}
 <pre class="language-tsx"><code class="lang-tsx">function App() {
-  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
-<strong>  const debouncedTimeframe = useDeferredValue(timeframe);
+  const [range, setRange] = useState(DEFAULT_TIMEFRAME);
+<strong>  const debouncedRange = useDeferredValue(range);
 </strong>  
   ...
   
@@ -32,8 +32,8 @@ If you use **React 18+**, you should make use of the [`useDeferredValue`](https:
     &#x3C;TimelineContext
         onDragEnd={onDragEnd}
         onResizeEnd={onResizeEnd}
-<strong>        timeframe={debouncedTimeframe} // provide the debounced timeframe
-</strong>        onTimeframeChanged={setTimeframe}
+<strong>        range={debouncedRange} // provide the debounced range
+</strong>        onRangeChanged={setRange}
     >
       &#x3C;Timeline items={items} rows={rows} />
     &#x3C;/TimelineContext>
@@ -71,8 +71,8 @@ Another common solution is **throttling.**
 {% tabs %}
 {% tab title="App.tsx" %}
 <pre class="language-tsx"><code class="lang-tsx">function App() {
-  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
-<strong>  const debouncedTimeframe = useThrottle(timeframe, 300);
+  const [range, setRange] = useState(DEFAULT_TIMEFRAME);
+<strong>  const debouncedRange = useThrottle(range, 300);
 </strong>  
   ...
   
@@ -80,8 +80,8 @@ Another common solution is **throttling.**
     &#x3C;TimelineContext
         onDragEnd={onDragEnd}
         onResizeEnd={onResizeEnd}
-<strong>        timeframe={debouncedTimeframe} // provide the debounced timeframe
-</strong>        onTimeframeChanged={setTimeframe}
+<strong>        range={debouncedRange} // provide the debounced range
+</strong>        onRangeChanged={setRange}
     >
       &#x3C;Timeline items={items} rows={rows} />
     &#x3C;/TimelineContext>
@@ -148,8 +148,8 @@ The most common way to solve this is using **debounce.**
 {% tabs %}
 {% tab title="App.tsx" %}
 <pre class="language-tsx"><code class="lang-tsx">function App() {
-  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
-<strong>  const debouncedTimeframe = useDebounce(timeframe, 300)
+  const [range, setRange] = useState(DEFAULT_TIMEFRAME);
+<strong>  const debouncedRange = useDebounce(range, 300)
 </strong>  
   ...
   
@@ -157,8 +157,8 @@ The most common way to solve this is using **debounce.**
     &#x3C;TimelineContext
         onDragEnd={onDragEnd}
         onResizeEnd={onResizeEnd}
-<strong>        timeframe={debouncedTimeframe} // provide the debounced timeframe
-</strong>        onTimeframeChanged={setTimeframe}
+<strong>        range={debouncedRange} // provide the debounced range
+</strong>        onRangeChanged={setRange}
     >
       &#x3C;Timeline items={items} rows={rows} />
     &#x3C;/TimelineContext>
@@ -209,7 +209,7 @@ export function useDebounce<T>(value: T, delay = 500) {
 
 > 🧠 You can still make use of the un-debounced state to render selected components in real-time. For example, you can render the time-axis using the un-debounced state, and render the timeline using the debounced state.
 >
-> Play around with the live demo, and watch how the timeaxis and the timeframe move asynchronously🔥
+> Play around with the live demo, and watch how the timeaxis and the range move asynchronously🔥
 
 ### Live Example
 

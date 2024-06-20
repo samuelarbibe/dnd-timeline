@@ -1,17 +1,17 @@
 # Subrow
 
-When you have two or more items who's relevance's intersect, you would expect them to stack on top of each other.
+When you have two or more items who's span's intersect, you would expect them to stack on top of each other.
 
 Each item in that stack should be rendered inside a subrow of some kind, that will seprate stacked items into different containers inside the same row.
 
 `dnd-timeline` does not have this behaviour by default, but provides you with a simple util to help you stack.
 
 <pre class="language-tsx" data-title="Timeline.tsx"><code class="lang-tsx">function Timeline(props: TimelineProps) {  
-  const { setTimelineRef, style, timeframe } = useTimelineContext()
+  const { setTimelineRef, style, range } = useTimelineContext()
 
   const groupedSubrows = useMemo(
-<strong>    () => groupItemsToSubrows(items, timeframe),
-</strong>    [items, timeframe]
+<strong>    () => groupItemsToSubrows(items, range),
+</strong>    [items, range]
   )
 
   return (
@@ -58,7 +58,7 @@ The function receives and returns items of a certain type. If your items are of 
 
 ```tsx
 groupItemsToSubrows: 
-    (items: ItemDefinition[], timeframe?: Relevance) =>
+    (items: ItemDefinition[], range?: Span) =>
     Record<string, ItemDefinition[][]>
 ```
 
@@ -78,16 +78,16 @@ An array of items in the shape of `ItemDefinition`
 type ItemDefinition = {
     id: string
     rowId: string
-    relevance: Relevance
+    span: Span
     disabled?: boolean
 }
 ```
 
-#### `timeframe?`
+#### `range?`
 
 ```tsx
-timeframe?: Relevance
+range?: Span
 ```
 
-An optional timeframe object to filter out items that do not intersect with the current timeframe. This is to reduce the amount of items rendered at a time.
+An optional range object to filter out items that do not intersect with the current range. This is to reduce the amount of items rendered at a time.
 

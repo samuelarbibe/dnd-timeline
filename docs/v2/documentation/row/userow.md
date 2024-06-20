@@ -48,13 +48,13 @@ Custom data that can be passed to the row.
 > {% code title="Timeline.tsx" %}
 > ```tsx
 > const onDragEnd = (event: DragEndEvent) => {
->   const updatedRelevance =
->     event.active.data.current.getRelevanceFromDragEvent?.(event)
+>   const updatedSpan =
+>     event.active.data.current.getSpanFromDragEvent?.(event)
 >
 >   const rowType = event.active.data.current.type
 >   
 >   if (rowType === 'timeline-row') {
->     // update item with id activeItemId with the updatedRelevance, or the updated row using overedId
+>     // update item with id activeItemId with the updatedSpan, or the updated row using overedId
 >   }
 > }
 > ```

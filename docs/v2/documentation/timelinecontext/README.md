@@ -28,13 +28,13 @@ You will need to wrap your timeline and all of its component in a `<TimelineCont
 function App(){
   const [rows, setRows] = useRows()
   const [items, setItems] = useItems()
-  const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME)
+  const [range, setRange] = useState(DEFAULT_TIMEFRAME)
   
   const onResizeEnd = useCallback((event: ResizeEndEvent) => {
-      const updatedRelevance =
-        event.active.data.current.getRelevanceFromResizeEvent?.(event)
+      const updatedSpan =
+        event.active.data.current.getSpanFromResizeEvent?.(event)
   
-      if (!updatedRelevance) return
+      if (!updatedSpan) return
   
       const activeItemId = event.active.id
   
@@ -44,7 +44,7 @@ function App(){
   
           return {
             ...item,
-            relevance: updatedRelevance,
+            span: updatedSpan,
           }
       }))
     }, [])
@@ -52,8 +52,8 @@ function App(){
   return (
     <TimelineContext
       onResizeEnd={onResizeEnd}
-      timeframe={timeframe}
-      onTimeframeChanged={setTimeframe}
+      range={range}
+      onRangeChanged={setRange}
     >
       <Timeline rows={rows} items={items} />
     </TimelineContext>
@@ -92,14 +92,14 @@ You can learn how to render rows here:
 
 ```tsx
 interface TimelineContextProps {
-    timeframe: Timeframe // { start: Date, end: Date }
+    range: Range // { start: number, end: number }
     overlayed?: boolean
     onResizeEnd: OnResizeEnd
     onResizeMove?: OnResizeMove
     onResizeStart?: OnResizeStart
     usePanStrategy?: UsePanStrategy
-    onTimeframeChanged: OnTimeframeChanged
-    timeframeGridSizeDefinition?: number | GridSizeDefinition[]
+    onRangeChanged: OnRangeChanged
+    rangeGridSizeDefinition?: number | GridSizeDefinition[]
     // ...DndContext Props
 }
 ```
@@ -118,17 +118,17 @@ For example, the `onDragEnd` event is called with extra data:
 
   const activeItemId = event.active.id
 
-<strong>  const updatedRelevance =
-</strong><strong>    event.active.data.current.getRelevanceFromDragEvent?.(event)
+<strong>  const updatedSpan =
+</strong><strong>    event.active.data.current.getSpanFromDragEvent?.(event)
 </strong>    
-  // update your state using the updated relevance.
+  // update your state using the updated span.
 }
 </code></pre>
 
-Every event contains a helper function that can be used to infer the item's updated relevance.
+Every event contains a helper function that can be used to infer the item's updated span.
 
 {% hint style="warning" %}
-Do not try to calculate the item's updated relevance on your own. You should call the `getRelevanceFromDragEvent` or `getRelevanceFromResizeEvent` to get the updated relevance right before using it to update you own state.
+Do not try to calculate the item's updated span on your own. You should call the `getSpanFromDragEvent` or `getSpanFromResizeEvent` to get the updated span right before using it to update you own state.
 {% endhint %}
 
 #### `onDonDragStart? | onDragEnd? | onDragMove? | onDragCancel?`
@@ -137,7 +137,7 @@ Do not try to calculate the item's updated relevance on your own. You should cal
 Click to see dnd-kit's documentation on these event callbacks.
 {% endembed %}
 
-The only difference is that the `getRelevanceFromDragEvent` function is added to the `data` of the event's active node.
+The only difference is that the `getSpanFromDragEvent` function is added to the `data` of the event's active node.
 
 #### `onResizeStart?`
 
@@ -152,7 +152,7 @@ type ResizeStartEvent = {
 }
 ```
 
-The `active` object contains the item's custom data, alongside a `getRelevanceFromDragEvent` function that should be called with the event to get the updated relevance.
+The `active` object contains the item's custom data, alongside a `getSpanFromDragEvent` function that should be called with the event to get the updated span.
 
 #### `onResizeMove?`
 
@@ -170,7 +170,7 @@ type ResizeMoveEvent = {
 }
 ```
 
-The `active` object contains the item's custom data, alongside a `getRelevanceFromResizeEvent` function that should be called with the event to get the updated relevance.
+The `active` object contains the item's custom data, alongside a `getSpanFromResizeEvent` function that should be called with the event to get the updated span.
 
 #### `onResizeEnd?`
 
@@ -188,40 +188,40 @@ type ResizeEndEvent = {
 }
 ```
 
-The `active` object contains the item's custom data, alongside a `getRelevanceFromResizeEvent` function that should be called with the event to get the updated relevance.
+The `active` object contains the item's custom data, alongside a `getSpanFromResizeEvent` function that should be called with the event to get the updated span.
 
 ***
 
 ### Options
 
-#### `timeframe`
+#### `range`
 
 ```tsx
-timeframe: Timeframe
+range: Range
 ```
 
 ```tsx
-type Timeframe = {
-  start: Date
-  end: Date
+type Range = {
+  start: number
+  end: number
 }
 ```
 
-An object defining the viewable timeframe in the timeline. This field is fully controlled.
+An object defining the viewable range in the timeline. This field is fully controlled.
 
-#### `onTimeframeChanged`
+#### `onRangeChanged`
 
 ```tsx
-onTimeframeChanged: OnTimeframeChanged
+onRangeChanged: OnRangeChanged
 ```
 
 ```tsx
-type OnTimeframeChanged = (
-  updateFunction: (prev: Timeframe) => Timeframe
+type OnRangeChanged = (
+  updateFunction: (prev: Range) => Range
 ) => void
 ```
 
-A callback that receives an update function as a prop. Use this to update your controlled state of `timeframe`.
+A callback that receives an update function as a prop. Use this to update your controlled state of `range`.
 
 #### `overlayed?`
 
@@ -231,40 +231,40 @@ overlayed?: boolean = false
 
 This prop enabled/disabled rendering of items when dragging. If using `dnd-kit`'s [DragOverlay](https://docs.dndkit.com/api-documentation/draggable/drag-overlay), this should be set to `true`.
 
-#### `timeframeGridSizeDefinition?`
+#### `rangeGridSizeDefinition?`
 
 ```tsx
-timeframeGridSizeDefinition?: number | GridSizeDefinition[]
+rangeGridSizeDefinition?: number | GridSizeDefinition[]
 ```
 
 ```tsx
 type GridSizeDefinition = {
   value: number
-  maxTimeframeSize?: number
+  maxRangeSize?: number
 }
 ```
 
 Enables and configures snapping in the timeline.&#x20;
 
-If provided with a number, the value will be the snap grid size in `milliseconds`.
+If provided with a number, the value will be the snap grid size.
 
-If provided with an array of `GridSizeDefinition`, the snap grid size will be the `value` of the array member with the smallest matching `maxTimeframeSize`, in `milliseconds`.
+If provided with an array of `GridSizeDefinition`, the snap grid size will be the `value` of the array member with the smallest matching `maxRangeSize`.
 
-> 🧠 To create a dynamic snap grid, that is based on the timeframe size, pass in an array of `GridSizeDefinition`.
+> 🧠 To create a dynamic snap grid, that is based on the range size, pass in an array of `GridSizeDefinition`.
 >
 > ```tsx
->   const timeframeGridSize: GridSizeDefinition[] = [
+>   const rangeGridSize: GridSizeDefinition[] = [
 >     {
 >       value: hoursToMilliseconds(1),
 >     },
 >     {
 >       value: minutesToMilliseconds(30),
->       maxTimeframeSize: hoursToMilliseconds(24),
+>       maxRangeSize: hoursToMilliseconds(24),
 >     }
 >   ]
 > ```
 >
-> For example, the `timeframeGridSize` above will cause the timeframe to have a snap grid size of 30 minutes if timeframe size is smaller than 24 hours, otherwise the grid size will be 1 hour.
+> For example, the `rangeGridSize` above will cause the range to have a snap grid size of 30 minutes if range size is smaller than 24 hours, otherwise the grid size will be 1 hour.
 
 #### `usePanStrategy?`
 

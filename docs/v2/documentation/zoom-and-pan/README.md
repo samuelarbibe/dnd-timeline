@@ -39,9 +39,9 @@ type PanEndEvent = {
 
 #### `deltaX`
 
-The amount of pixels panned on the X axis. This will then be translated into symmetrical changes in the start and end of the timeline's timeframe.
+The amount of pixels panned on the X axis. This will then be translated into symmetrical changes in the start and end of the timeline's range.
 
-For example, a `deltaX` will be translated into addition / subtraction of respective amount of milliseconds both in the `start` and `end` of the timeframe. `rtl` is taken into account.
+For example, a `deltaX` will be translated into addition / subtraction of respective amount of value both in the `start` and `end` of the range. `rtl` is taken into account.
 
 `clientX` and `clientY` have no effect on this translation.
 
@@ -49,11 +49,11 @@ This will create the effect of panning right and left on the timeline.
 
 #### `deltaY`
 
-The amount of pixels scrolled on the Y axis. This will then be translated into **asymmetrical** changes in the `start` and `end` of the timeline's timeframe.
+The amount of pixels scrolled on the Y axis. This will then be translated into **asymmetrical** changes in the `start` and `end` of the timeline's range.
 
-If `clientX` and `clientY` are **not** provided, a `deltaY` will be translated into **mirrored** addition / subtraction of respective amount of milliseconds both in the `start` and `end` of the timeframe.
+If `clientX` and `clientY` are **not** provided, a `deltaY` will be translated into **mirrored** addition / subtraction of respective amount of value both in the `start` and `end` of the range.
 
-If `clientX` and `clientY` are provided, a `deltaY` will be translated into similar changes to the start and end of the timeframe, but biased by the client's cursor position in relation to the timeline. If the client's cursor is closer to the end of the timeline, the zoom in/out will be directed towards it.
+If `clientX` and `clientY` are provided, a `deltaY` will be translated into similar changes to the start and end of the range, but biased by the client's cursor position in relation to the timeline. If the client's cursor is closer to the end of the timeline, the zoom in/out will be directed towards it.
 
 This will create the effect of zooming in and out of the timeline.
 

@@ -16,7 +16,7 @@ A basic Item component will look like this:
 ```tsx
 interface ItemProps {
   id: string
-  relevance: Relevance
+  span: Span
   children: ReactNode
 }
 
@@ -29,7 +29,7 @@ function Item(props: ItemProps) {
     itemContentStyle,
   } = useItem({
     id: props.id,
-    relevance: props.relevance,
+    span: props.span,
   })
 
   return (
@@ -58,7 +58,7 @@ Every `<Item />` component should be rendered as a child of it's parent row.
 ```tsx
 <Row id={row.id}>
   {groupedItems[row.id].map((item) => 
-    <Item id={item.id} relevance={item.relevance}>
+    <Item id={item.id} span={item.span}>
       // item content...
     </Item>
   )}
