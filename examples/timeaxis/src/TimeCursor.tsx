@@ -9,16 +9,16 @@ interface TimeCursorProps {
 function TimeCursor(props: TimeCursorProps) {
 	const timeCursorRef = useRef<HTMLDivElement>(null);
 
-	const { timeframe, timelineDirection, sidebarWidth, millisecondsToPixels } =
+	const { range, direction, sidebarWidth, valueToPixels } =
 		useTimelineContext();
 
-	const side = timelineDirection === "rtl" ? "right" : "left";
+	const side = direction === "rtl" ? "right" : "left";
 
 	useLayoutEffect(() => {
 		const offsetCursor = () => {
 			if (!timeCursorRef.current) return;
-			const timeDelta = new Date().getTime() - timeframe.start.getTime();
-			const timeDeltaInPixels = millisecondsToPixels(timeDelta);
+			const timeDelta = new Date().getTime() - range.start;
+			const timeDeltaInPixels = valueToPixels(timeDelta);
 
 			const sideDelta = sidebarWidth + timeDeltaInPixels;
 			timeCursorRef.current.style[side] = `${sideDelta}px`;
@@ -31,13 +31,7 @@ function TimeCursor(props: TimeCursorProps) {
 		return () => {
 			clearInterval(interval);
 		};
-	}, [
-		side,
-		sidebarWidth,
-		props.interval,
-		timeframe.start,
-		millisecondsToPixels,
-	]);
+	}, [side, sidebarWidth, props.interval, range.start, valueToPixels]);
 
 	return (
 		<div

@@ -1,10 +1,5 @@
 import { minutesToMilliseconds } from "date-fns";
-import type {
-	ItemDefinition,
-	Relevance,
-	RowDefinition,
-	Timeframe,
-} from "dnd-timeline";
+import type { ItemDefinition, Range, RowDefinition, Span } from "dnd-timeline";
 import { nanoid } from "nanoid";
 
 interface GenerateRowsOptions {
@@ -31,39 +26,36 @@ const getRandomInRange = (min: number, max: number) => {
 	return Math.random() * (max - min) + min;
 };
 
-const DEFAULT_MIN_DURATION = minutesToMilliseconds(60);
-const DEFAULT_MAX_DURATION = minutesToMilliseconds(360);
+const DEFAULT_MIN_LENGTH = minutesToMilliseconds(60);
+const DEFAULT_MAX_LENGTH = minutesToMilliseconds(360);
 
-export const generateRandomRelevance = (
-	timeframe: Timeframe,
-	minDuration: number = DEFAULT_MIN_DURATION,
-	maxDuration: number = DEFAULT_MAX_DURATION,
-): Relevance => {
-	const duration = getRandomInRange(minDuration, maxDuration);
+export const generateRandomSpan = (
+	range: Range,
+	minLength: number = DEFAULT_MIN_LENGTH,
+	maxLength: number = DEFAULT_MAX_LENGTH,
+): Span => {
+	const duration = getRandomInRange(minLength, maxLength);
 
-	const start = getRandomInRange(
-		timeframe.start.getTime(),
-		timeframe.end.getTime() - duration,
-	);
+	const start = getRandomInRange(range.start, range.end - duration);
 
 	const end = start + duration;
 
 	return {
-		start: new Date(start),
-		end: new Date(end),
+		start: start,
+		end: end,
 	};
 };
 
 interface GenerateItemsOptions {
 	disabled?: boolean;
 	background?: boolean;
-	minDuration?: number;
-	maxDuration?: number;
+	minLength?: number;
+	maxLength?: number;
 }
 
 export const generateItems = (
 	count: number,
-	timeframe: Timeframe,
+	range: Range,
 	rows: RowDefinition[],
 	options?: GenerateItemsOptions,
 ) => {
@@ -74,10 +66,10 @@ export const generateItems = (
 			const rowId = row.id;
 			const disabled = row.disabled || options?.disabled;
 
-			const relevance = generateRandomRelevance(
-				timeframe,
-				options?.minDuration,
-				options?.maxDuration,
+			const span = generateRandomSpan(
+				range,
+				options?.minLength,
+				options?.maxLength,
 			);
 
 			let id = `item-${nanoid(4)}`;
@@ -86,7 +78,7 @@ export const generateItems = (
 			return {
 				id,
 				rowId,
-				relevance,
+				span,
 				disabled,
 			};
 		});

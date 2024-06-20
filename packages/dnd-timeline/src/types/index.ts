@@ -4,9 +4,9 @@ export * from "./timeline";
 export * from "./resize";
 export * from "./drag";
 
-export interface Relevance {
-	start: Date;
-	end: Date;
+export interface Range {
+	start: number;
+	end: number;
 }
 
-export type Timeframe = Relevance;
+export interface Span extends Range {}

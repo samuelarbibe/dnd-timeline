@@ -1,10 +1,10 @@
 import { useItem } from "dnd-timeline";
-import type { Relevance } from "dnd-timeline";
+import type { Span } from "dnd-timeline";
 import type React from "react";
 
 interface ItemProps {
 	id: string;
-	relevance: Relevance;
+	span: Span;
 	children: React.ReactNode;
 }
 
@@ -12,7 +12,7 @@ function Item(props: ItemProps) {
 	const { setNodeRef, attributes, listeners, itemStyle, itemContentStyle } =
 		useItem({
 			id: props.id,
-			relevance: props.relevance,
+			span: props.span,
 		});
 
 	return (

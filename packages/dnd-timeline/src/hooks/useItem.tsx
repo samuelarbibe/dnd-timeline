@@ -40,16 +40,16 @@ export default function useItem(props: UseItemProps) {
 	const [dragDirection, setDragDirection] = useState<DragDirection | null>();
 
 	const {
-		timeframe,
+		range,
 		overlayed,
 		onResizeEnd,
 		onResizeMove,
 		onResizeStart,
-		timelineDirection,
+		direction,
 		resizeHandleWidth,
-		millisecondsToPixels,
-		getRelevanceFromDragEvent,
-		getRelevanceFromResizeEvent,
+		valueToPixels,
+		getSpanFromDragEvent,
+		getSpanFromResizeEvent,
 	} = useTimelineContext();
 
 	const propsOnResizeEnd = props.onResizeEnd;
@@ -81,9 +81,9 @@ export default function useItem(props: UseItemProps) {
 	);
 
 	dataRef.current = {
-		getRelevanceFromDragEvent,
-		getRelevanceFromResizeEvent,
-		relevance: props.relevance,
+		getSpanFromDragEvent,
+		getSpanFromResizeEvent,
+		span: props.span,
 		...(props.data || {}),
 	};
 
@@ -93,21 +93,15 @@ export default function useItem(props: UseItemProps) {
 		disabled: props.disabled,
 	});
 
-	const deltaXStart = millisecondsToPixels(
-		props.relevance.start.getTime() - timeframe.start.getTime(),
-	);
+	const deltaXStart = valueToPixels(props.span.start - range.start);
 
-	const deltaXEnd = millisecondsToPixels(
-		timeframe.end.getTime() - props.relevance.end.getTime(),
-	);
+	const deltaXEnd = valueToPixels(range.end - props.span.end);
 
-	const width = millisecondsToPixels(
-		props.relevance.end.getTime() - props.relevance.start.getTime(),
-	);
+	const width = valueToPixels(props.span.end - props.span.start);
 
-	const sideStart = timelineDirection === "rtl" ? "right" : "left";
+	const sideStart = direction === "rtl" ? "right" : "left";
 
-	const sideEnd = timelineDirection === "rtl" ? "left" : "right";
+	const sideEnd = direction === "rtl" ? "left" : "right";
 
 	const cursor = props.disabled
 		? "inherit"
@@ -122,8 +116,7 @@ export default function useItem(props: UseItemProps) {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
 			const dragDeltaX =
-				(event.clientX - dragStartX.current) *
-				(timelineDirection === "rtl" ? -1 : 1);
+				(event.clientX - dragStartX.current) * (direction === "rtl" ? -1 : 1);
 
 			if (dragDirection === "start") {
 				const newSideDelta = deltaXStart + dragDeltaX;
@@ -160,7 +153,7 @@ export default function useItem(props: UseItemProps) {
 		deltaXStart,
 		props.id,
 		dragDirection,
-		timelineDirection,
+		direction,
 		draggableProps.node,
 		onResizeMoveCallback,
 	]);
@@ -224,7 +217,7 @@ export default function useItem(props: UseItemProps) {
 			const newDragDirection = getDragDirection(
 				event.clientX,
 				draggableProps.node.current.getBoundingClientRect(),
-				timelineDirection,
+				direction,
 				resizeHandleWidth,
 			);
 
@@ -234,13 +227,7 @@ export default function useItem(props: UseItemProps) {
 				draggableProps.node.current.style.cursor = cursor;
 			}
 		},
-		[
-			draggableProps.node,
-			props.disabled,
-			timelineDirection,
-			cursor,
-			resizeHandleWidth,
-		],
+		[draggableProps.node, props.disabled, direction, cursor, resizeHandleWidth],
 	);
 
 	const onPointerDown = useCallback<PointerEventHandler>(
@@ -250,7 +237,7 @@ export default function useItem(props: UseItemProps) {
 			const newDragDirection = getDragDirection(
 				event.clientX,
 				draggableProps.node.current.getBoundingClientRect(),
-				timelineDirection,
+				direction,
 				resizeHandleWidth,
 			);
 
@@ -272,7 +259,7 @@ export default function useItem(props: UseItemProps) {
 		[
 			props.id,
 			props.disabled,
-			timelineDirection,
+			direction,
 			resizeHandleWidth,
 			draggableProps.node,
 			onResizeStartCallback,
@@ -280,11 +267,9 @@ export default function useItem(props: UseItemProps) {
 		],
 	);
 
-	const paddingStart =
-		timelineDirection === "rtl" ? "paddingRight" : "paddingLeft";
+	const paddingStart = direction === "rtl" ? "paddingRight" : "paddingLeft";
 
-	const paddingEnd =
-		timelineDirection === "rtl" ? "paddingLeft" : "paddingRight";
+	const paddingEnd = direction === "rtl" ? "paddingLeft" : "paddingRight";
 
 	const itemStyle: CSSProperties = {
 		position: "absolute",

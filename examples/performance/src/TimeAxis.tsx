@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 
 import { minutesToMilliseconds } from "date-fns";
-import type { Timeframe } from "dnd-timeline";
+import type { Range } from "dnd-timeline";
 import { useTimelineContext } from "dnd-timeline";
 
 interface Marker {
@@ -12,21 +12,20 @@ interface Marker {
 
 export interface MarkerDefinition {
 	value: number;
-	maxTimeframeSize?: number;
-	minTimeframeSize?: number;
+	maxRangeSize?: number;
+	minRangeSize?: number;
 	getLabel?: (time: Date) => string;
 }
 
 interface TimeAxisProps {
-	timeframe: Timeframe;
+	range: Range;
 	markers: MarkerDefinition[];
 }
 
 function TimeAxis(props: TimeAxisProps) {
-	const { timelineDirection, sidebarWidth, millisecondsToPixels } =
-		useTimelineContext();
+	const { direction, sidebarWidth, valueToPixels } = useTimelineContext();
 
-	const side = timelineDirection === "rtl" ? "right" : "left";
+	const side = direction === "rtl" ? "right" : "left";
 
 	const markers = useMemo(() => {
 		const sortedMarkers = [...props.markers];
@@ -34,13 +33,11 @@ function TimeAxis(props: TimeAxisProps) {
 
 		const delta = sortedMarkers[sortedMarkers.length - 1].value;
 
-		const timeframeSize =
-			props.timeframe.end.getTime() - props.timeframe.start.getTime();
+		const rangeSize = props.range.end - props.range.start;
 
-		const startTime =
-			Math.floor(props.timeframe.start.getTime() / delta) * delta;
+		const startTime = Math.floor(props.range.start / delta) * delta;
 
-		const endTime = props.timeframe.end.getTime();
+		const endTime = props.range.end;
 		const timezoneOffset = minutesToMilliseconds(
 			new Date().getTimezoneOffset(),
 		);
@@ -51,10 +48,8 @@ function TimeAxis(props: TimeAxisProps) {
 			const multiplierIndex = sortedMarkers.findIndex(
 				(marker) =>
 					(time - timezoneOffset) % marker.value === 0 &&
-					(!marker.maxTimeframeSize ||
-						timeframeSize <= marker.maxTimeframeSize) &&
-					(!marker.minTimeframeSize ||
-						timeframeSize >= marker.minTimeframeSize),
+					(!marker.maxRangeSize || rangeSize <= marker.maxRangeSize) &&
+					(!marker.minRangeSize || rangeSize >= marker.minRangeSize),
 			);
 
 			if (multiplierIndex === -1) continue;
@@ -66,15 +61,12 @@ function TimeAxis(props: TimeAxisProps) {
 			markerSideDeltas.push({
 				label,
 				heightMultiplier: 1 / (multiplierIndex + 1),
-				sideDelta: millisecondsToPixels(
-					time - props.timeframe.start.getTime(),
-					props.timeframe,
-				),
+				sideDelta: valueToPixels(time - props.range.start, props.range),
 			});
 		}
 
 		return markerSideDeltas;
-	}, [props.timeframe, millisecondsToPixels, props.markers]);
+	}, [props.range, valueToPixels, props.markers]);
 
 	return (
 		<div

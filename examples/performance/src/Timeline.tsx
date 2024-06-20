@@ -1,5 +1,5 @@
 import { format, hoursToMilliseconds, minutesToMilliseconds } from "date-fns";
-import type { ItemDefinition, RowDefinition, Timeframe } from "dnd-timeline";
+import type { ItemDefinition, Range, RowDefinition } from "dnd-timeline";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
 import React, { useMemo } from "react";
 import Item from "./Item";
@@ -17,68 +17,68 @@ const timeAxisMarkers: MarkerDefinition[] = [
 	},
 	{
 		value: hoursToMilliseconds(2),
-		minTimeframeSize: hoursToMilliseconds(24),
+		minRangeSize: hoursToMilliseconds(24),
 		getLabel: (date: Date) => format(date, "k"),
 	},
 	{
 		value: hoursToMilliseconds(1),
-		minTimeframeSize: hoursToMilliseconds(24),
+		minRangeSize: hoursToMilliseconds(24),
 	},
 	{
 		value: hoursToMilliseconds(1),
-		maxTimeframeSize: hoursToMilliseconds(24),
+		maxRangeSize: hoursToMilliseconds(24),
 		getLabel: (date: Date) => format(date, "k"),
 	},
 	{
 		value: minutesToMilliseconds(30),
-		maxTimeframeSize: hoursToMilliseconds(24),
-		minTimeframeSize: hoursToMilliseconds(12),
+		maxRangeSize: hoursToMilliseconds(24),
+		minRangeSize: hoursToMilliseconds(12),
 	},
 	{
 		value: minutesToMilliseconds(15),
-		maxTimeframeSize: hoursToMilliseconds(12),
+		maxRangeSize: hoursToMilliseconds(12),
 		getLabel: (date: Date) => format(date, "m"),
 	},
 	{
 		value: minutesToMilliseconds(5),
-		maxTimeframeSize: hoursToMilliseconds(6),
-		minTimeframeSize: hoursToMilliseconds(3),
+		maxRangeSize: hoursToMilliseconds(6),
+		minRangeSize: hoursToMilliseconds(3),
 	},
 	{
 		value: minutesToMilliseconds(5),
-		maxTimeframeSize: hoursToMilliseconds(3),
+		maxRangeSize: hoursToMilliseconds(3),
 		getLabel: (date: Date) => format(date, "m"),
 	},
 	{
 		value: minutesToMilliseconds(1),
-		maxTimeframeSize: hoursToMilliseconds(2),
+		maxRangeSize: hoursToMilliseconds(2),
 	},
 ];
 
 interface TimelineProps {
 	rows: RowDefinition[];
 	items: ItemDefinition[];
-	timeframe: Timeframe;
+	range: Range;
 }
 
 function Timeline(props: TimelineProps) {
-	const { setTimelineRef, style, timeframe } = useTimelineContext();
+	const { setTimelineRef, style, range } = useTimelineContext();
 
 	const groupedSubrows = useMemo(
-		() => groupItemsToSubrows(props.items, timeframe),
-		[props.items, timeframe],
+		() => groupItemsToSubrows(props.items, range),
+		[props.items, range],
 	);
 
 	return (
 		<div ref={setTimelineRef} style={style}>
-			<TimeAxis markers={timeAxisMarkers} timeframe={props.timeframe} />
+			<TimeAxis markers={timeAxisMarkers} range={props.range} />
 			<TimeCursor />
 			{props.rows.map((row) => (
 				<Row id={row.id} key={row.id} sidebar={<Sidebar row={row} />}>
 					{groupedSubrows[row.id]?.map((subrow, index) => (
 						<Subrow key={`${row.id}-${index}`}>
 							{subrow.map((item) => (
-								<Item id={item.id} key={item.id} relevance={item.relevance}>
+								<Item id={item.id} key={item.id} span={item.span}>
 									{`Item ${item.id}`}
 								</Item>
 							))}

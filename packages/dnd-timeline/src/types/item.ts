@@ -2,12 +2,12 @@ import type { Active, Data } from "@dnd-kit/core";
 import type { MutableRefObject } from "react";
 
 import type {
-	GetRelevanceFromDragEvent,
-	GetRelevanceFromResizeEvent,
-	Relevance,
+	GetSpanFromDragEvent,
+	GetSpanFromResizeEvent,
 	ResizeEndEvent,
 	ResizeMoveEvent,
 	ResizeStartEvent,
+	Span,
 } from ".";
 
 export type DragDirection = "start" | "end";
@@ -16,11 +16,11 @@ export interface ItemDefinition {
 	id: string;
 	rowId: string;
 	disabled?: boolean;
-	relevance: Relevance;
+	span: Span;
 }
 
 export interface UseItemProps
-	extends Pick<ItemDefinition, "id" | "relevance" | "disabled"> {
+	extends Pick<ItemDefinition, "id" | "span" | "disabled"> {
 	data?: object;
 	onResizeEnd?: (event: ResizeEndEvent) => void;
 	onResizeMove?: (event: ResizeMoveEvent) => void;
@@ -28,15 +28,15 @@ export interface UseItemProps
 }
 
 interface ItemDataBase extends Data {
-	relevance: Relevance;
+	span: Span;
 }
 
 export interface DragItemData extends ItemDataBase {
-	getRelevanceFromDragEvent?: GetRelevanceFromDragEvent;
+	getSpanFromDragEvent?: GetSpanFromDragEvent;
 }
 
 export interface ResizeItemData extends ItemDataBase {
-	getRelevanceFromResizeEvent?: GetRelevanceFromResizeEvent;
+	getSpanFromResizeEvent?: GetSpanFromResizeEvent;
 }
 
 export interface ItemData extends DragItemData, ResizeItemData {}

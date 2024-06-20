@@ -1,11 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { minutesToMilliseconds } from "date-fns";
-import type {
-	ItemDefinition,
-	Relevance,
-	RowDefinition,
-	Timeframe,
-} from "dnd-timeline";
+import type { ItemDefinition, Range, RowDefinition, Span } from "dnd-timeline";
 import { nanoid } from "nanoid";
 import { twMerge } from "tailwind-merge";
 
@@ -40,23 +35,20 @@ const getRandomInRange = (min: number, max: number) => {
 const DEFAULT_MIN_DURATION = minutesToMilliseconds(60);
 const DEFAULT_MAX_DURATION = minutesToMilliseconds(360);
 
-export const generateRandomRelevance = (
-	timeframe: Timeframe,
+export const generateRandomSpan = (
+	range: Range,
 	minDuration: number = DEFAULT_MIN_DURATION,
 	maxDuration: number = DEFAULT_MAX_DURATION,
-): Relevance => {
+): Span => {
 	const duration = getRandomInRange(minDuration, maxDuration);
 
-	const start = getRandomInRange(
-		timeframe.start.getTime(),
-		timeframe.end.getTime() - duration,
-	);
+	const start = getRandomInRange(range.start, range.end - duration);
 
 	const end = start + duration;
 
 	return {
-		start: new Date(start),
-		end: new Date(end),
+		start: start,
+		end: end,
 	};
 };
 
@@ -69,7 +61,7 @@ interface GenerateItemsOptions {
 
 export const generateItems = (
 	count: number,
-	timeframe: Timeframe,
+	range: Range,
 	rows: RowDefinition[],
 	options?: GenerateItemsOptions,
 ) => {
@@ -80,8 +72,8 @@ export const generateItems = (
 			const rowId = row.id;
 			const disabled = row.disabled || options?.disabled;
 
-			const relevance = generateRandomRelevance(
-				timeframe,
+			const span = generateRandomSpan(
+				range,
 				options?.minDuration,
 				options?.maxDuration,
 			);
@@ -92,7 +84,7 @@ export const generateItems = (
 			return {
 				id,
 				rowId,
-				relevance,
+				span,
 				disabled,
 			};
 		});

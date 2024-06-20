@@ -1,5 +1,22 @@
 
 
+## [2.0.0-beta.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.3...dnd-timeline@2.0.0-beta.0) (2024-06-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* use numbers instead of dates
+
+### Features
+
+* use numbers instead of dates ([e061c6b](https://github.com/samuelarbibe/dnd-timeline/commit/e061c6b5eea4d0c96ee97ee74a2d52099901ab12))
+
+
+### Bug Fixes
+
+* add passive option to pan strategy event handlers ([8a56eb9](https://github.com/samuelarbibe/dnd-timeline/commit/8a56eb9e030e52130577e48efa59fca386bb049f))
+* update examples to use range instead of timeframe ([66c03a1](https://github.com/samuelarbibe/dnd-timeline/commit/66c03a1852f4e7c6b7b2041291fa281b3eda77fa))
+
 ## [1.6.3](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.2...dnd-timeline@1.6.3) (2024-05-23)
 
 

@@ -1,18 +1,16 @@
-import { addMilliseconds, differenceInMilliseconds } from "date-fns";
 import type { CSSProperties } from "react";
 import { useCallback, useMemo } from "react";
 
 import type {
-	GetDateFromScreenX,
-	GetRelevanceFromDragEvent,
-	GetRelevanceFromResizeEvent,
-	MillisecondsToPixels,
+	GetSpanFromDragEvent,
+	GetSpanFromResizeEvent,
+	GetValueFromScreenX,
 	OnPanEnd,
-	PixelsToMilliseconds,
-	Relevance,
-	Timeframe,
+	PixelsToValue,
+	Range,
 	TimelineBag,
 	UseTimelineProps,
+	ValueToPixels,
 } from "../types";
 import { useWheelStrategy } from "../utils/panStrategies";
 
@@ -28,24 +26,24 @@ const style: CSSProperties = {
 const DEFAULT_RESIZE_HANDLE_WIDTH = 20;
 
 export default function useTimeline({
-	timeframe,
+	range,
 	onResizeEnd,
-	onResizeStart,
 	onResizeMove,
+	onResizeStart,
+	onRangeChanged,
 	overlayed = false,
-	onTimeframeChanged,
-	timeframeGridSizeDefinition,
+	rangeGridSizeDefinition,
 	usePanStrategy = useWheelStrategy,
 	resizeHandleWidth = DEFAULT_RESIZE_HANDLE_WIDTH,
 }: UseTimelineProps): TimelineBag {
-	const timeframeStart = timeframe.start.getTime();
-	const timeframeEnd = timeframe.end.getTime();
+	const rangeStart = range.start;
+	const rangeEnd = range.end;
 
 	const {
 		ref: timelineRef,
 		setRef: setTimelineRef,
 		width: timelineWidth,
-		direction: timelineDirection,
+		direction,
 	} = useElementRef();
 
 	const {
@@ -56,184 +54,160 @@ export default function useTimeline({
 
 	const timelineViewportWidth = timelineWidth - sidebarWidth;
 
-	const timeframeGridSize = useMemo(() => {
-		if (Array.isArray(timeframeGridSizeDefinition)) {
-			const gridSizes = timeframeGridSizeDefinition;
+	const rangeGridSize = useMemo(() => {
+		if (Array.isArray(rangeGridSizeDefinition)) {
+			const gridSizes = rangeGridSizeDefinition;
 
-			const timeframeSize = timeframeEnd - timeframeStart;
+			const rangeSize = rangeEnd - rangeStart;
 
-			const sortedTimeframeGridSizes = [...gridSizes];
-			sortedTimeframeGridSizes.sort((a, b) => a.value - b.value);
+			const sortedRangeGridSizes = [...gridSizes];
+			sortedRangeGridSizes.sort((a, b) => a.value - b.value);
 
-			return sortedTimeframeGridSizes.find(
-				(curr) =>
-					!curr.maxTimeframeSize || timeframeSize < curr.maxTimeframeSize,
+			return sortedRangeGridSizes.find(
+				(curr) => !curr.maxRangeSize || rangeSize < curr.maxRangeSize,
 			)?.value;
 		}
 
-		return timeframeGridSizeDefinition;
-	}, [timeframeStart, timeframeEnd, timeframeGridSizeDefinition]);
+		return rangeGridSizeDefinition;
+	}, [rangeStart, rangeEnd, rangeGridSizeDefinition]);
 
-	const millisecondsToPixels = useCallback<MillisecondsToPixels>(
-		(milliseconds: number, customTimeframe?: Timeframe) => {
-			const start = customTimeframe?.start ?? timeframeStart;
-			const end = customTimeframe?.end ?? timeframeEnd;
+	const valueToPixels = useCallback<ValueToPixels>(
+		(value: number, customRange?: Range) => {
+			const start = customRange?.start ?? rangeStart;
+			const end = customRange?.end ?? rangeEnd;
 
-			const msToPixel =
-				timelineViewportWidth / differenceInMilliseconds(end, start);
-			return milliseconds * msToPixel;
+			const valueToPixel = timelineViewportWidth / (end - start);
+			return value * valueToPixel;
 		},
-		[timeframeStart, timeframeEnd, timelineViewportWidth],
+		[rangeStart, rangeEnd, timelineViewportWidth],
 	);
 
-	const pixelsToMilliseconds = useCallback<PixelsToMilliseconds>(
-		(pixels: number, customTimeframe?: Timeframe) => {
-			const start = customTimeframe?.start ?? timeframeStart;
-			const end = customTimeframe?.end ?? timeframeEnd;
+	const pixelsToValue = useCallback<PixelsToValue>(
+		(pixels: number, customRange?: Range) => {
+			const start = customRange?.start ?? rangeStart;
+			const end = customRange?.end ?? rangeEnd;
 
-			const pixelToMs =
-				differenceInMilliseconds(end, start) / timelineViewportWidth;
+			const pixelToMs = (end - start) / timelineViewportWidth;
 			return pixels * pixelToMs;
 		},
-		[timeframeStart, timeframeEnd, timelineViewportWidth],
+		[rangeStart, rangeEnd, timelineViewportWidth],
 	);
 
-	const snapDateToTimeframeGrid = useCallback(
-		(date: Date) => {
-			if (!timeframeGridSize) return date;
+	const snapValueToRangeGrid = useCallback(
+		(value: number) => {
+			if (!rangeGridSize) return value;
 
-			return new Date(
-				Math.round(date.getTime() / timeframeGridSize) * timeframeGridSize,
-			);
+			return Math.round(value / rangeGridSize) * rangeGridSize;
 		},
-		[timeframeGridSize],
+		[rangeGridSize],
 	);
 
-	const getDateFromScreenX = useCallback<GetDateFromScreenX>(
+	const getValueFromScreenX = useCallback<GetValueFromScreenX>(
 		(screenX) => {
-			const side = timelineDirection === "rtl" ? "right" : "left";
+			const side = direction === "rtl" ? "right" : "left";
 
 			const timelineSideX =
 				(timelineRef.current?.getBoundingClientRect()[side] || 0) +
-				sidebarWidth * (timelineDirection === "rtl" ? -1 : 1);
+				sidebarWidth * (direction === "rtl" ? -1 : 1);
 
 			const deltaX = screenX - timelineSideX;
 
-			const deltaInMilliseconds =
-				pixelsToMilliseconds(deltaX) * (timelineDirection === "rtl" ? -1 : 1);
+			const delta = pixelsToValue(deltaX) * (direction === "rtl" ? -1 : 1);
 
-			return snapDateToTimeframeGrid(
-				addMilliseconds(timeframeStart, deltaInMilliseconds),
-			);
+			return snapValueToRangeGrid(rangeStart + delta);
 		},
 		[
 			timelineRef,
 			sidebarWidth,
-			timeframeStart,
-			timelineDirection,
-			pixelsToMilliseconds,
-			snapDateToTimeframeGrid,
+			rangeStart,
+			direction,
+			pixelsToValue,
+			snapValueToRangeGrid,
 		],
 	);
 
-	const getRelevanceFromDragEvent = useCallback<GetRelevanceFromDragEvent>(
+	const getSpanFromDragEvent = useCallback<GetSpanFromDragEvent>(
 		(event) => {
-			const side = timelineDirection === "rtl" ? "right" : "left";
+			const side = direction === "rtl" ? "right" : "left";
 			const itemX = event.active.rect.current.translated?.[side] || 0;
 
-			const start = getDateFromScreenX(itemX);
+			const start = getValueFromScreenX(itemX);
 
-			if (event.active.data.current?.relevance) {
-				const { start: prevItemStart, end: prevItemEnd } = event.active.data
-					.current.relevance as Relevance;
+			if (event.active.data.current?.span) {
+				const { start: prevItemStart, end: prevItemEnd } =
+					event.active.data.current.span;
 
-				const itemDurationInMs = differenceInMilliseconds(
-					prevItemEnd,
-					prevItemStart,
-				);
+				const itemDuration = prevItemEnd - prevItemStart;
 
-				const end = snapDateToTimeframeGrid(
-					addMilliseconds(start, itemDurationInMs),
-				);
+				const end = snapValueToRangeGrid(start + itemDuration);
 
 				return { start, end };
 			} else if (event.active.data.current?.duration) {
-				const itemDurationInMs = event.active.data.current.duration as number;
+				const itemDuration = event.active.data.current.duration;
 
-				const end = snapDateToTimeframeGrid(
-					addMilliseconds(start, itemDurationInMs),
-				);
+				const end = snapValueToRangeGrid(start + itemDuration);
 
 				return { start, end };
 			}
 
 			return null;
 		},
-		[getDateFromScreenX, snapDateToTimeframeGrid, timelineDirection],
+		[getValueFromScreenX, snapValueToRangeGrid, direction],
 	);
 
-	const getRelevanceFromResizeEvent = useCallback<GetRelevanceFromResizeEvent>(
+	const getSpanFromResizeEvent = useCallback<GetSpanFromResizeEvent>(
 		(event) => {
-			if (event.active.data.current?.relevance) {
-				const prevRelevance = event.active.data.current.relevance;
-				const deltaInMilliseconds = pixelsToMilliseconds(event.delta.x);
+			if (event.active.data.current?.span) {
+				const prevSpan = event.active.data.current.span;
+				const delta = pixelsToValue(event.delta.x);
 
-				const updatedRelevance: Relevance = {
-					...prevRelevance,
+				const updatedRange: Range = {
+					...prevSpan,
 				};
 
-				updatedRelevance[event.direction] = snapDateToTimeframeGrid(
-					addMilliseconds(prevRelevance[event.direction], deltaInMilliseconds),
+				updatedRange[event.direction] = snapValueToRangeGrid(
+					prevSpan[event.direction] + delta,
 				);
 
-				return updatedRelevance;
+				return updatedRange;
 			}
 
 			return null;
 		},
-		[pixelsToMilliseconds, snapDateToTimeframeGrid],
+		[pixelsToValue, snapValueToRangeGrid],
 	);
 
 	const onPanEnd = useCallback<OnPanEnd>(
 		(event) => {
-			const deltaXInMilliseconds =
-				pixelsToMilliseconds(event.deltaX) *
-				(timelineDirection === "rtl" ? -1 : 1);
-			const deltaYInMilliseconds =
-				pixelsToMilliseconds(event.deltaY) *
-				(timelineDirection === "rtl" ? -1 : 1);
+			const deltaX =
+				pixelsToValue(event.deltaX) * (direction === "rtl" ? -1 : 1);
+			const deltaY =
+				pixelsToValue(event.deltaY) * (direction === "rtl" ? -1 : 1);
 
-			const timeframeDuration = timeframeEnd - timeframeStart;
+			const rangeDuration = rangeEnd - rangeStart;
 
 			const startBias = event.clientX
-				? differenceInMilliseconds(
-						timeframeStart,
-						getDateFromScreenX(event.clientX),
-					) / timeframeDuration
+				? (rangeStart - getValueFromScreenX(event.clientX)) / rangeDuration
 				: 1;
 			const endBias = event.clientX
-				? differenceInMilliseconds(
-						getDateFromScreenX(event.clientX),
-						timeframeEnd,
-					) / timeframeDuration
+				? (getValueFromScreenX(event.clientX) - rangeEnd) / rangeDuration
 				: 1;
 
-			const startDelta =
-				deltaYInMilliseconds * startBias + deltaXInMilliseconds;
-			const endDelta = -deltaYInMilliseconds * endBias + deltaXInMilliseconds;
+			const startDelta = deltaY * startBias + deltaX;
+			const endDelta = -deltaY * endBias + deltaX;
 
-			onTimeframeChanged((prev) => ({
-				start: addMilliseconds(prev.start, startDelta),
-				end: addMilliseconds(prev.end, endDelta),
+			onRangeChanged((prev) => ({
+				start: prev.start + startDelta,
+				end: prev.end + endDelta,
 			}));
 		},
 		[
-			timeframeEnd,
-			timeframeStart,
-			timelineDirection,
-			getDateFromScreenX,
-			onTimeframeChanged,
-			pixelsToMilliseconds,
+			rangeEnd,
+			rangeStart,
+			direction,
+			getValueFromScreenX,
+			onRangeChanged,
+			pixelsToValue,
 		],
 	);
 
@@ -242,7 +216,7 @@ export default function useTimeline({
 	const value = useMemo<TimelineBag>(
 		() => ({
 			style,
-			timeframe,
+			range,
 			overlayed,
 			onPanEnd,
 			onResizeEnd,
@@ -252,18 +226,18 @@ export default function useTimeline({
 			setSidebarRef,
 			sidebarWidth,
 			resizeHandleWidth,
-			pixelsToMilliseconds,
-			millisecondsToPixels,
+			pixelsToValue,
+			valueToPixels,
 			timelineRef,
 			setTimelineRef,
-			timelineDirection,
-			timeframeGridSize,
-			getDateFromScreenX,
-			getRelevanceFromDragEvent,
-			getRelevanceFromResizeEvent,
+			direction,
+			rangeGridSize,
+			getValueFromScreenX,
+			getSpanFromDragEvent,
+			getSpanFromResizeEvent,
 		}),
 		[
-			timeframe,
+			range,
 			overlayed,
 			onPanEnd,
 			onResizeEnd,
@@ -273,15 +247,15 @@ export default function useTimeline({
 			setSidebarRef,
 			sidebarWidth,
 			resizeHandleWidth,
-			pixelsToMilliseconds,
-			millisecondsToPixels,
+			pixelsToValue,
+			valueToPixels,
 			timelineRef,
 			setTimelineRef,
-			timelineDirection,
-			timeframeGridSize,
-			getDateFromScreenX,
-			getRelevanceFromDragEvent,
-			getRelevanceFromResizeEvent,
+			direction,
+			rangeGridSize,
+			getValueFromScreenX,
+			getSpanFromDragEvent,
+			getSpanFromResizeEvent,
 		],
 	);
 

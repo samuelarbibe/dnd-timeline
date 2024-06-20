@@ -1,18 +1,18 @@
 import "./index.css";
 import { endOfDay, startOfDay } from "date-fns";
-import type { DragEndEvent, ResizeEndEvent, Timeframe } from "dnd-timeline";
+import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import React, { useCallback, useDeferredValue, useState } from "react";
 import Timeline from "./Timeline";
 import { useDebounce, useThrottle } from "./hooks";
 import { generateItems, generateRows } from "./utils";
 
-const DEFAULT_TIMEFRAME: Timeframe = {
-	start: startOfDay(new Date()),
-	end: endOfDay(new Date()),
+const DEFAULT_RANGE: Range = {
+	start: startOfDay(new Date()).getTime(),
+	end: endOfDay(new Date()).getTime(),
 };
 
-enum TimeframeType {
+enum RangeType {
 	NORMAL = "Normal",
 	DEBOUNCED = "Debounced",
 	THROTTLED = "Throttled",
@@ -20,34 +20,30 @@ enum TimeframeType {
 }
 
 function App() {
-	const [timeframeType, setTimeframeType] = useState<TimeframeType>(
-		TimeframeType.NORMAL,
-	);
+	const [rangeType, setRangeType] = useState<RangeType>(RangeType.NORMAL);
 
-	const [timeframe, setTimeframe] = useState(DEFAULT_TIMEFRAME);
-	const debouncedTimeframe = useDebounce(timeframe, 300);
-	const throttledTimeframe = useThrottle(timeframe, 300);
-	const deferredTimeframe = useDeferredValue(timeframe);
+	const [range, setRange] = useState(DEFAULT_RANGE);
+	const debouncedRange = useDebounce(range, 300);
+	const throttledRange = useThrottle(range, 300);
+	const deferredRange = useDeferredValue(range);
 
-	const timeframeByType = {
-		[TimeframeType.NORMAL]: timeframe,
-		[TimeframeType.DEBOUNCED]: debouncedTimeframe,
-		[TimeframeType.THROTTLED]: throttledTimeframe,
-		[TimeframeType.DEFERRED]: deferredTimeframe,
+	const rangeByType = {
+		[RangeType.NORMAL]: range,
+		[RangeType.DEBOUNCED]: debouncedRange,
+		[RangeType.THROTTLED]: throttledRange,
+		[RangeType.DEFERRED]: deferredRange,
 	};
 
-	const selectedTimeframe = timeframeByType[timeframeType];
+	const selectedRange = rangeByType[rangeType];
 
 	const [rows] = useState(generateRows(1));
-	const [items, setItems] = useState(
-		generateItems(500, selectedTimeframe, rows),
-	);
+	const [items, setItems] = useState(generateItems(500, selectedRange, rows));
 
 	const onResizeEnd = useCallback((event: ResizeEndEvent) => {
-		const updatedRelevance =
-			event.active.data.current.getRelevanceFromResizeEvent?.(event);
+		const updatedSpan =
+			event.active.data.current.getSpanFromResizeEvent?.(event);
 
-		if (!updatedRelevance) return;
+		if (!updatedSpan) return;
 
 		const activeItemId = event.active.id;
 
@@ -57,17 +53,16 @@ function App() {
 
 				return {
 					...item,
-					relevance: updatedRelevance,
+					span: updatedSpan,
 				};
 			}),
 		);
 	}, []);
 	const onDragEnd = useCallback((event: DragEndEvent) => {
 		const activeRowId = event.over?.id as string;
-		const updatedRelevance =
-			event.active.data.current.getRelevanceFromDragEvent?.(event);
+		const updatedSpan = event.active.data.current.getSpanFromDragEvent?.(event);
 
-		if (!updatedRelevance || !activeRowId) return;
+		if (!updatedSpan || !activeRowId) return;
 
 		const activeItemId = event.active.id;
 
@@ -78,7 +73,7 @@ function App() {
 				return {
 					...item,
 					rowId: activeRowId,
-					relevance: updatedRelevance,
+					span: updatedSpan,
 				};
 			}),
 		);
@@ -86,30 +81,30 @@ function App() {
 
 	return (
 		<>
-			{Object.values(TimeframeType).map((timeframeTypeOption) => (
+			{Object.values(RangeType).map((rangeTypeOption) => (
 				<>
 					<input
-						key={timeframeTypeOption}
-						checked={timeframeType === timeframeTypeOption}
-						id={timeframeTypeOption}
+						key={rangeTypeOption}
+						checked={rangeType === rangeTypeOption}
+						id={rangeTypeOption}
 						onClick={() => {
-							setTimeframeType(timeframeTypeOption);
+							setRangeType(rangeTypeOption);
 						}}
 						type="radio"
-						value={timeframeType}
+						value={rangeType}
 					/>
-					<label key={timeframeTypeOption} htmlFor={timeframeTypeOption}>
-						{timeframeTypeOption}
+					<label key={rangeTypeOption} htmlFor={rangeTypeOption}>
+						{rangeTypeOption}
 					</label>
 				</>
 			))}
 			<TimelineContext
+				range={selectedRange}
 				onDragEnd={onDragEnd}
 				onResizeEnd={onResizeEnd}
-				onTimeframeChanged={setTimeframe}
-				timeframe={selectedTimeframe}
+				onRangeChanged={setRange}
 			>
-				<Timeline items={items} rows={rows} timeframe={timeframe} />
+				<Timeline items={items} rows={rows} range={range} />
 			</TimelineContext>
 		</>
 	);
