@@ -1,42 +1,30 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
-    "release": {
-      "dependsOn": [
-        "^release",
-        "^lint",
-        "^typecheck"
-      ],
-      "outputMode": "new-only"
-    },
-    "build": {
-      "dependsOn": [
-        "^build"
-      ]
-    },
-    "test": {
-      "outputs": [
-        "coverage/**"
-      ],
-      "dependsOn": []
-    },
-    "lint": {
-      "dependsOn": []
-    },
-    "typecheck": {
-      "dependsOn": [
-        "^build"
-      ]
-    },
-    "dev": {
-      "dependsOn": [
-        "^build"
-      ],
-      "cache": false,
-      "persistent": true
-    },
-    "clean": {
-      "cache": false
-    }
-  }
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"release": {
+			"dependsOn": ["^release", "^lint", "^typecheck"],
+			"outputLogs": "new-only"
+		},
+		"build": {
+			"dependsOn": ["^build"]
+		},
+		"test": {
+			"outputs": ["coverage/**"],
+			"dependsOn": []
+		},
+		"lint": {
+			"dependsOn": []
+		},
+		"typecheck": {
+			"dependsOn": ["^build"]
+		},
+		"dev": {
+			"dependsOn": ["^build"],
+			"cache": false,
+			"persistent": true
+		},
+		"clean": {
+			"cache": false
+		}
+	}
 }
