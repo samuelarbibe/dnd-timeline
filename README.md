@@ -44,15 +44,26 @@ npm install dnd-timeline
 
 ## Contribute
 
-This project uses turborepo to manage the monorepo.
+This project uses [turborepo](https://turbo.build/repo/docs) to manage the monorepo.
+It also uses [pnpm](https://pnpm.io/) instead of npm as a package manager.
+
+To install pnpm, you can run:
+```sh
+corepack enable pnpm
+```
 
 If you want to develop on your local machine, simply clone the project, and run
 
 ```sh
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 And all the examples will run on your local machine, likned to the local instance of the library.
-
 Any changes made to the library will be reflected in the examples.
+
+If you want to run only a specific example, checkout turborepo's [`--filter`](https://turbo.build/repo/docs/crafting-your-repository/running-tasks#using-filters) operator:
+```sh
+pnpm run dev --filter home...
+```
+For example this will run the `home` package and all the packages' it is depending on (`dnd-timeline`).
