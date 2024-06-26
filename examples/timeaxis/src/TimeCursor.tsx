@@ -14,7 +14,12 @@ function TimeCursor(props: TimeCursorProps) {
 
 	const side = direction === "rtl" ? "right" : "left";
 
+	const isVisible =
+		new Date().getTime() > range.start && new Date().getTime() < range.end;
+
 	useLayoutEffect(() => {
+		if (!isVisible) return;
+
 		const offsetCursor = () => {
 			if (!timeCursorRef.current) return;
 			const timeDelta = new Date().getTime() - range.start;
@@ -31,7 +36,16 @@ function TimeCursor(props: TimeCursorProps) {
 		return () => {
 			clearInterval(interval);
 		};
-	}, [side, sidebarWidth, props.interval, range.start, valueToPixels]);
+	}, [
+		side,
+		sidebarWidth,
+		props.interval,
+		range.start,
+		valueToPixels,
+		isVisible,
+	]);
+
+	if (!isVisible) return null;
 
 	return (
 		<div
