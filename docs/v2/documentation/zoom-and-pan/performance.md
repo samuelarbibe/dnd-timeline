@@ -215,6 +215,6 @@ export function useDebounce<T>(value: T, delay = 500) {
 
 In this example, You can play around with difference modes and feel the difference between them.&#x20;
 
-[Click here to see the full code](../../../examples/performance/src/App.tsx)
+[Click here to see the full code](../../../../examples/performance/src/App.tsx)
 
 {% embed url="https://dnd-timeline-performance.vercel.app" %}
