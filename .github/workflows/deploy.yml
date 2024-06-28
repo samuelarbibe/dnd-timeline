@@ -14,9 +14,11 @@ jobs:
   deploy_production:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    env:
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v2
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Deploy to Vercel
-        run: vercel --prod --projectId=${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel --prod
