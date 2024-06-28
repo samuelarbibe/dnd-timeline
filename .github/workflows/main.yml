@@ -1,0 +1,10 @@
+name: Deploy dnd-timeline examples
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy_timeaxis: 
+    environment: Production - dnd-timeline-timeaxis
+    uses: samuelarbibe/dnd-timeline/.github/workflows/deploy.yml@main
