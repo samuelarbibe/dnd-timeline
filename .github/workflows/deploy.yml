@@ -20,10 +20,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
-      - name: Log secrets
-        run: |
-          echo $VERCEL_PROJECT_ID | sed 's/./& /g'
-          echo $VERCEL_TOKEN | sed 's/./& /g'
-          echo $VERCEL_ORG_ID | sed 's/./& /g'
       - name: Deploy to Vercel
         run: vercel --prod --yes
