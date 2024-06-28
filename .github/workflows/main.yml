@@ -21,9 +21,9 @@ jobs:
       environment: Production - dnd-timeline-demo
     secrets: inherit
 
-  deploy_basic: 
+  deploy_grouped: 
     uses: ./.github/workflows/deploy.yml
     with:
-      environment: Production - dnd-timeline-basic
+      environment: Production - dnd-timeline-grouped
     secrets: inherit
 
