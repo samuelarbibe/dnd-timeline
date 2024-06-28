@@ -9,3 +9,5 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       environment: Production - dnd-timeline-timeaxis
+    secrets: inherit
+
