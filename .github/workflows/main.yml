@@ -1,13 +1,29 @@
 name: Deploy dnd-timeline examples
 on:
   push:
-    branches:
-    - main
 
 jobs:
   deploy_timeaxis: 
     uses: ./.github/workflows/deploy.yml
     with:
       environment: Production - dnd-timeline-timeaxis
+    secrets: inherit
+
+  deploy_performance: 
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: Production - dnd-timeline-performance
+    secrets: inherit
+
+  deploy_demo: 
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: Production - dnd-timeline-demo
+    secrets: inherit
+
+  deploy_basic: 
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: Production - dnd-timeline-basic
     secrets: inherit
 
