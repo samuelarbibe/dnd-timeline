@@ -1,0 +1,10 @@
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy_timeaxis: 
+    uses: samuelarbibe/dnd-timeline/.github/workflows/deploy.yml@main
+    secrets:
+      projectId: ${{ secrets.VERCEL_PROJECT_ID_TIMEAXIS }}
