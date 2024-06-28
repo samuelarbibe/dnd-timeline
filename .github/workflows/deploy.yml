@@ -1,0 +1,21 @@
+name: Deploy dnd-timeline examples
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+on:
+  workflow_call:
+    secrets:
+      projectId:
+        required: true
+        
+jobs:
+  deploy_production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Deploy to Vercel
+        run: vercel --prod --projectId=${{ secrets.projectId }}
+  
