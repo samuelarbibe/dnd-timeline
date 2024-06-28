@@ -6,5 +6,6 @@ on:
 
 jobs:
   deploy_timeaxis: 
-    environment: Production - dnd-timeline-timeaxis
-    uses: samuelarbibe/dnd-timeline/.github/workflows/deploy.yml@main
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: Production - dnd-timeline-timeaxis
