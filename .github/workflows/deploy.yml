@@ -13,7 +13,9 @@ on:
 jobs:
   deploy_production:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: 
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deploy.outputs.url }}
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
@@ -21,4 +23,5 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Deploy to Vercel
-        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        id: deploy
+        run: "url=$(vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
