@@ -1,4 +1,4 @@
-name: Production - Deploy dnd-timeline examples
+name: Deploy all examples for Preview
 on:
   pull_request:
     types: [opened, synchronize]

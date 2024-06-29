@@ -1,3 +1,4 @@
+name: Deploy all examples template
 on:
   workflow_call:
     inputs:
