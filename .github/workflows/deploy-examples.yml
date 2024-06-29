@@ -6,8 +6,8 @@ on:
         required: true
         type: string
       isProd:
-        required: true
         type: boolean
+        default: false
 
 jobs:
   deploy_timeaxis: 
