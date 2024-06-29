@@ -1,4 +1,4 @@
-name: Deploy all examples for Preview
+name: Preview - Deploy Examples
 on:
   pull_request:
     types: [opened, synchronize]

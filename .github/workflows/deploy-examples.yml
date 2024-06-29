@@ -1,4 +1,4 @@
-name: Deploy all examples template
+name: Template - Deploy All Examples
 on:
   workflow_call:
     inputs:

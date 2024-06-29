@@ -1,4 +1,4 @@
-name: Deploy all examples to Production
+name: Production - Deploy Examples
 on:
   push:
     branches:

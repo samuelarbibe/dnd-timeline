@@ -1,4 +1,4 @@
-name: Deploy Example Template
+name: Template - Deploy Example
 env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
