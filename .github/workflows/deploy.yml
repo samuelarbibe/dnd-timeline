@@ -27,4 +27,4 @@ jobs:
         run: npm install --global vercel@latest
       - name: Deploy to Vercel
         id: deploy
-        run: echo "url=$(vercel --prod=${{ inputs.isProd }} --yes --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
+        run: echo "url=$(vercel ${{ inputs.isProd && '--prod' }} --yes --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"

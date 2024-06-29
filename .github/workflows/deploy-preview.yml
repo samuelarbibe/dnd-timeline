@@ -4,7 +4,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  deploy_production: 
+  deploy_preview: 
     uses: ./.github/workflows/deploy-examples.yml
     with:
       environment: Preview
