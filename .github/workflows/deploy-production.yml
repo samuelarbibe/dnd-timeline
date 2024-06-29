@@ -1,0 +1,13 @@
+name: Production - Deploy dnd-timeline examples
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_production: 
+    uses: ./.github/workflows/deploy-examples.yml
+    with:
+      environment: Production
+      isProd: true
+    secrets: inherit

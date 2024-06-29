@@ -1,0 +1,31 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      isProd:
+        required: true
+        type: boolean
+
+jobs:
+  deploy_timeaxis: 
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ inputs.environment }} - dnd-timeline-timeaxis
+      isProd: ${{ inputs.isProd }}
+    secrets: inherit
+
+  deploy_performance: 
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ inputs.environment }} - dnd-timeline-performance
+      isProd: ${{ inputs.isProd }}
+    secrets: inherit
+
+  deploy_demo: 
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ inputs.environment }} - dnd-timeline-demo
+      isProd: ${{ inputs.isProd }}
+    secrets: inherit
