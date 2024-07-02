@@ -1,8 +1,14 @@
 import "./index.css";
+import { type Active, DragOverlay, MeasuringStrategy } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
-import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
+import type {
+	DragEndEvent,
+	DragStartEvent,
+	Range,
+	ResizeEndEvent,
+} from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import Timeline from "./Timeline";
 import { generateItems, generateRows } from "./utils";
 
@@ -12,6 +18,7 @@ const DEFAULT_RANGE: Range = {
 };
 
 function App() {
+	const [active, setActive] = useState<Active | null>(null);
 	const [range, setRange] = useState(DEFAULT_RANGE);
 
 	const [rows] = useState(generateRows(1000));
@@ -36,7 +43,9 @@ function App() {
 			}),
 		);
 	}, []);
+
 	const onDragEnd = useCallback((event: DragEndEvent) => {
+		setActive(null);
 		const activeRowId = event.over?.id as string;
 		const updatedSpan = event.active.data.current.getSpanFromDragEvent?.(event);
 
@@ -57,14 +66,26 @@ function App() {
 		);
 	}, []);
 
+	const onDragStart = useCallback(
+		(event: DragStartEvent) => setActive(event.active),
+		[],
+	);
+
+	const onDragCancel = useCallback(() => setActive(null), []);
+
 	return (
 		<TimelineContext
 			range={range}
 			onDragEnd={onDragEnd}
+			onDragStart={onDragStart}
 			onResizeEnd={onResizeEnd}
+			onDragCancel={onDragCancel}
 			onRangeChanged={setRange}
+			autoScroll={{ enabled: false }}
+			overlayed
 		>
-			<Timeline items={items} rows={rows} />
+			<Timeline items={items} rows={rows} activeItem={active} />
+			<DragOverlay>{active && <div>{active.id}</div>}</DragOverlay>
 		</TimelineContext>
 	);
 }
