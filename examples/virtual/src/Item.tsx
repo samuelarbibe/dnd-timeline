@@ -5,6 +5,7 @@ import type React from "react";
 interface ItemProps {
 	id: string;
 	span: Span;
+	rowId: string;
 	children: React.ReactNode;
 }
 
@@ -13,6 +14,9 @@ function Item(props: ItemProps) {
 		useItem({
 			id: props.id,
 			span: props.span,
+			data: {
+				rowId: props.rowId,
+			},
 		});
 
 	return (
