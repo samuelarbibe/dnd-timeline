@@ -3,9 +3,12 @@ import type { Span } from "dnd-timeline";
 import type React from "react";
 import { useState } from "react";
 
+import ItemContent from "@/components/ui/item-content";
+
 interface ItemProps {
 	id: string;
 	span: Span;
+	rowId: string;
 	children: React.ReactNode;
 }
 
@@ -42,16 +45,15 @@ function Item(props: ItemProps) {
 		useItem({
 			id: props.id,
 			span: props.span,
+			data: {
+				rowId: props.rowId,
+			},
 		});
 
 	return (
 		<div ref={setNodeRef} style={itemStyle} {...listeners} {...attributes}>
 			<div style={itemContentStyle}>
-				<div
-					className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 items-center ${bgColor}`}
-				>
-					{props.children}
-				</div>
+				<ItemContent bgColor={bgColor}>{props.children}</ItemContent>
 			</div>
 		</div>
 	);

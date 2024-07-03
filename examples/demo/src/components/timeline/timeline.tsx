@@ -1,10 +1,16 @@
+import { useAutoscroll } from "@/hooks/useAutoscroll";
 import { generateItems } from "@/lib/utils";
-import { itemsAtom, rowsAtom } from "@/store";
+import { activeAtom, itemsAtom, rowsAtom } from "@/store";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import {
+	type Range,
+	defaultRangeExtractor,
+	useVirtualizer,
+} from "@tanstack/react-virtual";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
+
 import { InlineCode } from "../ui/Inline-code";
 import { Button } from "../ui/button";
 import Item from "./item";
@@ -14,8 +20,11 @@ import Subrow from "./subrow";
 
 function Timeline() {
 	const rows = useAtomValue(rowsAtom);
+	const activeItem = useAtomValue(activeAtom);
 	const [items, setItems] = useAtom(itemsAtom);
 	const { setTimelineRef, style, range, timelineRef } = useTimelineContext();
+
+	useAutoscroll();
 
 	const regenerateItems = () => {
 		setItems(generateItems(50, range, rows));
@@ -26,10 +35,26 @@ function Timeline() {
 		[items, range],
 	);
 
+	const activeItemIndex = useMemo(
+		() => rows.findIndex((row) => row.id === activeItem?.data.current?.rowId),
+		[rows, activeItem],
+	);
+
 	const rowVirtualizer = useVirtualizer({
 		count: rows.length,
 		getItemKey: (index) => rows[index].id,
 		getScrollElement: () => timelineRef.current,
+		rangeExtractor: useCallback(
+			(range: Range) => {
+				const next = new Set([
+					...(activeItemIndex === -1 ? [] : [activeItemIndex]),
+					...defaultRangeExtractor(range),
+				]);
+
+				return [...next].sort((a, b) => a - b);
+			},
+			[activeItemIndex],
+		),
 		estimateSize: (index) => (groupedSubrows[rows[index].id]?.length || 1) * 50,
 	});
 
@@ -72,7 +97,12 @@ function Timeline() {
 								{groupedSubrows[virtualRow.key]?.map((subrow, index) => (
 									<Subrow key={`${virtualRow.key}-${index}`}>
 										{subrow.map((item) => (
-											<Item id={item.id} key={item.id} span={item.span}>
+											<Item
+												id={item.id}
+												key={item.id}
+												rowId={item.rowId}
+												span={item.span}
+											>
 												{`Item ${item.id}`}
 											</Item>
 										))}
@@ -104,4 +134,4 @@ function Timeline() {
 	);
 }
 
-export default Timeline;
+export default memo(Timeline);

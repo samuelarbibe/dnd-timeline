@@ -1,10 +1,18 @@
-import { itemsAtom } from "@/store";
+import { DragOverlay } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
-import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
+import type {
+	DragEndEvent,
+	DragStartEvent,
+	Range,
+	ResizeEndEvent,
+} from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
+import { useCallback, useState } from "react";
 import type { PropsWithChildren } from "react";
-import React, { useCallback, useState } from "react";
+
+import ItemContent from "@/components/ui/item-content";
+import { activeAtom, itemsAtom } from "@/store";
 
 const DEFAULT_RANGE: Range = {
 	start: startOfDay(new Date()).getTime(),
@@ -12,6 +20,7 @@ const DEFAULT_RANGE: Range = {
 };
 
 function TimelineWrapper(props: PropsWithChildren) {
+	const [active, setActive] = useAtom(activeAtom);
 	const [range, setRange] = useState(DEFAULT_RANGE);
 
 	const setItems = useSetAtom(itemsAtom);
@@ -41,6 +50,8 @@ function TimelineWrapper(props: PropsWithChildren) {
 
 	const onDragEnd = useCallback(
 		(event: DragEndEvent) => {
+			setActive(null);
+
 			const activeRowId = event.over?.id as string;
 			const updatedSpan =
 				event.active.data.current.getSpanFromDragEvent?.(event);
@@ -61,17 +72,33 @@ function TimelineWrapper(props: PropsWithChildren) {
 				}),
 			);
 		},
-		[setItems],
+		[setItems, setActive],
 	);
+
+	const onDragStart = useCallback(
+		(event: DragStartEvent) => setActive(event.active),
+		[setActive],
+	);
+
+	const onDragCancel = useCallback(() => setActive(null), [setActive]);
 
 	return (
 		<TimelineContext
 			onDragEnd={onDragEnd}
+			onDragStart={onDragStart}
 			onResizeEnd={onResizeEnd}
 			onRangeChanged={setRange}
+			onDragCancel={onDragCancel}
+			autoScroll={{ enabled: false }}
 			range={range}
+			overlayed
 		>
 			{props.children}
+			<DragOverlay>
+				{active && (
+					<ItemContent bgColor="border-red-400">{active.id}</ItemContent>
+				)}
+			</DragOverlay>
 		</TimelineContext>
 	);
 }

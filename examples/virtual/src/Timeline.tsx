@@ -1,4 +1,4 @@
-import { type Active, useDndContext } from "@dnd-kit/core";
+import type { Active } from "@dnd-kit/core";
 import {
 	type Range,
 	defaultRangeExtractor,
@@ -20,13 +20,9 @@ interface TimelineProps {
 }
 
 function Timeline(props: TimelineProps) {
-	const { dragOverlay } = useDndContext();
 	const { setTimelineRef, timelineRef, style, range } = useTimelineContext();
 
-	useAutoscroll({
-		containerRef: timelineRef,
-		dragOverlay: dragOverlay,
-	});
+	useAutoscroll();
 
 	const groupedSubrows = useMemo(
 		() => groupItemsToSubrows(props.items, range),
