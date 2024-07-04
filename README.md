@@ -1,18 +1,20 @@
-![Screenshot 2024-03-09 at 0 28 29](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/d7639942-0727-4f0f-91c3-eef43cb7f40b)
+![Screenshot 2024-07-04 at 22 01 52](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/f3229bc4-c855-4b50-9ab2-9fd2ac37f0ca)
 
 # [🎉 dnd-timeline](https://dnd-timeline.com)
 
 ## dnd-timeline: A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
+![npm bundle size](https://img.shields.io/bundlephobia/min/dnd-timeline)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/dnd-timeline)
 
 
 
-
-- **Headless:** `dnd-timeline` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
-- **Hook-based:** exposes simple hooks like `useItem` and `useRow`, that should integrate seamlessly into your existing architecture.
-- **Flexible:** very slim and flexible by design. `dnd-timeline` exposes utility functions and positional styling, and you can use them in conjunction with you favorite libraries - styling libraries (MUI, tailwindcss, ant-design, etc.), and functional libraries (react-virtual, framer-motion, etc.)
-- **Based on [`dnd-kit`](https://docs.dndkit.com/):** all features exposed by the [`dnd-kit`](https://docs.dndkit.com/) library are applicable to dnd-timeline.
-- **Performant:** renders only when needed. All the intermediate states and animations are done using css transformations, and require 0 re-renders.
-- **RTL:** `dnd-timeline` nativly supports RTL. simply declare one of the parent divs as rtl with `dir="rtl"`, and thats it.
+- 🧠 **Headless:** `dnd-timeline` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
+- 🪝 **Hook-based :** exposes simple hooks like `useItem` and `useRow`, that should integrate seamlessly into your existing architecture.
+- 🤺 **Flexible:** very slim and flexible by design. `dnd-timeline` exposes utility functions and positional styling, and you can use them in conjunction with you favorite libraries - styling libraries (MUI, tailwindcss, ant-design, etc.), and functional libraries (react-virtual, framer-motion, etc.)
+- 🏗️ **Based on [`dnd-kit`](https://docs.dndkit.com/) :** all features exposed by the [`dnd-kit`](https://docs.dndkit.com/) library are applicable to dnd-timeline.
+- 🏎️ **Performant:** renders only when needed. All the intermediate states and animations are done using css transformations, and require 0 re-renders.
+- 👆 **Touch Support:** Works with touch by default. Sensors can be highly configured using [`dnd-kit`](https://docs.dndkit.com/)'s sensors.
+- 🌍 **RTL:** `dnd-timeline` nativly supports RTL. simply declare one of the parent divs as rtl with `dir="rtl"`, and thats it.
 
 ![2024-03-09 00 35 27](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/39e1e0c7-22ac-4286-8f35-58dc7380b7eb)
 
@@ -32,20 +34,18 @@ Then, you can install the library itself:
 npm install dnd-timeline
 ```
 
-## Features
+## Examples
+- [**External**](https://dnd-timeline-external.vercel.app/): Drag items from outside to the timeline, from one timeline to another, nest timelines in each other... What ever you want!   
+- [**Timeaxis**](https://dnd-timeline-timeaxis.vercel.app/): Add custom components using the timeline's data, for example a timeaxis with custom labels.   
+- [**Sortable**](https://dnd-timeline-sortable.vercel.app/): Allow for sortable rows.   
+- [**Virtual**](https://dnd-timeline-virtual.vercel.app/): Render thousands of items and rows using your favorite virtualization library.   
+- [**Grouped**](https://dnd-timeline-grouped.vercel.app/): Group the rows in any way you like.   
+- [**Grouped**](https://dnd-timeline-grouped.vercel.app/): Group the rows in any way you like.   
 
-- **Stacked rows:** Items whose relevance's intersect are stacked on top of each other inside the same row.
-- **Snap to Grid:** Items snap into a pre-defined grid when dropped, that can be changed according to zoom level.
-- **Time Axis:** An optional time axis can be displayed, with different markers according to zoom level.
-- **Time Cursor:** An optional time cursor indicating the current time on top of the timeline.
-- **Pan and zoom:** You can zoom by holding <kbd>Ctrl</kbd> and scrolling using the mouse wheel, and pan by holding <kbd>Ctrl + Shift</kbd> scrolling using the mouse wheel.
-  ![2023-07-09 20 27 50](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/b94f870b-5d32-4099-92f7-a1a236dbf7b1)
-- **Dynamically disabled rows and items:** Items and Rows can be disabled according to a client-defined logic.
-  ![2023-07-09 20 29 15](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/a21f3afc-d075-448a-8fb7-fb445351b9f5)
-- **Integration with external DnD:** The timeline can be used in conjunction with other DnD interactions in you app, to drag items into and outside of the timeline.
-  ![2023-07-09 20 30 25](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/bd354d06-415a-4561-9476-1b9b8463cdd1)
+#### 💡 These are just a few examples of what can be done with this library.  
+I invite you to share your ideas, and challange the library with any idea you come up with by opening a discussion [**here**](https://github.com/samuelarbibe/dnd-timeline/discussions/categories/ideas).
 
-## Contribute
+## Contribution
 
 This project uses [turborepo](https://turbo.build/repo/docs) to manage the monorepo.
 It also uses [pnpm](https://pnpm.io/) instead of npm as a package manager.
@@ -70,3 +70,5 @@ If you want to run only a specific example, checkout turborepo's [`--filter`](ht
 pnpm run dev --filter home...
 ```
 For example this will run the `home` package and all the packages' it is depending on (`dnd-timeline`).
+  
+Good luck 🤞
