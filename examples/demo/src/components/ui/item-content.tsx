@@ -1,13 +1,13 @@
 import type { PropsWithChildren } from "react";
 
 interface ItemContentProps extends PropsWithChildren {
-	bgColor: string;
+	classes: string;
 }
 
-function ItemContent({ children, bgColor }: ItemContentProps) {
+function ItemContent({ children, classes }: ItemContentProps) {
 	return (
 		<div
-			className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 h-items-center ${bgColor}`}
+			className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 h-items-center ${classes}`}
 		>
 			{children}
 		</div>

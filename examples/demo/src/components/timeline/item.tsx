@@ -39,7 +39,7 @@ function hashCode(str: string) {
 }
 
 function Item(props: ItemProps) {
-	const [bgColor] = useState(COLORS[hashCode(props.id) % COLORS.length]);
+	const [classes] = useState(COLORS[hashCode(props.id) % COLORS.length]);
 
 	const { setNodeRef, attributes, listeners, itemStyle, itemContentStyle } =
 		useItem({
@@ -53,7 +53,7 @@ function Item(props: ItemProps) {
 	return (
 		<div ref={setNodeRef} style={itemStyle} {...listeners} {...attributes}>
 			<div style={itemContentStyle}>
-				<ItemContent bgColor={bgColor}>{props.children}</ItemContent>
+				<ItemContent classes={classes}>{props.children}</ItemContent>
 			</div>
 		</div>
 	);

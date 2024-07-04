@@ -96,7 +96,7 @@ function TimelineWrapper(props: PropsWithChildren) {
 			{props.children}
 			<DragOverlay>
 				{active && (
-					<ItemContent bgColor="border-red-400">{active.id}</ItemContent>
+					<ItemContent classes="border-red-400">{active.id}</ItemContent>
 				)}
 			</DragOverlay>
 		</TimelineContext>
