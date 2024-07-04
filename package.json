@@ -18,11 +18,14 @@
 		"@release-it/conventional-changelog": "^8.0.1",
 		"husky": "^8.0.3",
 		"release-it": "^17.0.1",
-		"turbo": "^2.0.4"
+		"turbo": "^2.0.6"
 	},
 	"engines": {
 		"node": ">=18"
 	},
 	"packageManager": "pnpm@9.4.0",
-	"workspaces": ["examples/*", "packages/*"]
+	"workspaces": [
+		"examples/*",
+		"packages/*"
+	]
 }
