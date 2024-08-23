@@ -1,5 +1,14 @@
 
 
+## [2.0.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.0...dnd-timeline@2.0.1) (2024-08-23)
+
+
+### Bug Fixes
+
+* store timeframe ref in useState ([4e7b3cc](https://github.com/samuelarbibe/dnd-timeline/commit/4e7b3cc8003adfcaf98083a91da4f4b23236d678))
+* timecursor overflows to sidebar ([9f8a835](https://github.com/samuelarbibe/dnd-timeline/commit/9f8a83512f2b04f8db0bb21026cf062ed8ed5ea3))
+* use custom autoscroll with virtualization ([e0e747b](https://github.com/samuelarbibe/dnd-timeline/commit/e0e747b4d2a4faa6911d427b229f12f6d92f750c))
+
 ## [2.0.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.0-beta.0...dnd-timeline@2.0.0) (2024-06-20)
 
 ## [2.0.0-beta.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@1.6.3...dnd-timeline@2.0.0-beta.0) (2024-06-20)
