@@ -1,6 +1,6 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import type { CSSProperties, PointerEventHandler } from "react";
+import type { CSSProperties, PointerEvent, PointerEventHandler } from "react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import type {
@@ -112,7 +112,7 @@ export default function useItem(props: UseItemProps) {
 	useLayoutEffect(() => {
 		if (!dragDirection) return;
 
-		const pointermoveHandler = (event: PointerEvent) => {
+		const pointermoveHandler = (event: globalThis.PointerEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
 			const dragDeltaX =
@@ -131,6 +131,7 @@ export default function useItem(props: UseItemProps) {
 			}
 
 			onResizeMoveCallback({
+				activatorEvent: event,
 				delta: {
 					x: dragDeltaX,
 				},
@@ -161,7 +162,7 @@ export default function useItem(props: UseItemProps) {
 	useLayoutEffect(() => {
 		if (!dragDirection) return;
 
-		const pointerupHandler = () => {
+		const pointerupHandler = (event: globalThis.PointerEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
 			let dragDeltaX = 0;
@@ -179,6 +180,7 @@ export default function useItem(props: UseItemProps) {
 			}
 
 			onResizeEndCallback({
+				activatorEvent: event,
 				delta: {
 					x: dragDeltaX,
 				},
@@ -246,6 +248,7 @@ export default function useItem(props: UseItemProps) {
 				dragStartX.current = event.clientX;
 
 				onResizeStartCallback({
+					activatorEvent: event as unknown as Event,
 					active: {
 						id: props.id,
 						data: dataRef,
