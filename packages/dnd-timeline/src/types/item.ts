@@ -25,6 +25,7 @@ export interface UseItemProps
 	onResizeEnd?: (event: ResizeEndEvent) => void;
 	onResizeMove?: (event: ResizeMoveEvent) => void;
 	onResizeStart?: (event: ResizeStartEvent) => void;
+	calcNewSan?: CalculateNewSpan;
 }
 
 interface ItemDataBase extends Data {
@@ -48,3 +49,10 @@ export interface DragActiveItem extends Active {
 export interface ResizeActiveItem extends Omit<Active, "rect"> {
 	data: MutableRefObject<ResizeItemData>;
 }
+
+export interface CalculateNewSpanArgs {
+	span: Span;
+	direction: DragDirection;
+	deltaX: number;
+}
+export type CalculateNewSpan = (args: CalculateNewSpanArgs) => Span;
