@@ -4,6 +4,7 @@ import type { CSSProperties, PointerEventHandler } from "react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import type {
+	CalculateNewSpan,
 	DragDirection,
 	ItemData,
 	ResizeEndEvent,
@@ -33,6 +34,15 @@ const getDragDirection = (
 
 	return null;
 };
+
+const defaultCalculateNewSpan: CalculateNewSpan = ({
+	span,
+	direction,
+	deltaX,
+}) =>
+	direction === "start"
+		? { start: span.start + deltaX, end: span.end }
+		: { start: span.start, end: span.end + deltaX };
 
 export default function useItem(props: UseItemProps) {
 	const dataRef = useRef<ItemData>({} as ItemData);
@@ -112,22 +122,25 @@ export default function useItem(props: UseItemProps) {
 	useLayoutEffect(() => {
 		if (!dragDirection) return;
 
+		const calculateNewSpan = props.calcNewSan || defaultCalculateNewSpan;
+
 		const pointermoveHandler = (event: PointerEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
 			const dragDeltaX =
 				(event.clientX - dragStartX.current) * (direction === "rtl" ? -1 : 1);
 
-			if (dragDirection === "start") {
-				const newSideDelta = deltaXStart + dragDeltaX;
-				draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
+			const newSpan = calculateNewSpan({
+				span: props.span,
+				direction: dragDirection,
+				deltaX: dragDeltaX,
+			});
+			const newWidth = valueToPixels(newSpan.end - newSpan.start);
+			draggableProps.node.current.style.width = `${newWidth}px`;
 
-				const newWidth = width + deltaXStart - newSideDelta;
-				draggableProps.node.current.style.width = `${newWidth}px`;
-			} else {
-				const otherSideDelta = deltaXStart + width + dragDeltaX;
-				const newWidth = otherSideDelta - deltaXStart;
-				draggableProps.node.current.style.width = `${newWidth}px`;
+			if (dragDirection === "start") {
+				const newSideDelta = valueToPixels(newSpan.start - range.start);
+				draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
 			}
 
 			onResizeMoveCallback({
@@ -149,9 +162,11 @@ export default function useItem(props: UseItemProps) {
 		};
 	}, [
 		sideStart,
-		width,
-		deltaXStart,
+		range,
 		props.id,
+		props.span,
+		props.calcNewSan,
+		valueToPixels,
 		dragDirection,
 		direction,
 		draggableProps.node,
