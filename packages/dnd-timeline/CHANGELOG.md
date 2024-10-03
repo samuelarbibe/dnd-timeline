@@ -1,5 +1,12 @@
 
 
+## [2.0.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.1...dnd-timeline@2.0.2) (2024-10-03)
+
+
+### Bug Fixes
+
+* add activatorEvent to resize events ([3463841](https://github.com/samuelarbibe/dnd-timeline/commit/34638416d6e1abd63a2b7fff4f943ab54059e730))
+
 ## [2.0.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.0...dnd-timeline@2.0.1) (2024-08-23)
 
 
