@@ -5,6 +5,24 @@ import type { UseRowProps } from "../types";
 
 import useTimelineContext from "./useTimelineContext";
 
+const rowWrapperStyle: CSSProperties = {
+	display: "inline-flex",
+};
+
+const rowStyle: CSSProperties = {
+	flex: 1,
+	display: "flex",
+	position: "relative",
+	alignItems: "stretch",
+	flexDirection: "column",
+};
+
+const rowSidebarStyle: CSSProperties = {
+	left: 0,
+	zIndex: 3,
+	display: "flex",
+};
+
 export default function useRow(props: UseRowProps) {
 	const { setSidebarRef } = useTimelineContext();
 
@@ -13,24 +31,6 @@ export default function useRow(props: UseRowProps) {
 		data: props.data,
 		disabled: props.disabled,
 	});
-
-	const rowWrapperStyle: CSSProperties = {
-		display: "inline-flex",
-	};
-
-	const rowStyle: CSSProperties = {
-		flex: 1,
-		display: "flex",
-		position: "relative",
-		alignItems: "stretch",
-		flexDirection: "column",
-	};
-
-	const rowSidebarStyle: CSSProperties = {
-		left: 0,
-		zIndex: 3,
-		display: "flex",
-	};
 
 	return {
 		rowStyle,

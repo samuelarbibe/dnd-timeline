@@ -1,7 +1,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import type { CSSProperties, PointerEvent, PointerEventHandler } from "react";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties, PointerEventHandler } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type {
 	DragDirection,
@@ -274,28 +274,46 @@ export default function useItem(props: UseItemProps) {
 
 	const paddingEnd = direction === "rtl" ? "paddingLeft" : "paddingRight";
 
-	const itemStyle: CSSProperties = {
-		position: "absolute",
-		top: 0,
-		width,
-		[sideStart]: deltaXStart,
-		[sideEnd]: deltaXEnd,
-		cursor,
-		height: "100%",
-		touchAction: "none",
-		...(!(draggableProps.isDragging && overlayed) && {
-			transform: CSS.Translate.toString(draggableProps.transform),
-		}),
-	};
+	const transform = CSS.Translate.toString(draggableProps.transform);
 
-	const itemContentStyle: CSSProperties = {
-		height: "100%",
-		display: "flex",
-		overflow: "hidden",
-		alignItems: "stretch",
-		[paddingStart]: Math.max(0, -deltaXStart),
-		[paddingEnd]: Math.max(0, -deltaXEnd),
-	};
+	const itemStyle: CSSProperties = useMemo(
+		() => ({
+			position: "absolute",
+			top: 0,
+			width,
+			[sideStart]: deltaXStart,
+			[sideEnd]: deltaXEnd,
+			cursor,
+			height: "100%",
+			touchAction: "none",
+			...(!(draggableProps.isDragging && overlayed) && {
+				transform,
+			}),
+		}),
+		[
+			width,
+			sideStart,
+			deltaXStart,
+			sideEnd,
+			deltaXEnd,
+			cursor,
+			draggableProps.isDragging,
+			overlayed,
+			transform,
+		],
+	);
+
+	const itemContentStyle: CSSProperties = useMemo(
+		() => ({
+			height: "100%",
+			display: "flex",
+			overflow: "hidden",
+			alignItems: "stretch",
+			[paddingStart]: Math.max(0, -deltaXStart),
+			[paddingEnd]: Math.max(0, -deltaXEnd),
+		}),
+		[paddingStart, paddingEnd, deltaXStart, deltaXEnd],
+	);
 
 	return {
 		itemStyle,
