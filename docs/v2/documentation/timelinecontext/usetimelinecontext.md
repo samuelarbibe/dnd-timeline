@@ -34,7 +34,7 @@ A ref setter that must be passed to the timeline's container element.
 valueToPixels: (value: number) => number
 ```
 
-A helper function that receives a value, and returns the pixel representation in relation to the timeline's container element.&#x20;
+A helper function that receives a value, and returns the pixel representation in relation to the timeline's container element.
 
 > 🧠 It can be used to infer elements' size and position in pixels, based on their duration. It is internally used in order to position items on the timeline.
 
@@ -51,12 +51,22 @@ A helper function that receives pixels, and returns the equivalent duration for 
 #### `getValueFromScreenX`
 
 ```typescript
-getValueFromScreenX: (screenX: number) => Value
+getValueFromScreenX: (screenX: number) => number
 ```
 
-A helper function that x position in the client's screen, and returns a date represenation of that position, in relation to the timeline's container element.
+A helper function that receives x position in the client's screen, and returns a date representation of that position, in relation to the timeline's container element.
 
 > 🧠 It can be used to infer a time value from a mouse event. For example, you can use it to extract a date from a click event on the timeline.
+
+#### `getDeltaXFromScreenX`
+
+```typescript
+getDeltaXFromScreenX: (screenX: number) => number
+```
+
+A helper function that receives x position in the client's screen, and returns the delta X distance from the timeline's start.
+
+> 🧠 It can be used to infer a relative position for a custom item from a mouse event. For example, you can use it to place a custom item on the timeline from a pointer event.&#x20;
 
 #### `getSpanFromDragEvent`
 
@@ -105,5 +115,3 @@ This function is injected into all of dnd-timeline's resize events, and allowes 
   // update your state using the updated span.
 }
 </code></pre>
-
-&#x20;
