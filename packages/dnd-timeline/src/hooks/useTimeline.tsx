@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { useCallback, useMemo } from "react";
 
 import type {
+	GetDeltaXFromScreenX,
 	GetSpanFromDragEvent,
 	GetSpanFromResizeEvent,
 	GetValueFromScreenX,
@@ -93,6 +94,21 @@ export default function useTimeline({
 		[rangeStart, rangeEnd, timelineViewportWidth],
 	);
 
+	const getDeltaXFromScreenX = useCallback<GetDeltaXFromScreenX>(
+		(screenX) => {
+			const side = direction === "rtl" ? "right" : "left";
+
+			const timelineSideX =
+				(timelineRef.current?.getBoundingClientRect()[side] || 0) +
+				sidebarWidth * (direction === "rtl" ? -1 : 1);
+
+			const deltaX = screenX - timelineSideX;
+
+			return deltaX;
+		},
+		[timelineRef, sidebarWidth, direction],
+	);
+
 	const snapValueToRangeGrid = useCallback(
 		(value: number) => {
 			if (!rangeGridSize) return value;
@@ -104,24 +120,16 @@ export default function useTimeline({
 
 	const getValueFromScreenX = useCallback<GetValueFromScreenX>(
 		(screenX) => {
-			const side = direction === "rtl" ? "right" : "left";
-
-			const timelineSideX =
-				(timelineRef.current?.getBoundingClientRect()[side] || 0) +
-				sidebarWidth * (direction === "rtl" ? -1 : 1);
-
-			const deltaX = screenX - timelineSideX;
-
+			const deltaX = getDeltaXFromScreenX(screenX);
 			const delta = pixelsToValue(deltaX) * (direction === "rtl" ? -1 : 1);
 
 			return snapValueToRangeGrid(rangeStart + delta);
 		},
 		[
-			timelineRef,
-			sidebarWidth,
 			rangeStart,
 			direction,
 			pixelsToValue,
+			getDeltaXFromScreenX,
 			snapValueToRangeGrid,
 		],
 	);
@@ -233,6 +241,7 @@ export default function useTimeline({
 			direction,
 			rangeGridSize,
 			getValueFromScreenX,
+			getDeltaXFromScreenX,
 			getSpanFromDragEvent,
 			getSpanFromResizeEvent,
 		}),
@@ -254,6 +263,7 @@ export default function useTimeline({
 			direction,
 			rangeGridSize,
 			getValueFromScreenX,
+			getDeltaXFromScreenX,
 			getSpanFromDragEvent,
 			getSpanFromResizeEvent,
 		],

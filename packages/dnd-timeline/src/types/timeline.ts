@@ -25,6 +25,8 @@ export type GetSpanFromResizeEvent = (event: ResizeEndEvent) => Range | null;
 
 export type GetValueFromScreenX = (screenX: number) => number;
 
+export type GetDeltaXFromScreenX = (screenX: number) => number;
+
 export type OnResizeStart = (event: ResizeStartEvent) => void;
 
 export type OnResizeEnd = (event: ResizeEndEvent) => void;
@@ -54,6 +56,7 @@ export interface TimelineBag {
 	valueToPixels: ValueToPixels;
 	pixelsToValue: PixelsToValue;
 	getValueFromScreenX: GetValueFromScreenX;
+	getDeltaXFromScreenX: GetDeltaXFromScreenX;
 	getSpanFromDragEvent: GetSpanFromDragEvent;
 	getSpanFromResizeEvent: GetSpanFromResizeEvent;
 }
