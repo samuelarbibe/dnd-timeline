@@ -1,5 +1,12 @@
 
 
+## [2.1.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.1.0...dnd-timeline@2.1.1) (2024-12-20)
+
+
+### Bug Fixes
+
+* memoize useItem and useRow styles ([3e5136a](https://github.com/samuelarbibe/dnd-timeline/commit/3e5136a219752c5db5ad76d8ec803656bebb4d4d))
+
 ## [2.1.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.2...dnd-timeline@2.1.0) (2024-12-20)
 
 
