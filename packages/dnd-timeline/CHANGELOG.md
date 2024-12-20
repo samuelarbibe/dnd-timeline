@@ -1,5 +1,12 @@
 
 
+## [2.1.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.2...dnd-timeline@2.1.0) (2024-12-20)
+
+
+### Features
+
+* add getDeltaXFromScreenX ([17e1dc8](https://github.com/samuelarbibe/dnd-timeline/commit/17e1dc8b3fc41ef18d156631b51e7310a5e43832))
+
 ## [2.0.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.0.1...dnd-timeline@2.0.2) (2024-10-03)
 
 
