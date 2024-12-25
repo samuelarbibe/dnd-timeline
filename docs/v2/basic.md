@@ -51,9 +51,15 @@ These components are external to the library, and are an example of how to use `
 
 ## Performance
 
-This example adds a `debounce` or a `throttle` mechanism to the range, in order to greatly improve the zoom and pan performance. &#x20;
+This example adds a `debounce` or a `throttle` mechanism to the range, in order to greatly improve the zoom and pan performance.
 
 Play around with the different options to see how they feel!
 
 {% embed url="https://dnd-timeline-performance.vercel.app" %}
+
+## Drag to Create
+
+This example adds the ability to create a new item by dragging it on a row. Simply click on a row, move to a certain size, and release to create an item of that size, on the row.
+
+{% embed url="https://dnd-timeline-create.vercel.app" %}
 
