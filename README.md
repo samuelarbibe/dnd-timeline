@@ -40,7 +40,8 @@ npm install dnd-timeline
 - [**Sortable**](https://dnd-timeline-sortable.vercel.app/): Allow for sortable rows.   
 - [**Virtual**](https://dnd-timeline-virtual.vercel.app/): Render thousands of items and rows using your favorite virtualization library.   
 - [**Grouped**](https://dnd-timeline-grouped.vercel.app/): Group the rows in any way you like.   
-- [**Grouped**](https://dnd-timeline-grouped.vercel.app/): Group the rows in any way you like.   
+- [**Performance**](https://dnd-timeline-performance.vercel.app): Debounce scrolling and panning to allow for a large amount of items at once.
+- [**Drag to Create**](https://dnd-timeline-create.vercel.app/): Create items on the timeline by dragging their shape on a row.
 
 #### 💡 These are just a few examples of what can be done with this library.  
 I invite you to share your ideas, and challange the library with any idea you come up with by opening a discussion [**here**](https://github.com/samuelarbibe/dnd-timeline/discussions/categories/ideas).
