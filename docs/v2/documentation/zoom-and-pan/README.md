@@ -23,8 +23,8 @@ The hook is of the following structure:
 
 ```tsx
 type UsePanStrategy = (
-  timelineRef: React.MutableRefObject<HTMLElement | null>,
-  onPanEnd: OnPanEnd
+    timelineBag: TimelineBag,
+    onPanEnd: OnPanEnd,
 ) => void
 
 type OnPanEnd = (event: PanEndEvent) => void
@@ -63,10 +63,10 @@ This will create the effect of zooming in and out of the timeline.
 
 This is an example to the default strategy, `useWheelStrategy`:
 
-<pre class="language-tsx" data-title="src/utils/panStrategies.ts"><code class="lang-tsx">export const useWheelStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
+<pre class="language-tsx" data-title="src/utils/panStrategies.ts"><code class="lang-tsx">export const useWheelStrategy: UsePanStrategy = (timelineBag, onPanEnd) => {
   useLayoutEffect(() => {
-    const element = timelineRef?.current
-    if (!element) returntax
+    const element = timelineBag.timelineRef?.current
+    if (!element) return
 
     const wheelHandler = (event: WheelEvent) => {
       if (!event.ctrlKey &#x26;&#x26; !event.metaKey) return
@@ -90,6 +90,6 @@ This is an example to the default strategy, `useWheelStrategy`:
     return () => {
       element.removeEventListener('wheel', wheelHandler)
     }
-  }, [onPanEnd, timelineRef])
+  }, [onPanEnd, timelineBag.timelineRef])
 }
 </code></pre>
