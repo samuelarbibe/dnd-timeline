@@ -1,6 +1,15 @@
+import { useDndContext } from "@dnd-kit/core";
 import { minutesToMilliseconds } from "date-fns";
-import type { ItemDefinition, Range, RowDefinition, Span } from "dnd-timeline";
+import type {
+	ItemDefinition,
+	PanEndEvent,
+	Range,
+	RowDefinition,
+	Span,
+	UsePanStrategy,
+} from "dnd-timeline";
 import { nanoid } from "nanoid";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 interface GenerateRowsOptions {
 	disabled?: boolean;
@@ -82,4 +91,66 @@ export const generateItems = (
 				disabled,
 			};
 		});
+};
+
+export const useOverflowPanStrategy: UsePanStrategy = (
+	timelineContext,
+	onPanEnd,
+) => {
+	const { active } = useDndContext();
+	const { timelineRef, sidebarWidth } = timelineContext;
+
+	const panSpeedRef = useRef<number>(0);
+
+	useLayoutEffect(() => {
+		if (!active) return;
+
+		// instead of an interval, you can use requestAnimationFrame()
+		const interval = setInterval(() => {
+			if (panSpeedRef.current) {
+				const panEndEvent: PanEndEvent = {
+					deltaX: panSpeedRef.current,
+					deltaY: 0,
+				};
+
+				onPanEnd(panEndEvent);
+			}
+		}, 50);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, [onPanEnd, active]);
+
+	useLayoutEffect(() => {
+		const element = timelineRef?.current;
+		if (!active || !element) return;
+
+		const moveHandler = (event: PointerEvent) => {
+			event.preventDefault();
+
+			const overflowLeft =
+				element.getBoundingClientRect().left + sidebarWidth - event.clientX;
+
+			const overflowRight =
+				event.clientX - element.getBoundingClientRect().right;
+
+			let panSpeed = 0;
+			const panAcceleration = 0.05;
+
+			if (overflowLeft > 0) {
+				panSpeed = -overflowLeft * panAcceleration;
+			} else if (overflowRight > 0) {
+				panSpeed = overflowRight * panAcceleration;
+			}
+
+			panSpeedRef.current = panSpeed;
+		};
+
+		window.addEventListener("pointermove", moveHandler);
+
+		return () => {
+			window.removeEventListener("pointermove", moveHandler);
+		};
+	}, [timelineRef, sidebarWidth, active]);
 };

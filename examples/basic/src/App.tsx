@@ -4,7 +4,7 @@ import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import React, { useCallback, useState } from "react";
 import Timeline from "./Timeline";
-import { generateItems, generateRows } from "./utils";
+import { generateItems, generateRows, useOverflowPanStrategy } from "./utils";
 
 const DEFAULT_RANGE: Range = {
 	start: startOfDay(new Date()).getTime(),
@@ -64,6 +64,7 @@ function App() {
 			onDragEnd={onDragEnd}
 			onResizeEnd={onResizeEnd}
 			onRangeChanged={setRange}
+			usePanStrategy={useOverflowPanStrategy}
 		>
 			<Timeline items={items} rows={rows} />
 		</TimelineContext>
