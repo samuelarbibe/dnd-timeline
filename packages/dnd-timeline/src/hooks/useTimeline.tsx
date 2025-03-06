@@ -72,26 +72,38 @@ export default function useTimeline({
 		return rangeGridSizeDefinition;
 	}, [rangeStart, rangeEnd, rangeGridSizeDefinition]);
 
-	const valueToPixels = useCallback<ValueToPixels>(
-		(value: number, customRange?: Range) => {
-			const start = customRange?.start ?? rangeStart;
-			const end = customRange?.end ?? rangeEnd;
+	const valueToPixelsInternal = useCallback(
+		(value: number, range: Range) => {
+			const start = range.start;
+			const end = range.end;
 
 			const valueToPixel = timelineViewportWidth / (end - start);
 			return value * valueToPixel;
 		},
-		[rangeStart, rangeEnd, timelineViewportWidth],
+		[timelineViewportWidth],
 	);
 
-	const pixelsToValue = useCallback<PixelsToValue>(
-		(pixels: number, customRange?: Range) => {
-			const start = customRange?.start ?? rangeStart;
-			const end = customRange?.end ?? rangeEnd;
+	const valueToPixels = useCallback<ValueToPixels>(
+		(value: number, customRange?: Range) =>
+			valueToPixelsInternal(value, customRange ?? range),
+		[valueToPixelsInternal, range],
+	);
+
+	const pixelsToValueInternal = useCallback(
+		(pixels: number, range: Range) => {
+			const start = range.start;
+			const end = range.end;
 
 			const pixelToMs = (end - start) / timelineViewportWidth;
 			return pixels * pixelToMs;
 		},
-		[rangeStart, rangeEnd, timelineViewportWidth],
+		[timelineViewportWidth],
+	);
+
+	const pixelsToValue = useCallback<PixelsToValue>(
+		(pixels: number, customRange?: Range) =>
+			pixelsToValueInternal(pixels, customRange ?? range),
+		[range, pixelsToValueInternal],
 	);
 
 	const getDeltaXFromScreenX = useCallback<GetDeltaXFromScreenX>(
@@ -118,20 +130,25 @@ export default function useTimeline({
 		[rangeGridSize],
 	);
 
-	const getValueFromScreenX = useCallback<GetValueFromScreenX>(
-		(screenX) => {
+	const getValueFromScreenXInternal = useCallback(
+		(screenX: number, range: Range) => {
 			const deltaX = getDeltaXFromScreenX(screenX);
-			const delta = pixelsToValue(deltaX) * (direction === "rtl" ? -1 : 1);
+			const delta =
+				pixelsToValueInternal(deltaX, range) * (direction === "rtl" ? -1 : 1);
 
-			return snapValueToRangeGrid(rangeStart + delta);
+			return snapValueToRangeGrid(range.start + delta);
 		},
 		[
-			rangeStart,
 			direction,
-			pixelsToValue,
+			pixelsToValueInternal,
 			getDeltaXFromScreenX,
 			snapValueToRangeGrid,
 		],
+	);
+
+	const getValueFromScreenX = useCallback<GetValueFromScreenX>(
+		(screenX: number) => getValueFromScreenXInternal(screenX, range),
+		[range, getValueFromScreenXInternal],
 	);
 
 	const getSpanFromDragEvent = useCallback<GetSpanFromDragEvent>(
@@ -187,39 +204,43 @@ export default function useTimeline({
 
 	const onPanEnd = useCallback<OnPanEnd>(
 		(event) => {
-			const deltaX =
-				pixelsToValue(event.deltaX) * (direction === "rtl" ? -1 : 1);
-			const deltaY =
-				pixelsToValue(event.deltaY) * (direction === "rtl" ? -1 : 1);
+			onRangeChanged((prevRange) => {
+				const deltaX =
+					pixelsToValueInternal(event.deltaX, prevRange) *
+					(direction === "rtl" ? -1 : 1);
+				const deltaY =
+					pixelsToValueInternal(event.deltaY, prevRange) *
+					(direction === "rtl" ? -1 : 1);
 
-			const rangeDuration = rangeEnd - rangeStart;
+				const rangeDuration = prevRange.end - prevRange.start;
 
-			const startBias = event.clientX
-				? (rangeStart - getValueFromScreenX(event.clientX)) / rangeDuration
-				: 1;
-			const endBias = event.clientX
-				? (getValueFromScreenX(event.clientX) - rangeEnd) / rangeDuration
-				: 1;
+				const startBias = event.clientX
+					? (prevRange.start -
+							getValueFromScreenXInternal(event.clientX, prevRange)) /
+						rangeDuration
+					: 1;
+				const endBias = event.clientX
+					? (getValueFromScreenXInternal(event.clientX, prevRange) -
+							prevRange.end) /
+						rangeDuration
+					: 1;
 
-			const startDelta = deltaY * startBias + deltaX;
-			const endDelta = -deltaY * endBias + deltaX;
+				const startDelta = deltaY * startBias + deltaX;
+				const endDelta = -deltaY * endBias + deltaX;
 
-			onRangeChanged((prev) => ({
-				start: prev.start + startDelta,
-				end: prev.end + endDelta,
-			}));
+				return {
+					start: prevRange.start + startDelta,
+					end: prevRange.end + endDelta,
+				};
+			});
 		},
 		[
-			rangeEnd,
-			rangeStart,
 			direction,
-			getValueFromScreenX,
+			pixelsToValueInternal,
+			getValueFromScreenXInternal,
 			onRangeChanged,
-			pixelsToValue,
 		],
 	);
-
-	usePanStrategy(timelineRef, onPanEnd);
 
 	const value = useMemo<TimelineBag>(
 		() => ({
@@ -268,6 +289,8 @@ export default function useTimeline({
 			getSpanFromResizeEvent,
 		],
 	);
+
+	usePanStrategy(value, onPanEnd);
 
 	return value;
 }
