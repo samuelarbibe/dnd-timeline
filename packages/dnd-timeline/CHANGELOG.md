@@ -1,5 +1,12 @@
 
 
+## [2.1.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.1.1...dnd-timeline@2.1.2) (2025-03-06)
+
+
+### Bug Fixes
+
+* memoize onPanEnd and send it the the full timelineBag ([e0fd895](https://github.com/samuelarbibe/dnd-timeline/commit/e0fd895e3c13f7bee2022cef5eafdc88e3b38772))
+
 ## [2.1.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.1.0...dnd-timeline@2.1.1) (2024-12-20)
 
 
