@@ -1,15 +1,15 @@
 import { useLayoutEffect, useRef } from "react";
 
-import type { OnPanEnd, PanEndEvent } from "../types";
+import type { OnPanEnd, PanEndEvent, TimelineBag } from "../types";
 
 export type UsePanStrategy = (
-	timelineRef: React.MutableRefObject<HTMLElement | null>,
+	timelineBag: TimelineBag,
 	onPanEnd: OnPanEnd,
 ) => void;
 
-export const useWheelStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
+export const useWheelStrategy: UsePanStrategy = (timelineBag, onPanEnd) => {
 	useLayoutEffect(() => {
-		const element = timelineRef.current;
+		const element = timelineBag.timelineRef.current;
 		if (!element) return;
 
 		const pointerWheelHandler = (event: WheelEvent) => {
@@ -34,14 +34,14 @@ export const useWheelStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
 		return () => {
 			element.removeEventListener("wheel", pointerWheelHandler);
 		};
-	}, [onPanEnd, timelineRef]);
+	}, [onPanEnd, timelineBag.timelineRef]);
 };
 
-export const useDragStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
+export const useDragStrategy: UsePanStrategy = (timelineContext, onPanEnd) => {
 	const lastDragX = useRef<number | null>(null);
 
 	useLayoutEffect(() => {
-		const element = timelineRef.current;
+		const element = timelineContext.timelineRef.current;
 		if (!element) return;
 
 		const pointerWheelHandler = (event: WheelEvent) => {
@@ -66,10 +66,10 @@ export const useDragStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
 		return () => {
 			element.removeEventListener("wheel", pointerWheelHandler);
 		};
-	}, [onPanEnd, timelineRef]);
+	}, [onPanEnd, timelineContext.timelineRef]);
 
 	useLayoutEffect(() => {
-		const element = timelineRef.current;
+		const element = timelineContext.timelineRef.current;
 		if (!element) return;
 
 		const pointerdownHandler = (event: MouseEvent) => {
@@ -108,5 +108,5 @@ export const useDragStrategy: UsePanStrategy = (timelineRef, onPanEnd) => {
 			element.removeEventListener("pointermove", pointermoveHandler);
 			element.removeEventListener("pointerleave", pointerupHandler);
 		};
-	}, [onPanEnd, timelineRef]);
+	}, [onPanEnd, timelineContext.timelineRef]);
 };
