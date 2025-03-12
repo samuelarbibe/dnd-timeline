@@ -26,6 +26,9 @@ importers:
       release-it:
         specifier: ^17.0.1
         version: 17.0.1(typescript@5.5.2)
+      scheduler:
+        specifier: ^0.25.0
+        version: 0.25.0
       turbo:
         specifier: ^2.0.6
         version: 2.0.6
@@ -6358,6 +6361,10 @@ packages:
     dependencies:
       loose-envify: 1.4.0
     dev: false
+
+  /scheduler@0.25.0:
+    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
+    dev: true
 
   /semver-diff@4.0.0:
     resolution: {integrity: sha512-0Ju4+6A8iOnpL/Thra7dZsSlOHYAHIeMxfhWQRI1/VLcT3WDBZKKtQt/QkBOsiIN9ZpuvHE6cGZ0x4glCMmfiA==}
