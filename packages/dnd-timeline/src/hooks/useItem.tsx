@@ -193,8 +193,11 @@ export default function useItem(props: UseItemProps) {
 
 			setDragDirection(null);
 
-			draggableProps.node.current.style.width = `${width}px`;
-			draggableProps.node.current.style[sideStart] = `${deltaXStart}px`;
+			
+			if (draggableProps.node.current && draggableProps.node.current.style) {
+				draggableProps.node.current.style.width = `${width}px`;
+				draggableProps.node.current.style[sideStart] = `${deltaXStart}px`;
+			}
 		};
 
 		window.addEventListener("pointerup", pointerupHandler);
