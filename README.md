@@ -6,7 +6,9 @@
 ![npm bundle size](https://img.shields.io/bundlephobia/min/dnd-timeline)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/dnd-timeline)
 
-## If you want to support this project, you can help me and [Buy me a Coffee](https://buymeacoffee.com/samuelarbibe)  
+## Support
+
+If you find this project helpful, consider supporting me on [Buy Me a Coffee](https://www.buymeacoffee.com/samuelarbibe)!
 
 - 🧠 **Headless:** `dnd-timeline` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
 - 🪝 **Hook-based :** exposes simple hooks like `useItem` and `useRow`, that should integrate seamlessly into your existing architecture.
