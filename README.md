@@ -10,6 +10,10 @@
 
 If you find this project helpful, consider supporting me on [Buy Me a Coffee](https://www.buymeacoffee.com/samuelarbibe)!
 
+[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/samuelarbibe)  
+
+---
+
 - 🧠 **Headless:** `dnd-timeline` is a headless-ui library, and contains 0 styling, aside from functional styling (position, z-index, etc.).
 - 🪝 **Hook-based :** exposes simple hooks like `useItem` and `useRow`, that should integrate seamlessly into your existing architecture.
 - 🤺 **Flexible:** very slim and flexible by design. `dnd-timeline` exposes utility functions and positional styling, and you can use them in conjunction with you favorite libraries - styling libraries (MUI, tailwindcss, ant-design, etc.), and functional libraries (react-virtual, framer-motion, etc.)
