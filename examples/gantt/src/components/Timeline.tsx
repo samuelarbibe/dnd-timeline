@@ -1,13 +1,8 @@
 import { useDndContext } from "@dnd-kit/core";
 import type { ItemDefinition, RowDefinition } from "dnd-timeline";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import {
-	Position,
-	type SmoothStepPath,
-	type XYPosition,
-	getSmoothStepPath,
-} from "../utils/path";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Position, getSmoothStepPath } from "../utils/path";
 import Item from "./Item";
 import Row from "./Row";
 import Sidebar from "./Sidebar";
@@ -18,33 +13,18 @@ interface TimelineProps {
 	items: ItemDefinition[];
 }
 
-const getConnectionPoint = (rect: DOMRect, position: Position): XYPosition => {
-	const { x, y, height, width } = rect;
-
-	return {
-		x: x + (position === Position.Right ? width : 0),
-		y: y + height / 2,
-	};
-};
-
 function Timeline(props: TimelineProps) {
-	const { setTimelineRef, style, range, timelineRef } = useTimelineContext();
-	const [pathsData, setPathsData] = useState<SmoothStepPath[]>([]);
+	const { setTimelineRef, style, range } = useTimelineContext();
+	const [paths, setPaths] = useState<string[]>([]);
+
+	const { draggableNodes } = useDndContext();
 
 	const groupedSubrows = useMemo(
 		() => groupItemsToSubrows(props.items, range),
 		[props.items, range],
 	);
 
-	const { draggableNodes } = useDndContext();
-
-	console.log(timelineRef);
-
-	const isLoaded = !!timelineRef.current;
-
-	useEffect(() => {
-		if (!isLoaded) return;
-
+	const connections = useMemo(() => {
 		const items = Object.values(groupedSubrows)
 			.flat(2)
 			.sort((a, b) => (a.id > b.id ? 1 : -1));
@@ -53,40 +33,61 @@ function Timeline(props: TimelineProps) {
 			{ from: items[0].id, to: items[1].id },
 			{ from: items[2].id, to: items[3].id },
 		];
+		return connections;
+	}, [groupedSubrows]);
 
+	const updatePaths = useCallback(() => {
 		const paths = connections.reduce((acc, { from, to }) => {
-			const source = draggableNodes
+			const rect1 = draggableNodes
 				.get(from)
-				?.node.current?.getClientRects()[0];
-			const target = draggableNodes.get(to)?.node.current?.getClientRects()[0];
+				?.node.current?.getBoundingClientRect();
+			const rect2 = draggableNodes
+				.get(to)
+				?.node.current?.getBoundingClientRect();
 
-			if (!source || !target) return acc;
+			if (!rect1 || !rect2) return acc;
 
-			const { x: sourceX, y: sourceY } = getConnectionPoint(
-				source,
-				Position.Right,
-			);
-			const { x: targetX, y: targetY } = getConnectionPoint(
-				target,
-				Position.Left,
-			);
+			const isRef1Left = rect1.left < rect2.left;
+			const leftRect = isRef1Left ? rect1 : rect2;
+			const rightRect = isRef1Left ? rect2 : rect1;
 
-			acc.push(
-				getSmoothStepPath({
-					sourceX,
-					sourceY,
-					sourcePosition: Position.Right,
-					targetX,
-					targetY,
-					targetPosition: Position.Left,
-				}),
-			);
+			const sourceX = leftRect.right;
+			const sourceY = leftRect.top + leftRect.height / 2;
+
+			const targetX = rightRect.left;
+			const targetY = rightRect.top + rightRect.height / 2;
+
+			const [path] = getSmoothStepPath({
+				sourceX,
+				sourceY,
+				sourcePosition: Position.Right,
+				targetX,
+				targetY,
+				targetPosition: Position.Left,
+			});
+
+			acc.push(path);
 
 			return acc;
-		}, [] as SmoothStepPath[]);
+		}, [] as string[]);
 
-		setPathsData(paths);
-	}, [groupedSubrows, draggableNodes, isLoaded]);
+		setPaths(paths);
+	}, [connections, draggableNodes]);
+
+	useEffect(() => {
+		let frameId: number;
+
+		const render = () => {
+			updatePaths();
+			frameId = requestAnimationFrame(render);
+		};
+
+		render();
+
+		return () => {
+			cancelAnimationFrame(frameId);
+		};
+	}, [updatePaths]);
 
 	return (
 		<div ref={setTimelineRef} style={style}>
@@ -106,9 +107,9 @@ function Timeline(props: TimelineProps) {
 			<svg
 				width="100%"
 				height="100%"
-				style={{ position: "absolute", pointerEvents: "none" }}
+				style={{ position: "fixed", top: 0, left: 0, pointerEvents: "none" }}
 			>
-				{pathsData.map(([path]) => (
+				{paths.map((path) => (
 					<path
 						key={path}
 						d={path}
