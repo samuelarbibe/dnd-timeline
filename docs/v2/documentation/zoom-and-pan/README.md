@@ -11,8 +11,13 @@
 
 You can do so by passing you custom pan strategy to the `usePanStrategy` prop on the `TimelineContext`.
 
-{% content-ref url="../timelinecontext/" %}
-[timelinecontext](../timelinecontext/)
+dnd-timeline arrives with 2 existing strategies can use:
+
+1. **`useWheelStrategy`** - This is the default strategy. works as described above.
+2. **`useDragStrategy`  -** Allows moving the timeframe by dragging on the timeline's surface.
+
+{% content-ref url="../timelinecontext/usetimelinecontext.md" %}
+[usetimelinecontext.md](../timelinecontext/usetimelinecontext.md)
 {% endcontent-ref %}
 
 ## Custom Zoom & Pan Strategy
@@ -63,33 +68,36 @@ This will create the effect of zooming in and out of the timeline.
 
 This is an example to the default strategy, `useWheelStrategy`:
 
-<pre class="language-tsx" data-title="src/utils/panStrategies.ts"><code class="lang-tsx">export const useWheelStrategy: UsePanStrategy = (timelineBag, onPanEnd) => {
-  useLayoutEffect(() => {
-    const element = timelineBag.timelineRef?.current
-    if (!element) return
+{% code title="src/utils/panStrategies.ts" fullWidth="true" %}
+```tsx
+export const useWheelStrategy: UsePanStrategy = (timelineBag, onPanEnd) => {
+	useLayoutEffect(() => {
+		const element = timelineBag.timelineRef.current;
+		if (!element) return;
 
-    const wheelHandler = (event: WheelEvent) => {
-      if (!event.ctrlKey &#x26;&#x26; !event.metaKey) return
+		const pointerWheelHandler = (event: WheelEvent) => {
+			if (!event.ctrlKey && !event.metaKey) return;
 
-      event.preventDefault()
+			event.preventDefault();
 
-      const isHorizontal = event.shiftKey
+			const isHorizontal = event.shiftKey;
 
-<strong>      const panEndEvent: PanEndEvent = {
-</strong><strong>        clientX: event.clientX,
-</strong><strong>        clientY: event.clientY,
-</strong><strong>        deltaX: isHorizontal ? event.deltaX || event.deltaY : 0,
-</strong><strong>        deltaY: isHorizontal ? 0 : event.deltaY,
-</strong><strong>      }
-</strong>
-<strong>      onPanEnd(panEndEvent)
-</strong>    }
+			const panEndEvent: PanEndEvent = {
+				clientX: event.clientX,
+				clientY: event.clientY,
+				deltaX: isHorizontal ? event.deltaX || event.deltaY : 0,
+				deltaY: isHorizontal ? 0 : event.deltaY,
+			};
 
-    element.addEventListener('wheel', wheelHandler)
+			onPanEnd(panEndEvent);
+		};
 
-    return () => {
-      element.removeEventListener('wheel', wheelHandler)
-    }
-  }, [onPanEnd, timelineBag.timelineRef])
-}
-</code></pre>
+		element.addEventListener("wheel", pointerWheelHandler, { passive: false });
+
+		return () => {
+			element.removeEventListener("wheel", pointerWheelHandler);
+		};
+	}, [onPanEnd, timelineBag.timelineRef]);
+};
+```
+{% endcode %}
