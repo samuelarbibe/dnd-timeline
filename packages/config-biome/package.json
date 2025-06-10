@@ -1,9 +1,9 @@
 {
-  "name": "@repo/biome-config",
-  "license": "MIT",
-  "version": "0.0.0",
-  "private": true,
-  "exports": {
-    "./biome": "./biome.json"
-  }
+	"name": "@repo/biome-config",
+	"license": "MIT",
+	"version": "0.0.0",
+	"private": true,
+	"exports": {
+		"./biome": "./biome.json"
+	}
 }

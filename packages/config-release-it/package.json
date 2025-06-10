@@ -1,6 +1,6 @@
 {
-  "name": "@repo/release-it-config",
-  "license": "MIT",
-  "version": "0.0.0",
-  "private": true
+	"name": "@repo/release-it-config",
+	"license": "MIT",
+	"version": "0.0.0",
+	"private": true
 }

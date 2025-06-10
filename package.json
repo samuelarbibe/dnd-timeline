@@ -5,7 +5,7 @@
 		"build": "turbo run build",
 		"clean": "turbo run clean",
 		"dev": "turbo run dev --parallel",
-		"lint": "turbo run lint",
+		"lint": "biome check . --write",
 		"test": "turbo run test",
 		"typecheck": "turbo run typecheck",
 		"release": "turbo release --concurrency=1",
@@ -24,8 +24,5 @@
 		"node": ">=18"
 	},
 	"packageManager": "pnpm@10.11.1",
-	"workspaces": [
-		"examples/*",
-		"packages/*"
-	]
+	"workspaces": ["examples/*", "packages/*"]
 }
