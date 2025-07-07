@@ -108,7 +108,7 @@ interface TimelineContextProps {
 
 `dnd-timeline` is based on `dnd-kit`, so all `dnd-kit's` events and event handlers are also supported here, with a little addition:
 
-Every handler is called with extra information regarding its relation to the timeline.&#x20;
+Every handler is called with extra information regarding its relation to the timeline.
 
 For example, the `onDragEnd` event is called with extra data:
 
@@ -131,7 +131,7 @@ Every event contains a helper function that can be used to infer the item's upda
 Do not try to calculate the item's updated span on your own. You should call the `getSpanFromDragEvent` or `getSpanFromResizeEvent` to get the updated span right before using it to update you own state.
 {% endhint %}
 
-#### `onDonDragStart? | onDragEnd? | onDragMove? | onDragCancel?`
+#### `onDragStart? | onDragEnd? | onDragMove? | onDragCancel?`
 
 {% embed url="https://docs.dndkit.com/api-documentation/context-provider#event-handlers" %}
 Click to see dnd-kit's documentation on these event callbacks.
@@ -244,7 +244,7 @@ type GridSizeDefinition = {
 }
 ```
 
-Enables and configures snapping in the timeline.&#x20;
+Enables and configures snapping in the timeline.
 
 If provided with a number, the value will be the snap grid size.
 
