@@ -37,11 +37,11 @@ export const useWheelStrategy: UsePanStrategy = (timelineBag, onPanEnd) => {
 	}, [onPanEnd, timelineBag.timelineRef]);
 };
 
-export const useDragStrategy: UsePanStrategy = (timelineContext, onPanEnd) => {
+export const useDragStrategy: UsePanStrategy = (timelineBag, onPanEnd) => {
 	const lastDragX = useRef<number | null>(null);
 
 	useLayoutEffect(() => {
-		const element = timelineContext.timelineRef.current;
+		const element = timelineBag.timelineRef.current;
 		if (!element) return;
 
 		const pointerWheelHandler = (event: WheelEvent) => {
@@ -66,10 +66,10 @@ export const useDragStrategy: UsePanStrategy = (timelineContext, onPanEnd) => {
 		return () => {
 			element.removeEventListener("wheel", pointerWheelHandler);
 		};
-	}, [onPanEnd, timelineContext.timelineRef]);
+	}, [onPanEnd, timelineBag.timelineRef]);
 
 	useLayoutEffect(() => {
-		const element = timelineContext.timelineRef.current;
+		const element = timelineBag.timelineRef.current;
 		if (!element) return;
 
 		const pointerdownHandler = (event: MouseEvent) => {
@@ -108,5 +108,5 @@ export const useDragStrategy: UsePanStrategy = (timelineContext, onPanEnd) => {
 			element.removeEventListener("pointermove", pointermoveHandler);
 			element.removeEventListener("pointerleave", pointerupHandler);
 		};
-	}, [onPanEnd, timelineContext.timelineRef]);
+	}, [onPanEnd, timelineBag.timelineRef]);
 };
