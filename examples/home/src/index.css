@@ -1,11 +1,13 @@
-html, body, #root {
-  height: 100vh;
-  padding: 0;
-  margin: 0;
+html,
+body,
+#root {
+	height: 100vh;
+	padding: 0;
+	margin: 0;
 }
 
 .radix-themes {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
