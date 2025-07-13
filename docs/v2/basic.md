@@ -63,3 +63,11 @@ This example adds the ability to create a new item by dragging it on a row. Simp
 
 {% embed url="https://dnd-timeline-create.vercel.app" %}
 
+## Multi Select
+
+In dnd-kit, multi-select is not officially supported, an reuires work-arounds.\
+This example implements a simple workaround, that allows selecting items by clicking them, and them dragging all of them at once. \
+\
+In this example, all items are moved relative to their initial position.
+
+{% embed url="https://dnd-timeline-multi.vercel.app" %}
