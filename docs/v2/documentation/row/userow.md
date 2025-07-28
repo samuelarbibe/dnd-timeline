@@ -35,32 +35,30 @@ data?: object
 Custom data that can be passed to the row.
 
 > 🧠 This can be passed to rows to identify their type. This type can later be used in the event callbacks to apply different behaviors to different row types.
->
-> {% code title="Row.tsx" %}
-> ```tsx
-> useRow({
->   id: props.id,
->   data: { type: 'timeline-row' },
-> })
-> ```
-> {% endcode %}
->
-> {% code title="Timeline.tsx" %}
-> ```tsx
-> const onDragEnd = (event: DragEndEvent) => {
->   const updatedSpan =
->     event.active.data.current.getSpanFromDragEvent?.(event)
->
->   const rowType = event.active.data.current.type
->   
->   if (rowType === 'timeline-row') {
->     // update item with id activeItemId with the updatedSpan, or the updated row using overedId
->   }
-> }
-> ```
-> {% endcode %}
 
+{% code title="Row.tsx" %}
+```tsx
+useRow({
+  id: props.id,
+  data: { type: 'timeline-row' },
+})
+```
+{% endcode %}
 
+{% code title="Timeline.tsx" %}
+```tsx
+const onDragEnd = (event: DragEndEvent) => {
+  const updatedRelevance =
+    event.active.data.current.getRelevanceFromDragEvent?.(event)
+
+  const rowType = event.active.data.current.type
+  
+  if (rowType === 'timeline-row') {
+    // update item with id activeItemId with the updatedRelevance, or the updated row using overedId
+  }
+}
+```
+{% endcode %}
 
 ### API
 

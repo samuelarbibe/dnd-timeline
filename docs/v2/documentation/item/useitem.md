@@ -45,35 +45,35 @@ data?: object
 Custom data that can be passed to the row.
 
 > 🧠 This can be passed to rows to identify their type. This type can later be used in the event callbacks to apply different behaviors to different row types.
->
-> {% code title="Item.tsx" %}
-> ```tsx
-> useItem({
->   id: props.id,
->   span: props.span,
->   data: { type: 'timeline-item' },
-> })
-> ```
-> {% endcode %}
->
-> {% code title="Timeline.tsx" %}
-> ```tsx
-> const onDragEnd = (event: DragEndEvent) => {
->   const updatedSpan =
->     event.active.data.current.getSpanFromDragEvent?.(event)
->
->   const rowType = event.active.data.current.type
->   
->   if (rowType === 'timeline-row' && itemType === 'timeline-item') {
->     // update
->   }
->     
->   if (rowType === 'timeline-disabled-row' && itemType === 'timeline-item') {
->     // don't update, and pop an error message
->   }
-> }
-> ```
-> {% endcode %}
+
+{% code title="Item.tsx" %}
+```tsx
+useItem({
+  id: props.id,
+  span: props.span,
+  data: { type: 'timeline-item' },
+})
+```
+{% endcode %}
+
+{% code title="Timeline.tsx" %}
+```tsx
+const onDragEnd = (event: DragEndEvent) => {
+  const updatedSpan =
+    event.active.data.current.getSpanFromDragEvent?.(event)
+
+  const rowType = event.active.data.current.type
+  
+  if (rowType === 'timeline-row' && itemType === 'timeline-item') {
+    // update
+  }
+    
+  if (rowType === 'timeline-disabled-row' && itemType === 'timeline-item') {
+    // don't update, and pop an error message
+  }
+}
+```
+{% endcode %}
 
 ### Events
 
