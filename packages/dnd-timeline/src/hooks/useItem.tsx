@@ -46,11 +46,13 @@ export default function useItem(props: UseItemProps) {
 		onResizeMove,
 		onResizeStart,
 		direction,
-		resizeHandleWidth,
+		resizeHandleWidth: contextResizeHandleWidth,
 		valueToPixels,
 		getSpanFromDragEvent,
 		getSpanFromResizeEvent,
 	} = useTimelineContext();
+
+	const resizeHandleWidth = props.resizeHandleWidth ?? contextResizeHandleWidth;
 
 	const propsOnResizeEnd = props.onResizeEnd;
 	const propsOnResizeStart = props.onResizeStart;
