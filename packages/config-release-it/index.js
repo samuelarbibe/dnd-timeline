@@ -20,10 +20,10 @@ module.exports = {
 		commitMessage: `feat: released version v${version} [no ci]`,
 		requireCommits: true,
 		requireCommitsFail: false,
-		requireCleanWorkingDir: false,
+		requireCleanWorkingDir: true,
 	},
 	npm: {
-		publish: false,
+		publish: true,
 		versionArgs: ["--workspaces false"],
 	},
 	github: {
