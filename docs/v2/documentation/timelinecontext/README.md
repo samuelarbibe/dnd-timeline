@@ -295,3 +295,16 @@ The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoo
 {% content-ref url="../zoom-and-pan/" %}
 [zoom-and-pan](../zoom-and-pan/)
 {% endcontent-ref %}
+
+#### `resizeHandleWidth?` <a href="#resizehandlewidth" id="resizehandlewidth"></a>
+
+```tsx
+resizeHandleWidth?: number = 20
+```
+
+The resize handle width, in pixels. Choosing a larger or a smaller `handleWidth` will change the resize action's sensitivity.\
+Can be overwritten per item, using the same prop on `useItem`.
+
+{% hint style="info" %}
+**If set to `0`, resizing will be disabled.**
+{% endhint %}

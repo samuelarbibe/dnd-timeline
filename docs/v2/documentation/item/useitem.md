@@ -75,6 +75,22 @@ const onDragEnd = (event: DragEndEvent) => {
 ```
 {% endcode %}
 
+#### `resizeHandleWidth?`
+
+```tsx
+resizeHandleWidth?: number
+```
+
+An optional resize handler width, in pixels.
+
+defaults to the [`resizeHandleWidth`](../timelinecontext/#resizehandlewidth) provided to the context.&#x20;
+
+Choosing a larger or a smaller `handleWidth` will change the resize action's sensitivity.
+
+{% hint style="info" %}
+**If set to `0`, resizing will be disabled for the item.**
+{% endhint %}
+
 ### Events
 
 useItem can also receive callbacks, that will be called when the relevant event is triggered.
