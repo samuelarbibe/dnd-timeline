@@ -1,5 +1,12 @@
 
 
+## [2.2.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.1.2...dnd-timeline@2.2.0) (2025-07-30)
+
+
+### Features
+
+* add resizeHandleWidth prop to item ([b27616c](https://github.com/samuelarbibe/dnd-timeline/commit/b27616c836bebc04d6056becb6b634df27fb28a5))
+
 ## [2.1.2](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.1.1...dnd-timeline@2.1.2) (2025-03-06)
 
 
