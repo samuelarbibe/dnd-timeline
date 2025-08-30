@@ -8,8 +8,8 @@ import type {
 } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import { useAtom, useSetAtom } from "jotai";
-import { useCallback, useState } from "react";
 import type { PropsWithChildren } from "react";
+import { useCallback, useState } from "react";
 
 import ItemContent from "@/components/ui/item-content";
 import { activeAtom, itemsAtom } from "@/store";

@@ -1,7 +1,6 @@
-import React, { useMemo, memo } from "react";
-
 import { minutesToMilliseconds } from "date-fns";
 import { useTimelineContext } from "dnd-timeline";
+import { memo, useMemo } from "react";
 
 interface Marker {
 	label?: string;

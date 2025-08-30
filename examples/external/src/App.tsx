@@ -2,14 +2,14 @@ import "./index.css";
 import { endOfDay, startOfDay } from "date-fns";
 import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import ExternalList from "./ExternalList";
 import Timeline from "./Timeline";
 import {
-	ItemType,
 	generateExternalItems,
 	generateItems,
 	generateRows,
+	ItemType,
 } from "./utils";
 
 const DEFAULT_RANGE: Range = {

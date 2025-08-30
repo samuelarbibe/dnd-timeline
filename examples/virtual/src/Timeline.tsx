@@ -1,7 +1,7 @@
 import type { Active } from "@dnd-kit/core";
 import {
-	type Range,
 	defaultRangeExtractor,
+	type Range,
 	useVirtualizer,
 } from "@tanstack/react-virtual";
 import type { ItemDefinition, RowDefinition } from "dnd-timeline";

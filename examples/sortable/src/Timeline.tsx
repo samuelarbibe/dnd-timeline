@@ -4,7 +4,7 @@ import {
 } from "@dnd-kit/sortable";
 import type { ItemDefinition, RowDefinition } from "dnd-timeline";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import Item from "./Item";
 import Row from "./Row";
 import Sidebar from "./Sidebar";

@@ -1,5 +1,5 @@
 import { minutesToMilliseconds } from "date-fns";
-import type { ItemDefinition, Range, RowDefinition, Span } from "dnd-timeline";
+import type { ItemDefinition, Range, Span } from "dnd-timeline";
 import { nanoid } from "nanoid";
 import type { GroupedRowDefinition } from "./App";
 

@@ -1,18 +1,17 @@
-import { useAutoscroll } from "@/hooks/useAutoscroll";
-import { generateItems } from "@/lib/utils";
-import { activeAtom, itemsAtom, rowsAtom } from "@/store";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import {
-	type Range,
 	defaultRangeExtractor,
+	type Range,
 	useVirtualizer,
 } from "@tanstack/react-virtual";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
 import { useAtom, useAtomValue } from "jotai";
 import { memo, useCallback, useMemo } from "react";
-
-import { InlineCode } from "../ui/Inline-code";
+import { useAutoscroll } from "@/hooks/useAutoscroll";
+import { generateItems } from "@/lib/utils";
+import { activeAtom, itemsAtom, rowsAtom } from "@/store";
 import { Button } from "../ui/button";
+import { InlineCode } from "../ui/Inline-code";
 import Item from "./item";
 import Row from "./row";
 import Sidebar from "./sidebar";

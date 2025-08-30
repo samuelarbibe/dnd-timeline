@@ -1,6 +1,6 @@
 import { ExternalLinkIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Heading, Link, Text } from "@radix-ui/themes";
-
+import { useId } from "react";
 import BackgroundImage from "./components/BackgroundImage";
 import Timeline from "./components/timeline/Timeline";
 import TimelineWrapper from "./components/timeline/TimelineWrapper";
@@ -23,7 +23,7 @@ function App() {
 					position="absolute"
 					style={{ overflow: "hidden", zIndex: -999 }}
 				>
-					<BackgroundImage id="music" />
+					<BackgroundImage id={useId()} />
 				</Flex>
 				<Flex align="center" direction="column" justify="center">
 					<Flex direction="column" gap="2" justify="start">

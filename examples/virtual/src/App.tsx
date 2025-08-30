@@ -1,5 +1,5 @@
 import "./index.css";
-import { type Active, DragOverlay, MeasuringStrategy } from "@dnd-kit/core";
+import { type Active, DragOverlay } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
 import type {
 	DragEndEvent,

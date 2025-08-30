@@ -1,13 +1,13 @@
 import { format, hoursToMilliseconds, minutesToMilliseconds } from "date-fns";
 import type { ItemDefinition, RowDefinition } from "dnd-timeline";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import Item from "./Item";
 import Row from "./Row";
 import Sidebar from "./Sidebar";
 import Subrow from "./Subrow";
-import TimeAxis from "./TimeAxis";
 import type { MarkerDefinition } from "./TimeAxis";
+import TimeAxis from "./TimeAxis";
 import TimeCursor from "./TimeCursor";
 
 const timeAxisMarkers: MarkerDefinition[] = [

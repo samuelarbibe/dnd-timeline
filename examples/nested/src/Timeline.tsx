@@ -1,6 +1,6 @@
-import type { ItemDefinition, RowDefinition } from "dnd-timeline";
+import type { ItemDefinition } from "dnd-timeline";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { GroupedRowDefinition } from "./App";
 import Group from "./Group";
 import Item from "./Item";

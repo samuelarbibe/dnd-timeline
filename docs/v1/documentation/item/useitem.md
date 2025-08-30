@@ -63,11 +63,11 @@ Custom data that can be passed to the row.
 >     event.active.data.current.getRelevanceFromDragEvent?.(event)
 >
 >   const rowType = event.active.data.current.type
->   
+>
 >   if (rowType === 'timeline-row' && itemType === 'timeline-item') {
 >     // update
 >   }
->     
+>
 >   if (rowType === 'timeline-disabled-row' && itemType === 'timeline-item') {
 >     // don't update, and pop an error message
 >   }

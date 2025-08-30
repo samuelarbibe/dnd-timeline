@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import {
 	ExternalLinkIcon,
 	GitHubLogoIcon,
 	RotateCounterClockwiseIcon,
 } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 
 import Timeline from "./components/timeline/timeline";
 import TimelineWrapper from "./components/timeline/timeline-wrapper";

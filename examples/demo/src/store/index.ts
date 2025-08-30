@@ -1,8 +1,8 @@
-import { generateItems, generateRows } from "@/lib/utils";
 import type { Active } from "@dnd-kit/core";
 import { endOfDay, startOfDay } from "date-fns";
 import type { ItemDefinition, Range, RowDefinition } from "dnd-timeline";
 import { atom } from "jotai";
+import { generateItems, generateRows } from "@/lib/utils";
 
 const DEFAULT_RANGE: Range = {
 	start: startOfDay(new Date()).getTime(),

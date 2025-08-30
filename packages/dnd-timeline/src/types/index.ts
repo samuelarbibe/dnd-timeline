@@ -1,8 +1,8 @@
+export * from "./drag";
 export * from "./item";
+export * from "./resize";
 export * from "./row";
 export * from "./timeline";
-export * from "./resize";
-export * from "./drag";
 
 export interface Range {
 	start: number;

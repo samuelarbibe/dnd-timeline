@@ -172,11 +172,13 @@ export default function useItem(props: UseItemProps) {
 			if (dragDirection === "start") {
 				const currentSideDelta = Number.parseInt(
 					draggableProps.node.current.style[sideStart].slice(0, -2),
+					10,
 				);
 				dragDeltaX = currentSideDelta - deltaXStart;
 			} else {
 				const currentWidth = Number.parseInt(
 					draggableProps.node.current.style.width.slice(0, -2),
+					10,
 				);
 				dragDeltaX = currentWidth - width;
 			}

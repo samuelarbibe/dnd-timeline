@@ -1,12 +1,13 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.8.0/schema.json",
+	"root": false,
+	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
 	"files": {
-		"ignore": ["dist/**"]
-	},
-	"organizeImports": {
-		"enabled": true
+		"includes": ["**", "!dist", "!node_modules", "!**/*.css"]
 	},
 	"formatter": {
+		"enabled": true
+	},
+	"assist": {
 		"enabled": true
 	},
 	"linter": {
@@ -14,7 +15,8 @@
 		"rules": {
 			"recommended": true,
 			"a11y": {
-				"noSvgWithoutTitle": "off"
+				"noSvgWithoutTitle": "off",
+				"noStaticElementInteractions": "off"
 			},
 			"style": {
 				"noUselessElse": "off"

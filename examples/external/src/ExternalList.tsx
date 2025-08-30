@@ -1,5 +1,5 @@
-import ExternalItem from "./ExternalItem";
 import type { ExternalItemDefinition } from "./ExternalItem";
+import ExternalItem from "./ExternalItem";
 
 interface ExternaListProps {
 	items: ExternalItemDefinition[];

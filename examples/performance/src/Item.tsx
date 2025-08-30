@@ -1,7 +1,7 @@
-import { useItem } from "dnd-timeline";
 import type { Span } from "dnd-timeline";
-import type { CSSProperties } from "react";
+import { useItem } from "dnd-timeline";
 import type React from "react";
+import type { CSSProperties } from "react";
 
 interface ItemProps {
 	id: string;

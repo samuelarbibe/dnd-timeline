@@ -1,6 +1,5 @@
-import React, { memo, useRef, useLayoutEffect } from "react";
-
 import { useTimelineContext } from "dnd-timeline";
+import { memo, useLayoutEffect, useRef } from "react";
 
 interface TimeCursorProps {
 	interval?: number;
@@ -14,15 +13,14 @@ function TimeCursor(props: TimeCursorProps) {
 
 	const side = direction === "rtl" ? "right" : "left";
 
-	const isVisible =
-		new Date().getTime() > range.start && new Date().getTime() < range.end;
+	const isVisible = Date.now() > range.start && Date.now() < range.end;
 
 	useLayoutEffect(() => {
 		if (!isVisible) return;
 
 		const offsetCursor = () => {
 			if (!timeCursorRef.current) return;
-			const timeDelta = new Date().getTime() - range.start;
+			const timeDelta = Date.now() - range.start;
 			const timeDeltaInPixels = valueToPixels(timeDelta);
 
 			const sideDelta = sidebarWidth + timeDeltaInPixels;

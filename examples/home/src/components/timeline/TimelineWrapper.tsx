@@ -3,7 +3,7 @@ import type { DragEndEvent, Range, ResizeEndEvent } from "dnd-timeline";
 import { TimelineContext } from "dnd-timeline";
 import { useSetAtom } from "jotai";
 import type { PropsWithChildren } from "react";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { itemsAtom } from "../../store";
 
 const DEFAULT_RANGE: Range = {

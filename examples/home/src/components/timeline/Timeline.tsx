@@ -2,7 +2,7 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button, Card, Flex, Inset, Kbd, Text } from "@radix-ui/themes";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
 import { useAtom, useAtomValue } from "jotai";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { itemsAtom, rowsAtom } from "../../store";
 import { generateItems } from "../../utils";
 import Item from "./Item";

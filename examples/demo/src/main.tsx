@@ -1,8 +1,8 @@
 import "./global.css";
-import { ThemeProvider } from "@/components/theme-provider";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { ThemeProvider } from "@/components/theme-provider";
 import App from "./app";
 
 const el = document.getElementById("root");
