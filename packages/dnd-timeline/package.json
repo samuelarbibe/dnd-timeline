@@ -19,7 +19,7 @@
 		"dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check --write",
-		"release": "release-it --ci"
+		"release": "release-it"
 	},
 	"devDependencies": {
 		"@repo/biome-config": "workspace:*",

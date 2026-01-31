@@ -1,9 +1,12 @@
 {
 	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
 	"tasks": {
 		"release": {
 			"dependsOn": ["^release", "^lint", "^typecheck"],
-			"outputLogs": "new-only"
+			"outputLogs": "new-only",
+			"interactive": true,
+			"cache": false
 		},
 		"build": {
 			"dependsOn": ["^build"]
