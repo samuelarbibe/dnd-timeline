@@ -1,5 +1,12 @@
 
 
+## [2.3.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.2.0...dnd-timeline@2.3.0) (2026-01-31)
+
+
+### Features
+
+* add useTimelineMonitor hook and support for resize listeners ([b342fb7](https://github.com/samuelarbibe/dnd-timeline/commit/b342fb7f752d257a1a6b56a345ad2f7f0afbd794))
+
 ## [2.2.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.1.2...dnd-timeline@2.2.0) (2025-07-30)
 
 
