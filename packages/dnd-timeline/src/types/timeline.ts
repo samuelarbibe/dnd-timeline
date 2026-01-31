@@ -59,6 +59,16 @@ export interface TimelineBag {
 	getDeltaXFromScreenX: GetDeltaXFromScreenX;
 	getSpanFromDragEvent: GetSpanFromDragEvent;
 	getSpanFromResizeEvent: GetSpanFromResizeEvent;
+	addResizeListener: <K extends keyof ResizeEvents>(
+		event: K,
+		callback: ResizeEvents[K],
+	) => () => void;
+}
+
+export interface ResizeEvents {
+	resizeStart: OnResizeStart;
+	resizeMove: OnResizeMove;
+	resizeEnd: OnResizeEnd;
 }
 
 export type OnRangeChanged = (updateFunction: (prev: Range) => Range) => void;
