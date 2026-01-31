@@ -36,6 +36,7 @@ const getDragDirection = (
 
 export default function useItem(props: UseItemProps) {
 	const dataRef = useRef<ItemData>({} as ItemData);
+	const dragDeltaXRef = useRef<number>(0);
 	const dragStartX = useRef<number>();
 	const [dragDirection, setDragDirection] = useState<DragDirection | null>();
 
@@ -117,25 +118,26 @@ export default function useItem(props: UseItemProps) {
 		const pointermoveHandler = (event: globalThis.PointerEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
-			const dragDeltaX =
+			dragDeltaXRef.current =
 				(event.clientX - dragStartX.current) * (direction === "rtl" ? -1 : 1);
 
 			if (dragDirection === "start") {
-				const newSideDelta = deltaXStart + dragDeltaX;
-				draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
-
+				const newSideDelta = deltaXStart + dragDeltaXRef.current;
 				const newWidth = width + deltaXStart - newSideDelta;
+
+				draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
 				draggableProps.node.current.style.width = `${newWidth}px`;
 			} else {
-				const otherSideDelta = deltaXStart + width + dragDeltaX;
+				const otherSideDelta = deltaXStart + width + dragDeltaXRef.current;
 				const newWidth = otherSideDelta - deltaXStart;
+
 				draggableProps.node.current.style.width = `${newWidth}px`;
 			}
 
 			onResizeMoveCallback({
 				activatorEvent: event,
 				delta: {
-					x: dragDeltaX,
+					x: dragDeltaXRef.current,
 				},
 				direction: dragDirection,
 				active: {
@@ -167,26 +169,10 @@ export default function useItem(props: UseItemProps) {
 		const pointerupHandler = (event: globalThis.PointerEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
-			let dragDeltaX = 0;
-
-			if (dragDirection === "start") {
-				const currentSideDelta = Number.parseInt(
-					draggableProps.node.current.style[sideStart].slice(0, -2),
-					10,
-				);
-				dragDeltaX = currentSideDelta - deltaXStart;
-			} else {
-				const currentWidth = Number.parseInt(
-					draggableProps.node.current.style.width.slice(0, -2),
-					10,
-				);
-				dragDeltaX = currentWidth - width;
-			}
-
 			onResizeEndCallback({
 				activatorEvent: event,
 				delta: {
-					x: dragDeltaX,
+					x: dragDeltaXRef.current,
 				},
 				direction: dragDirection,
 				active: {
@@ -196,6 +182,7 @@ export default function useItem(props: UseItemProps) {
 			});
 
 			setDragDirection(null);
+			dragDeltaXRef.current = 0;
 
 			draggableProps.node.current.style.width = `${width}px`;
 			draggableProps.node.current.style[sideStart] = `${deltaXStart}px`;

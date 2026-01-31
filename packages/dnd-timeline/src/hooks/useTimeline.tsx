@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import type {
 	GetDeltaXFromScreenX,
@@ -7,8 +7,12 @@ import type {
 	GetSpanFromResizeEvent,
 	GetValueFromScreenX,
 	OnPanEnd,
+	OnResizeEnd,
+	OnResizeMove,
+	OnResizeStart,
 	PixelsToValue,
 	Range,
+	ResizeEvents,
 	TimelineBag,
 	UseTimelineProps,
 	ValueToPixels,
@@ -39,6 +43,58 @@ export default function useTimeline({
 }: UseTimelineProps): TimelineBag {
 	const rangeStart = range.start;
 	const rangeEnd = range.end;
+
+	const resizeListeners = useRef<{
+		resizeStart: Set<OnResizeStart>;
+		resizeMove: Set<OnResizeMove>;
+		resizeEnd: Set<OnResizeEnd>;
+	}>({
+		resizeStart: new Set(),
+		resizeMove: new Set(),
+		resizeEnd: new Set(),
+	});
+
+	const addResizeListener = useCallback(
+		<K extends keyof ResizeEvents>(event: K, callback: ResizeEvents[K]) => {
+			const listeners = resizeListeners.current[event] as Set<ResizeEvents[K]>;
+			listeners.add(callback);
+
+			return () => {
+				listeners.delete(callback);
+			};
+		},
+		[],
+	);
+
+	const handleResizeStart = useCallback<OnResizeStart>(
+		(event) => {
+			onResizeStart?.(event);
+			resizeListeners.current.resizeStart.forEach((listener) => {
+				listener(event);
+			});
+		},
+		[onResizeStart],
+	);
+
+	const handleResizeMove = useCallback<OnResizeMove>(
+		(event) => {
+			onResizeMove?.(event);
+			resizeListeners.current.resizeMove.forEach((listener) => {
+				listener(event);
+			});
+		},
+		[onResizeMove],
+	);
+
+	const handleResizeEnd = useCallback<OnResizeEnd>(
+		(event) => {
+			onResizeEnd?.(event);
+			resizeListeners.current.resizeEnd.forEach((listener) => {
+				listener(event);
+			});
+		},
+		[onResizeEnd],
+	);
 
 	const {
 		ref: timelineRef,
@@ -248,9 +304,10 @@ export default function useTimeline({
 			range,
 			overlayed,
 			onPanEnd,
-			onResizeEnd,
-			onResizeMove,
-			onResizeStart,
+			onResizeEnd: handleResizeEnd,
+			onResizeMove: handleResizeMove,
+			onResizeStart: handleResizeStart,
+			addResizeListener,
 			sidebarRef,
 			setSidebarRef,
 			sidebarWidth,
@@ -270,9 +327,10 @@ export default function useTimeline({
 			range,
 			overlayed,
 			onPanEnd,
-			onResizeEnd,
-			onResizeMove,
-			onResizeStart,
+			handleResizeEnd,
+			handleResizeMove,
+			handleResizeStart,
+			addResizeListener,
 			sidebarRef,
 			setSidebarRef,
 			sidebarWidth,
