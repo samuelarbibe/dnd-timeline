@@ -29,7 +29,7 @@ function Item(props: ItemProps) {
 			style={itemStyle}
 			{...listeners}
 			{...attributes}
-			onPointerUp={() => {
+			onClickCapture={() => {
 				props.onClick(node as React.MutableRefObject<HTMLElement>);
 			}}
 		>
