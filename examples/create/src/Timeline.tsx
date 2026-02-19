@@ -1,4 +1,9 @@
-import type { ItemDefinition, RowDefinition, Span } from "dnd-timeline";
+import type {
+	DragDirection,
+	ItemDefinition,
+	RowDefinition,
+	Span,
+} from "dnd-timeline";
 import { groupItemsToSubrows, useTimelineContext } from "dnd-timeline";
 import { useMemo } from "react";
 import Item from "./Item";
@@ -10,6 +15,7 @@ interface TimelineProps {
 	rows: RowDefinition[];
 	items: ItemDefinition[];
 	onCreateItem: (span: Span, rowId: string) => void;
+	normalizeCreateSpan: (span: Span, direction: DragDirection) => Span | null;
 }
 
 function Timeline(props: TimelineProps) {
@@ -28,6 +34,7 @@ function Timeline(props: TimelineProps) {
 					key={row.id}
 					sidebar={<Sidebar row={row} />}
 					onCreateItem={props.onCreateItem}
+					normalizeCreateSpan={props.normalizeCreateSpan}
 				>
 					{groupedSubrows[row.id]?.map((subrow, index) => (
 						<Subrow key={`${row.id}-${index}`}>

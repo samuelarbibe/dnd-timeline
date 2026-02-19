@@ -1,4 +1,4 @@
-import type { RowDefinition, Span } from "dnd-timeline";
+import type { DragDirection, RowDefinition, Span } from "dnd-timeline";
 import { useRow } from "dnd-timeline";
 import type React from "react";
 import { type PointerEvent, useCallback, useState } from "react";
@@ -8,6 +8,7 @@ interface RowProps extends RowDefinition {
 	children: React.ReactNode;
 	sidebar: React.ReactNode;
 	onCreateItem: (span: Span, rowId: string) => void;
+	normalizeCreateSpan: (span: Span, direction: DragDirection) => Span | null;
 }
 
 function Row(props: RowProps) {
@@ -45,7 +46,11 @@ function Row(props: RowProps) {
 			>
 				{props.children}
 				{dragStartX && (
-					<CreateItem startX={dragStartX} onCreateEnd={handleOnCreateEnd} />
+					<CreateItem
+						startX={dragStartX}
+						onCreateEnd={handleOnCreateEnd}
+						normalizeSpan={props.normalizeCreateSpan}
+					/>
 				)}
 			</div>
 		</div>

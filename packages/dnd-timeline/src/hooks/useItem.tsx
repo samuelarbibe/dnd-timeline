@@ -54,6 +54,7 @@ export default function useItem(props: UseItemProps) {
 	} = useTimelineContext();
 
 	const resizeHandleWidth = props.resizeHandleWidth ?? contextResizeHandleWidth;
+	const useSpanResizeAnimation = props.useSpanResizeAnimation ?? false;
 
 	const propsOnResizeEnd = props.onResizeEnd;
 	const propsOnResizeStart = props.onResizeStart;
@@ -121,20 +122,7 @@ export default function useItem(props: UseItemProps) {
 			dragDeltaXRef.current =
 				(event.clientX - dragStartX.current) * (direction === "rtl" ? -1 : 1);
 
-			if (dragDirection === "start") {
-				const newSideDelta = deltaXStart + dragDeltaXRef.current;
-				const newWidth = width + deltaXStart - newSideDelta;
-
-				draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
-				draggableProps.node.current.style.width = `${newWidth}px`;
-			} else {
-				const otherSideDelta = deltaXStart + width + dragDeltaXRef.current;
-				const newWidth = otherSideDelta - deltaXStart;
-
-				draggableProps.node.current.style.width = `${newWidth}px`;
-			}
-
-			onResizeMoveCallback({
+			const resizeMoveEvent: ResizeMoveEvent = {
 				activatorEvent: event,
 				delta: {
 					x: dragDeltaXRef.current,
@@ -144,7 +132,36 @@ export default function useItem(props: UseItemProps) {
 					id: props.id,
 					data: dataRef,
 				},
-			});
+			};
+
+			if (useSpanResizeAnimation) {
+				const newSpan = getSpanFromResizeEvent(resizeMoveEvent);
+
+				if (newSpan) {
+					const newWidth = valueToPixels(newSpan.end - newSpan.start);
+					draggableProps.node.current.style.width = `${newWidth}px`;
+
+					if (dragDirection === "start") {
+						const newSideDelta = valueToPixels(newSpan.start - range.start);
+						draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
+					}
+				}
+			} else {
+				if (dragDirection === "start") {
+					const newSideDelta = deltaXStart + dragDeltaXRef.current;
+					const newWidth = width + deltaXStart - newSideDelta;
+
+					draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
+					draggableProps.node.current.style.width = `${newWidth}px`;
+				} else {
+					const otherSideDelta = deltaXStart + width + dragDeltaXRef.current;
+					const newWidth = otherSideDelta - deltaXStart;
+
+					draggableProps.node.current.style.width = `${newWidth}px`;
+				}
+			}
+
+			onResizeMoveCallback(resizeMoveEvent);
 		};
 
 		window.addEventListener("pointermove", pointermoveHandler);
@@ -156,7 +173,11 @@ export default function useItem(props: UseItemProps) {
 		sideStart,
 		width,
 		deltaXStart,
+		range,
 		props.id,
+		valueToPixels,
+		useSpanResizeAnimation,
+		getSpanFromResizeEvent,
 		dragDirection,
 		direction,
 		draggableProps.node,
@@ -183,6 +204,7 @@ export default function useItem(props: UseItemProps) {
 
 			setDragDirection(null);
 			dragDeltaXRef.current = 0;
+			dragStartX.current = undefined;
 
 			draggableProps.node.current.style.width = `${width}px`;
 			draggableProps.node.current.style[sideStart] = `${deltaXStart}px`;

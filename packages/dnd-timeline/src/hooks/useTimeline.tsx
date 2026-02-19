@@ -40,6 +40,8 @@ export default function useTimeline({
 	rangeGridSizeDefinition,
 	usePanStrategy = useWheelStrategy,
 	resizeHandleWidth = DEFAULT_RESIZE_HANDLE_WIDTH,
+	getSpanFromDragEventStrategy,
+	getSpanFromResizeEventStrategy,
 }: UseTimelineProps): TimelineBag {
 	const rangeStart = range.start;
 	const rangeEnd = range.end;
@@ -207,7 +209,7 @@ export default function useTimeline({
 		[range, getValueFromScreenXInternal],
 	);
 
-	const getSpanFromDragEvent = useCallback<GetSpanFromDragEvent>(
+	const defaultGetSpanFromDragEvent = useCallback<GetSpanFromDragEvent>(
 		(event) => {
 			const side = direction === "rtl" ? "right" : "left";
 			const itemX = event.active.rect.current.translated?.[side] || 0;
@@ -236,7 +238,15 @@ export default function useTimeline({
 		[getValueFromScreenX, snapValueToRangeGrid, direction],
 	);
 
-	const getSpanFromResizeEvent = useCallback<GetSpanFromResizeEvent>(
+	const getSpanFromDragEvent = useCallback<GetSpanFromDragEvent>(
+		(event) =>
+			getSpanFromDragEventStrategy
+				? getSpanFromDragEventStrategy(event, defaultGetSpanFromDragEvent)
+				: defaultGetSpanFromDragEvent(event),
+		[getSpanFromDragEventStrategy, defaultGetSpanFromDragEvent],
+	);
+
+	const defaultGetSpanFromResizeEvent = useCallback<GetSpanFromResizeEvent>(
 		(event) => {
 			if (event.active.data.current?.span) {
 				const prevSpan = event.active.data.current.span;
@@ -256,6 +266,14 @@ export default function useTimeline({
 			return null;
 		},
 		[pixelsToValue, snapValueToRangeGrid],
+	);
+
+	const getSpanFromResizeEvent = useCallback<GetSpanFromResizeEvent>(
+		(event) =>
+			getSpanFromResizeEventStrategy
+				? getSpanFromResizeEventStrategy(event, defaultGetSpanFromResizeEvent)
+				: defaultGetSpanFromResizeEvent(event),
+		[getSpanFromResizeEventStrategy, defaultGetSpanFromResizeEvent],
 	);
 
 	const onPanEnd = useCallback<OnPanEnd>(

@@ -23,6 +23,7 @@ export interface UseItemProps
 	extends Pick<ItemDefinition, "id" | "span" | "disabled"> {
 	data?: object;
 	resizeHandleWidth?: number;
+	useSpanResizeAnimation?: boolean;
 	onResizeEnd?: (event: ResizeEndEvent) => void;
 	onResizeMove?: (event: ResizeMoveEvent) => void;
 	onResizeStart?: (event: ResizeStartEvent) => void;
