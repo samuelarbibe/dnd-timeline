@@ -106,7 +106,7 @@ interface TimelineContextProps {
   usePanStrategy?: UsePanStrategy;
   onRangeChanged: OnRangeChanged;
   rangeGridSizeDefinition?: number | GridSizeDefinition[];
-  sidebarWidth: number;
+  sidebarWidth?: number;
   // ...DndContext Props
 }
 ```
@@ -301,13 +301,17 @@ The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoo
 [zoom-and-pan](../zoom-and-pan/)
 {% endcontent-ref %}
 
-#### `sidebarWidth`
+#### `sidebarWidth?`
 
 ```tsx
-sidebarWidth: number;
+sidebarWidth?: number
 ```
 
-The sidebar width in pixels. The timeline uses this value directly to calculate item positions and to set the `width` style on `rowSidebarStyle` returned from `useRow`.
+The sidebar width in pixels. When provided, the timeline uses this value directly instead of measuring the sidebar element on every row via a ref.
+
+Prefer this over attaching `setSidebarRef` to sidebar elements, as the ref-based approach causes excessive re-renders.
+
+When `sidebarWidth` is set, `rowSidebarStyle` returned from `useRow` will automatically include a matching `width` style, so you do not need to set the width on the sidebar element yourself.
 
 ```tsx
 <TimelineContext

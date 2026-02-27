@@ -92,4 +92,16 @@ Basic styles that must be applied to the row element.
 rowSidebarStyle: CSSProperties;
 ```
 
-Basic styles that must be applied to the row sidebar element. Includes a `width` style matching the `sidebarWidth` prop passed to `TimelineContext`.
+Basic styles that must be applied to the row sidebar element.
+
+When `sidebarWidth` is provided to `TimelineContext`, this style will automatically include a matching `width` value, so no additional width styling is needed on the sidebar element.
+
+#### `setSidebarRef`
+
+```tsx
+setSidebarRef: React.RefObject<HTMLDivElement>;
+```
+
+> **Deprecated.** Pass `sidebarWidth` as a prop to `TimelineContext` instead. Attaching this ref to every row's sidebar causes excessive re-renders.
+
+A ref that can be passed to the sidebar element so the timeline can measure its width. Prefer the `sidebarWidth` prop on `TimelineContext` for a more performant alternative.
