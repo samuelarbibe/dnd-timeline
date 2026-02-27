@@ -31,6 +31,7 @@ You timeline components must be wrapped in this context.
 You will need to wrap your timeline and all of its component in a `<TimelineContext>`
 
 {% code title="App.tsx" overflow="wrap" %}
+
 ```tsx
 function App() {
   const [rows, setRows] = useRows();
@@ -63,17 +64,20 @@ function App() {
       onResizeEnd={onResizeEnd}
       range={range}
       onRangeChanged={setRange}
+      sidebarWidth={200}
     >
       <Timeline rows={rows} items={items} />
     </TimelineContext>
   );
 }
 ```
+
 {% endcode %}
 
 You will need to create a `<Timeline />` component to use the useTimelineContext inside of it.
 
 {% code title="Timeline.tsx" %}
+
 ```tsx
 function Timeline(props: TimelineProps){
   const { setTimelineRef, style } = useTimelineContext()
@@ -87,6 +91,7 @@ function Timeline(props: TimelineProps){
   )
 }
 ```
+
 {% endcode %}
 
 You can learn how to render rows here:
@@ -95,7 +100,7 @@ You can learn how to render rows here:
 [row](../row/)
 {% endcontent-ref %}
 
-***
+---
 
 ## Props
 
@@ -109,7 +114,7 @@ interface TimelineContextProps {
   usePanStrategy?: UsePanStrategy;
   onRangeChanged: OnRangeChanged;
   rangeGridSizeDefinition?: number | GridSizeDefinition[];
-  sidebarWidth?: number;
+  sidebarWidth: number;
   // ...DndContext Props
 }
 ```
@@ -200,7 +205,7 @@ type ResizeEndEvent = {
 
 The `active` object contains the item's custom data, alongside a `getSpanFromResizeEvent` function that should be called with the event to get the updated span.
 
-***
+---
 
 ### Options
 
@@ -304,17 +309,13 @@ The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoo
 [zoom-and-pan](../zoom-and-pan/)
 {% endcontent-ref %}
 
-#### `sidebarWidth?`
+#### `sidebarWidth`
 
 ```tsx
-sidebarWidth?: number
+sidebarWidth: number;
 ```
 
-The sidebar width in pixels. When provided, the timeline uses this value directly instead of measuring the sidebar element on every row via a ref.
-
-Prefer this over attaching `setSidebarRef` to sidebar elements, as the ref-based approach causes excessive re-renders.
-
-When `sidebarWidth` is set, `rowSidebarStyle` returned from `useRow` will automatically include a matching `width` style, so you do not need to set the width on the sidebar element yourself.
+The sidebar width in pixels. The timeline uses this value to calculate item positions and viewport width, and to set the `width` style on `rowSidebarStyle` returned from `useRow`.
 
 ```tsx
 <TimelineContext
