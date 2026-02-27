@@ -51,6 +51,7 @@ export interface TimelineBag {
 	timelineRef: React.MutableRefObject<HTMLElement | null>;
 	setTimelineRef: (element: HTMLElement | null) => void;
 	sidebarWidth: number;
+	isSidebarWidthControlled: boolean;
 	sidebarRef: React.MutableRefObject<HTMLElement | null>;
 	setSidebarRef: (element: HTMLElement | null) => void;
 	valueToPixels: ValueToPixels;
@@ -88,6 +89,7 @@ export interface UseTimelineProps {
 	usePanStrategy?: UsePanStrategy;
 	onRangeChanged: OnRangeChanged;
 	rangeGridSizeDefinition?: number | GridSizeDefinition[];
+	sidebarWidth?: number;
 }
 
 export interface TimelineContextProps
