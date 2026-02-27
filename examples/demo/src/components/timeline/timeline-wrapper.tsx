@@ -91,6 +91,7 @@ function TimelineWrapper(props: PropsWithChildren) {
 			onDragCancel={onDragCancel}
 			autoScroll={{ enabled: false }}
 			range={range}
+			sidebarWidth={224}
 			overlayed
 		>
 			{props.children}
