@@ -24,31 +24,34 @@ You timeline components must be wrapped in this context.
 You will need to wrap your timeline and all of its component in a `<TimelineContext>`
 
 {% code title="App.tsx" overflow="wrap" %}
+
 ```tsx
-function App(){
-  const [rows, setRows] = useRows()
-  const [items, setItems] = useItems()
-  const [range, setRange] = useState(DEFAULT_TIMEFRAME)
-  
+function App() {
+  const [rows, setRows] = useRows();
+  const [items, setItems] = useItems();
+  const [range, setRange] = useState(DEFAULT_TIMEFRAME);
+
   const onResizeEnd = useCallback((event: ResizeEndEvent) => {
-      const updatedSpan =
-        event.active.data.current.getSpanFromResizeEvent?.(event)
-  
-      if (!updatedSpan) return
-  
-      const activeItemId = event.active.id
-  
-// Only update the changed item. This will cause only the changed items to re-render
-      setItems((prev) => prev.map((item) => {
-          if (item.id !== activeItemId) return item
-  
-          return {
-            ...item,
-            span: updatedSpan,
-          }
-      }))
-    }, [])
-  
+    const updatedSpan =
+      event.active.data.current.getSpanFromResizeEvent?.(event);
+
+    if (!updatedSpan) return;
+
+    const activeItemId = event.active.id;
+
+    // Only update the changed item. This will cause only the changed items to re-render
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id !== activeItemId) return item;
+
+        return {
+          ...item,
+          span: updatedSpan,
+        };
+      }),
+    );
+  }, []);
+
   return (
     <TimelineContext
       onResizeEnd={onResizeEnd}
@@ -57,27 +60,30 @@ function App(){
     >
       <Timeline rows={rows} items={items} />
     </TimelineContext>
-  )
+  );
 }
 ```
+
 {% endcode %}
 
 You will need to create a `<Timeline />` component to use the useTimelineContext inside of it.
 
 {% code title="Timeline.tsx" %}
+
 ```tsx
 function Timeline(props: TimelineProps){
   const { setTimelineRef, style } = useTimelineContext()
-  
+
   return (
     <div ref={setTimelineRef} style={style}>
-      {props.rows.map((row) => 
+      {props.rows.map((row) =>
         // Render rows here...
       )}
     </div>
   )
 }
 ```
+
 {% endcode %}
 
 You can learn how to render rows here:
@@ -86,21 +92,22 @@ You can learn how to render rows here:
 [row](../row/)
 {% endcontent-ref %}
 
-***
+---
 
 ## Props
 
 ```tsx
 interface TimelineContextProps {
-    range: Range // { start: number, end: number }
-    overlayed?: boolean
-    onResizeEnd: OnResizeEnd
-    onResizeMove?: OnResizeMove
-    onResizeStart?: OnResizeStart
-    usePanStrategy?: UsePanStrategy
-    onRangeChanged: OnRangeChanged
-    rangeGridSizeDefinition?: number | GridSizeDefinition[]
-    // ...DndContext Props
+  range: Range; // { start: number, end: number }
+  overlayed?: boolean;
+  onResizeEnd: OnResizeEnd;
+  onResizeMove?: OnResizeMove;
+  onResizeStart?: OnResizeStart;
+  usePanStrategy?: UsePanStrategy;
+  onRangeChanged: OnRangeChanged;
+  rangeGridSizeDefinition?: number | GridSizeDefinition[];
+  sidebarWidth?: number;
+  // ...DndContext Props
 }
 ```
 
@@ -120,7 +127,7 @@ For example, the `onDragEnd` event is called with extra data:
 
 <strong>  const updatedSpan =
 </strong><strong>    event.active.data.current.getSpanFromDragEvent?.(event)
-</strong>    
+</strong>
   // update your state using the updated span.
 }
 </code></pre>
@@ -147,9 +154,9 @@ onResizeMove?: (event: ResizeStartEvent) => void
 
 ```tsx
 type ResizeStartEvent = {
-  active: Omit<Active, 'rect'>
-  direction: DragDirection // 'start' | 'end'
-}
+  active: Omit<Active, "rect">;
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 The `active` object contains the item's custom data, alongside a `getSpanFromDragEvent` function that should be called with the event to get the updated span.
@@ -162,12 +169,12 @@ onResizeMove?: (event: ResizeMoveEvent) => void
 
 ```tsx
 type ResizeMoveEvent = {
-  active: Omit<Active, 'rect'>
+  active: Omit<Active, "rect">;
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 The `active` object contains the item's custom data, alongside a `getSpanFromResizeEvent` function that should be called with the event to get the updated span.
@@ -180,31 +187,31 @@ onResizeMove?: (event: ResizeEndEvent) => void
 
 ```tsx
 type ResizeEndEvent = {
-  active: Omit<Active, 'rect'>
+  active: Omit<Active, "rect">;
   delta: {
-    x: number
-  }
-  direction: DragDirection // 'start' | 'end'
-}
+    x: number;
+  };
+  direction: DragDirection; // 'start' | 'end'
+};
 ```
 
 The `active` object contains the item's custom data, alongside a `getSpanFromResizeEvent` function that should be called with the event to get the updated span.
 
-***
+---
 
 ### Options
 
 #### `range`
 
 ```tsx
-range: Range
+range: Range;
 ```
 
 ```tsx
 type Range = {
-  start: number
-  end: number
-}
+  start: number;
+  end: number;
+};
 ```
 
 An object defining the viewable range in the timeline. This field is fully controlled.
@@ -212,13 +219,11 @@ An object defining the viewable range in the timeline. This field is fully contr
 #### `onRangeChanged`
 
 ```tsx
-onRangeChanged: OnRangeChanged
+onRangeChanged: OnRangeChanged;
 ```
 
 ```tsx
-type OnRangeChanged = (
-  updateFunction: (prev: Range) => Range
-) => void
+type OnRangeChanged = (updateFunction: (prev: Range) => Range) => void;
 ```
 
 A callback that receives an update function as a prop. Use this to update your controlled state of `range`.
@@ -239,9 +244,9 @@ rangeGridSizeDefinition?: number | GridSizeDefinition[]
 
 ```tsx
 type GridSizeDefinition = {
-  value: number
-  maxRangeSize?: number
-}
+  value: number;
+  maxRangeSize?: number;
+};
 ```
 
 Enables and configures snapping in the timeline.
@@ -253,15 +258,15 @@ If provided with an array of `GridSizeDefinition`, the snap grid size will be th
 > 🧠 To create a dynamic snap grid, that is based on the range size, pass in an array of `GridSizeDefinition`.
 >
 > ```tsx
->   const rangeGridSize: GridSizeDefinition[] = [
->     {
->       value: hoursToMilliseconds(1),
->     },
->     {
->       value: minutesToMilliseconds(30),
->       maxRangeSize: hoursToMilliseconds(24),
->     }
->   ]
+> const rangeGridSize: GridSizeDefinition[] = [
+>   {
+>     value: hoursToMilliseconds(1),
+>   },
+>   {
+>     value: minutesToMilliseconds(30),
+>     maxRangeSize: hoursToMilliseconds(24),
+>   },
+> ];
 > ```
 >
 > For example, the `rangeGridSize` above will cause the range to have a snap grid size of 30 minutes if range size is smaller than 24 hours, otherwise the grid size will be 1 hour.
@@ -275,17 +280,17 @@ usePanStrategy?: UsePanStrategy = useWheelStrategy
 ```tsx
 type UsePanStrategy = (
   timelineRef: React.MutableRefObject<HTMLElement | null>,
-  onPanEnd: OnPanEnd
-) => void
+  onPanEnd: OnPanEnd,
+) => void;
 
-type OnPanEnd = (event: PanEndEvent) => void
+type OnPanEnd = (event: PanEndEvent) => void;
 
 type PanEndEvent = {
-  clientX?: number
-  clientY?: number
-  deltaX: number
-  deltaY: number
-}
+  clientX?: number;
+  clientY?: number;
+  deltaX: number;
+  deltaY: number;
+};
 ```
 
 Enables and configures panning and zooming the timeline.
@@ -295,6 +300,29 @@ The default strategy is the `useWheelStrategy`, which uses `ctrl + wheel` to zoo
 {% content-ref url="../zoom-and-pan/" %}
 [zoom-and-pan](../zoom-and-pan/)
 {% endcontent-ref %}
+
+#### `sidebarWidth?`
+
+```tsx
+sidebarWidth?: number
+```
+
+The sidebar width in pixels. When provided, the timeline uses this value directly instead of measuring the sidebar element on every row via a ref.
+
+Prefer this over attaching `setSidebarRef` to sidebar elements, as the ref-based approach causes excessive re-renders.
+
+When `sidebarWidth` is set, `rowSidebarStyle` returned from `useRow` will automatically include a matching `width` style, so you do not need to set the width on the sidebar element yourself.
+
+```tsx
+<TimelineContext
+  sidebarWidth={200}
+  onResizeEnd={onResizeEnd}
+  range={range}
+  onRangeChanged={setRange}
+>
+  <Timeline rows={rows} items={items} />
+</TimelineContext>
+```
 
 #### `resizeHandleWidth?` <a href="#resizehandlewidth" id="resizehandlewidth"></a>
 

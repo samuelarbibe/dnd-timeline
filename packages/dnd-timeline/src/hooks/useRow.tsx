@@ -1,5 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useMemo } from "react";
 
 import type { UseRowProps } from "../types";
 
@@ -17,14 +17,23 @@ const rowStyle: CSSProperties = {
 	flexDirection: "column",
 };
 
-const rowSidebarStyle: CSSProperties = {
+const baseRowSidebarStyle: CSSProperties = {
 	left: 0,
 	zIndex: 3,
 	display: "flex",
 };
 
 export default function useRow(props: UseRowProps) {
-	const { setSidebarRef } = useTimelineContext();
+	const { setSidebarRef, sidebarWidth, isSidebarWidthControlled } =
+		useTimelineContext();
+
+	const rowSidebarStyle = useMemo<CSSProperties>(
+		() =>
+			isSidebarWidthControlled
+				? { ...baseRowSidebarStyle, width: sidebarWidth }
+				: baseRowSidebarStyle,
+		[isSidebarWidthControlled, sidebarWidth],
+	);
 
 	const droppableProps = useDroppable({
 		id: props.id,
