@@ -24,15 +24,11 @@ const baseRowSidebarStyle: CSSProperties = {
 };
 
 export default function useRow(props: UseRowProps) {
-	const { setSidebarRef, sidebarWidth, isSidebarWidthControlled } =
-		useTimelineContext();
+	const { sidebarWidth } = useTimelineContext();
 
 	const rowSidebarStyle = useMemo<CSSProperties>(
-		() =>
-			isSidebarWidthControlled
-				? { ...baseRowSidebarStyle, width: sidebarWidth }
-				: baseRowSidebarStyle,
-		[isSidebarWidthControlled, sidebarWidth],
+		() => ({ ...baseRowSidebarStyle, width: sidebarWidth }),
+		[sidebarWidth],
 	);
 
 	const droppableProps = useDroppable({
@@ -45,7 +41,6 @@ export default function useRow(props: UseRowProps) {
 		rowStyle,
 		rowWrapperStyle,
 		rowSidebarStyle,
-		setSidebarRef,
 		...droppableProps,
 	};
 }

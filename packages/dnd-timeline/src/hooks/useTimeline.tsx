@@ -40,7 +40,7 @@ export default function useTimeline({
 	rangeGridSizeDefinition,
 	usePanStrategy = useWheelStrategy,
 	resizeHandleWidth = DEFAULT_RESIZE_HANDLE_WIDTH,
-	sidebarWidth: sidebarWidthProp,
+	sidebarWidth,
 }: UseTimelineProps): TimelineBag {
 	const rangeStart = range.start;
 	const rangeEnd = range.end;
@@ -103,15 +103,6 @@ export default function useTimeline({
 		width: timelineWidth,
 		direction,
 	} = useElementRef();
-
-	const {
-		ref: sidebarRef,
-		setRef: setSidebarRef,
-		width: measuredSidebarWidth,
-	} = useElementRef();
-
-	const isSidebarWidthControlled = sidebarWidthProp !== undefined;
-	const sidebarWidth = sidebarWidthProp ?? measuredSidebarWidth;
 
 	const timelineViewportWidth = timelineWidth - sidebarWidth;
 
@@ -312,9 +303,6 @@ export default function useTimeline({
 			onResizeMove: handleResizeMove,
 			onResizeStart: handleResizeStart,
 			addResizeListener,
-			isSidebarWidthControlled,
-			sidebarRef,
-			setSidebarRef,
 			sidebarWidth,
 			resizeHandleWidth,
 			pixelsToValue,
@@ -336,9 +324,6 @@ export default function useTimeline({
 			handleResizeMove,
 			handleResizeStart,
 			addResizeListener,
-			isSidebarWidthControlled,
-			sidebarRef,
-			setSidebarRef,
 			sidebarWidth,
 			resizeHandleWidth,
 			pixelsToValue,

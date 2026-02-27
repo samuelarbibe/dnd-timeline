@@ -13,7 +13,7 @@ function Sidebar(props: SidebarProps) {
 
 	const style = {
 		transition,
-		width: "200px",
+		width: "100%",
 		border: "1px solid grey",
 		...(transform && {
 			transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,

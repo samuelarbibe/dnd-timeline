@@ -123,6 +123,7 @@ function App() {
 	return (
 		<TimelineContext
 			range={range}
+			sidebarWidth={200}
 			sensors={useSensors(sensors)}
 			onDragMove={onDragMove}
 			onDragEnd={onDragEnd}
