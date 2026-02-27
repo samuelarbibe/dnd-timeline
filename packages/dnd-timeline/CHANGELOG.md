@@ -1,5 +1,12 @@
 
 
+## [2.4.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.3.0...dnd-timeline@2.4.0) (2026-02-27)
+
+
+### Features
+
+* add sidebarWidth prop to TimelineContext ([04d3030](https://github.com/samuelarbibe/dnd-timeline/commit/04d3030c1e5e29edfb2eed9306c3c01982f1b706))
+
 ## [2.3.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.2.0...dnd-timeline@2.3.0) (2026-01-31)
 
 
