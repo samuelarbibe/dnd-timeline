@@ -1,7 +1,7 @@
 import "./index.css";
 import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
 import { endOfDay, startOfDay } from "date-fns";
 import type {
 	DragEndEvent,
