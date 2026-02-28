@@ -17,11 +17,27 @@ export interface PanEndEvent {
 	deltaY: number;
 }
 
-export type GetSpanFromDragEvent = (
-	event: DragStartEvent | DragEndEvent | DragCancelEvent | DragMoveEvent,
+export type DragSpanEvent =
+	| DragStartEvent
+	| DragEndEvent
+	| DragCancelEvent
+	| DragMoveEvent;
+
+export type ResizeSpanEvent = ResizeMoveEvent | ResizeEndEvent;
+
+export type GetSpanFromDragEvent = (event: DragSpanEvent) => Range | null;
+
+export type GetSpanFromResizeEvent = (event: ResizeSpanEvent) => Range | null;
+
+export type GetSpanFromDragEventStrategy = (
+	event: DragSpanEvent,
+	timelineBag: TimelineBag,
 ) => Range | null;
 
-export type GetSpanFromResizeEvent = (event: ResizeEndEvent) => Range | null;
+export type GetSpanFromResizeEventStrategy = (
+	event: ResizeSpanEvent,
+	timelineBag: TimelineBag,
+) => Range | null;
 
 export type GetValueFromScreenX = (screenX: number) => number;
 
@@ -45,6 +61,7 @@ export interface TimelineBag {
 	onResizeEnd: OnResizeEnd;
 	onResizeMove?: OnResizeMove;
 	onResizeStart?: OnResizeStart;
+	useResizeAnimation: boolean;
 	resizeHandleWidth: number;
 	rangeGridSize?: number;
 	direction: CanvasDirection;
@@ -81,6 +98,9 @@ export interface UseTimelineProps {
 	overlayed?: boolean;
 	onResizeEnd: OnResizeEnd;
 	resizeHandleWidth?: number;
+	useResizeAnimation?: boolean;
+	getSpanFromDragEventStrategy?: GetSpanFromDragEventStrategy;
+	getSpanFromResizeEventStrategy?: GetSpanFromResizeEventStrategy;
 	onResizeMove?: OnResizeMove;
 	onResizeStart?: OnResizeStart;
 	usePanStrategy?: UsePanStrategy;
