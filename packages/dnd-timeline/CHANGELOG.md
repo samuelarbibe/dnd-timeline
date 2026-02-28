@@ -1,5 +1,38 @@
 
 
+## [3.0.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.4.0...dnd-timeline@3.0.0) (2026-02-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* sidebarRef and setSidebarRef have been removed from the
+TimelineBag and useRow API. sidebarWidth is now a required prop on
+TimelineContext instead of optional.
+
+- Remove sidebarRef, setSidebarRef, and isSidebarWidthControlled from TimelineBag
+- Remove sidebarRef measurement via useElementRef in useTimeline
+- Make sidebarWidth a required prop in UseTimelineProps
+- rowSidebarStyle from useRow now always includes width: sidebarWidth
+- setSidebarRef is no longer returned from useRow
+- Update all examples to pass sidebarWidth to TimelineContext
+- Update docs to reflect the new required sidebarWidth prop
+
+### Features
+
+* drop sidebarRef support and make sidebarWidth a required prop ([cf01439](https://github.com/samuelarbibe/dnd-timeline/commit/cf01439a1007c702ee9f574c3e2f1ba53435f66e))
+
+
+### Reverts
+
+* undo doc changes ([6ca6484](https://github.com/samuelarbibe/dnd-timeline/commit/6ca6484e01aded4cc0385179e27dbad725cca81e))
+
+## [2.4.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.3.0...dnd-timeline@2.4.0) (2026-02-27)
+
+
+### Features
+
+* add sidebarWidth prop to TimelineContext ([04d3030](https://github.com/samuelarbibe/dnd-timeline/commit/04d3030c1e5e29edfb2eed9306c3c01982f1b706))
+
 ## [2.3.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.2.0...dnd-timeline@2.3.0) (2026-01-31)
 
 

@@ -70,6 +70,7 @@ function TimelineWrapper(props: PropsWithChildren) {
 			onResizeEnd={onResizeEnd}
 			onRangeChanged={setRange}
 			range={range}
+			sidebarWidth={150}
 		>
 			{props.children}
 		</TimelineContext>

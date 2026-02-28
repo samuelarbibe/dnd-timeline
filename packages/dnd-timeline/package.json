@@ -1,6 +1,6 @@
 {
 	"name": "dnd-timeline",
-	"version": "2.3.0",
+	"version": "3.0.0",
 	"license": "MIT",
 	"main": "./dist/index",
 	"module": "./dist/index.mjs",

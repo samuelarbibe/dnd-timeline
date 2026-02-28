@@ -68,6 +68,7 @@ function App() {
 	return (
 		<TimelineContext
 			range={range}
+			sidebarWidth={200}
 			onDragEnd={onDragEnd}
 			onResizeEnd={onResizeEnd}
 			onRangeChanged={setRange}
