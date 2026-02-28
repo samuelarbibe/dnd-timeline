@@ -31,12 +31,12 @@ export type GetSpanFromResizeEvent = (event: ResizeSpanEvent) => Range | null;
 
 export type GetSpanFromDragEventStrategy = (
 	event: DragSpanEvent,
-	defaultGetSpanFromDragEvent: GetSpanFromDragEvent,
+	timelineBag: TimelineBag,
 ) => Range | null;
 
 export type GetSpanFromResizeEventStrategy = (
 	event: ResizeSpanEvent,
-	defaultGetSpanFromResizeEvent: GetSpanFromResizeEvent,
+	timelineBag: TimelineBag,
 ) => Range | null;
 
 export type GetValueFromScreenX = (screenX: number) => number;
@@ -61,6 +61,7 @@ export interface TimelineBag {
 	onResizeEnd: OnResizeEnd;
 	onResizeMove?: OnResizeMove;
 	onResizeStart?: OnResizeStart;
+	useResizeAnimation: boolean;
 	resizeHandleWidth: number;
 	rangeGridSize?: number;
 	direction: CanvasDirection;
@@ -99,6 +100,7 @@ export interface UseTimelineProps {
 	overlayed?: boolean;
 	onResizeEnd: OnResizeEnd;
 	resizeHandleWidth?: number;
+	useResizeAnimation?: boolean;
 	getSpanFromDragEventStrategy?: GetSpanFromDragEventStrategy;
 	getSpanFromResizeEventStrategy?: GetSpanFromResizeEventStrategy;
 	onResizeMove?: OnResizeMove;

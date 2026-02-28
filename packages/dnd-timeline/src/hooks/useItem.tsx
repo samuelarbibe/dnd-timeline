@@ -39,6 +39,8 @@ export default function useItem(props: UseItemProps) {
 	const dragDeltaXRef = useRef<number>(0);
 	const dragStartX = useRef<number>();
 	const [dragDirection, setDragDirection] = useState<DragDirection | null>();
+	const spanStart = props.span.start;
+	const spanEnd = props.span.end;
 
 	const {
 		range,
@@ -47,6 +49,7 @@ export default function useItem(props: UseItemProps) {
 		onResizeMove,
 		onResizeStart,
 		direction,
+		useResizeAnimation,
 		resizeHandleWidth: contextResizeHandleWidth,
 		valueToPixels,
 		getSpanFromDragEvent,
@@ -54,7 +57,6 @@ export default function useItem(props: UseItemProps) {
 	} = useTimelineContext();
 
 	const resizeHandleWidth = props.resizeHandleWidth ?? contextResizeHandleWidth;
-	const useSpanResizeAnimation = props.useSpanResizeAnimation ?? false;
 
 	const propsOnResizeEnd = props.onResizeEnd;
 	const propsOnResizeStart = props.onResizeStart;
@@ -97,14 +99,11 @@ export default function useItem(props: UseItemProps) {
 		disabled: props.disabled,
 	});
 
-	const deltaXStart = valueToPixels(props.span.start - range.start);
-
-	const deltaXEnd = valueToPixels(range.end - props.span.end);
-
-	const width = valueToPixels(props.span.end - props.span.start);
+	const deltaXStart = valueToPixels(spanStart - range.start);
+	const deltaXEnd = valueToPixels(range.end - spanEnd);
+	const width = valueToPixels(spanEnd - spanStart);
 
 	const sideStart = direction === "rtl" ? "right" : "left";
-
 	const sideEnd = direction === "rtl" ? "left" : "right";
 
 	const cursor = props.disabled
@@ -134,17 +133,15 @@ export default function useItem(props: UseItemProps) {
 				},
 			};
 
-			if (useSpanResizeAnimation) {
+			if (useResizeAnimation) {
 				const newSpan = getSpanFromResizeEvent(resizeMoveEvent);
 
 				if (newSpan) {
 					const newWidth = valueToPixels(newSpan.end - newSpan.start);
-					draggableProps.node.current.style.width = `${newWidth}px`;
+					const newSideDelta = valueToPixels(newSpan.start - range.start);
 
-					if (dragDirection === "start") {
-						const newSideDelta = valueToPixels(newSpan.start - range.start);
-						draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
-					}
+					draggableProps.node.current.style.width = `${newWidth}px`;
+					draggableProps.node.current.style[sideStart] = `${newSideDelta}px`;
 				}
 			} else {
 				if (dragDirection === "start") {
@@ -172,11 +169,11 @@ export default function useItem(props: UseItemProps) {
 	}, [
 		sideStart,
 		width,
+		range.start,
 		deltaXStart,
-		range,
 		props.id,
 		valueToPixels,
-		useSpanResizeAnimation,
+		useResizeAnimation,
 		getSpanFromResizeEvent,
 		dragDirection,
 		direction,
