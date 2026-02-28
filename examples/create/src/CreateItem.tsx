@@ -1,57 +1,16 @@
-import type { DragDirection, Span } from "dnd-timeline";
-import { useTimelineContext } from "dnd-timeline";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { type Span, useTimelineContext } from "dnd-timeline";
+import { useEffect, useMemo, useRef } from "react";
 
 interface ItemProps {
 	startX: number;
 	onCreateEnd: (span: Span) => void;
-	normalizeSpan: (span: Span, direction: DragDirection) => Span | null;
 }
 
 function CreateItem(props: ItemProps) {
 	const ref = useRef<HTMLDivElement | null>(null);
 	const endX = useRef<number>();
 
-	const {
-		direction,
-		range,
-		getDeltaXFromScreenX,
-		getValueFromScreenX,
-		valueToPixels,
-	} = useTimelineContext();
-
-	const sideStart = direction === "rtl" ? "right" : "left";
-
-	const getSpanFromScreenX = useCallback(
-		(startX: number, currentX: number): Span | null => {
-			const startValue = getValueFromScreenX(startX);
-			const currentValue = getValueFromScreenX(currentX);
-
-			const dragDirection: DragDirection =
-				currentValue < startValue ? "start" : "end";
-
-			const rawSpan: Span =
-				startValue <= currentValue
-					? { start: startValue, end: currentValue }
-					: { start: currentValue, end: startValue };
-
-			return props.normalizeSpan(rawSpan, dragDirection);
-		},
-		[getValueFromScreenX, props.normalizeSpan],
-	);
-
-	const applySpanToPreview = useCallback(
-		(span: Span) => {
-			if (!ref.current) return;
-
-			const startOffset = valueToPixels(span.start - range.start);
-			const width = valueToPixels(span.end - span.start);
-
-			ref.current.style[sideStart] = `${startOffset}px`;
-			ref.current.style.width = `${width}px`;
-		},
-		[range.start, sideStart, valueToPixels],
-	);
+	const { getDeltaXFromScreenX, getValueFromScreenX } = useTimelineContext();
 
 	const left = useMemo(
 		() => getDeltaXFromScreenX(props.startX),
@@ -64,16 +23,18 @@ function CreateItem(props: ItemProps) {
 		const pointerMoveHandler = (event: PointerEvent) => {
 			if (!ref.current) return;
 			endX.current = event.clientX;
-			const span = getSpanFromScreenX(props.startX, endX.current);
-			if (!span) return;
-			applySpanToPreview(span);
+
+			const width = endX.current - props.startX;
+			ref.current.style.width = `${width}px`;
 		};
 
 		const pointerUpHandler = () => {
-			if (endX.current === undefined) return;
+			if (!endX.current) return;
 
-			const span = getSpanFromScreenX(props.startX, endX.current);
-			if (!span) return;
+			const span: Span = {
+				start: getValueFromScreenX(props.startX),
+				end: getValueFromScreenX(endX.current),
+			};
 			props.onCreateEnd(span);
 		};
 
@@ -84,7 +45,7 @@ function CreateItem(props: ItemProps) {
 			window.removeEventListener("pointermove", pointerMoveHandler);
 			window.removeEventListener("pointerup", pointerUpHandler);
 		};
-	}, [applySpanToPreview, getSpanFromScreenX, props.onCreateEnd, props.startX]);
+	}, [props.onCreateEnd, props.startX, getValueFromScreenX]);
 
 	return (
 		<div
@@ -95,7 +56,7 @@ function CreateItem(props: ItemProps) {
 				overflow: "hidden",
 				position: "absolute",
 				width: 0,
-				[sideStart]: left,
+				left,
 			}}
 		>
 			Creating...

@@ -13,7 +13,6 @@ function Item(props: ItemProps) {
 		useItem({
 			id: props.id,
 			span: props.span,
-			useSpanResizeAnimation: true,
 		});
 
 	return (
