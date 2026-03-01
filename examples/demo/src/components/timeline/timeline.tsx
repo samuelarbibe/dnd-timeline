@@ -17,6 +17,8 @@ import Row from "./row";
 import Sidebar from "./sidebar";
 import Subrow from "./subrow";
 
+export const ROW_HEIGHT = 50;
+
 function Timeline() {
 	const rows = useAtomValue(rowsAtom);
 	const activeItem = useAtomValue(activeAtom);
@@ -54,7 +56,8 @@ function Timeline() {
 			},
 			[activeItemIndex],
 		),
-		estimateSize: (index) => (groupedSubrows[rows[index].id]?.length || 1) * 50,
+		estimateSize: (index) =>
+			(groupedSubrows[rows[index].id]?.length || 1) * ROW_HEIGHT,
 	});
 
 	return (
