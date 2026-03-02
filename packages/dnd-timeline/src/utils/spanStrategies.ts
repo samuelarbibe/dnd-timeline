@@ -1,8 +1,7 @@
 import type {
-	DragSpanEvent,
 	Range,
-	ResizeSpanEvent,
-	TimelineBag,
+	GetSpanFromDragEventStrategy,
+	GetSpanFromResizeEventStrategy
 } from "../types";
 
 const snapValueToRangeGrid = (value: number, rangeGridSize?: number) => {
@@ -11,17 +10,7 @@ const snapValueToRangeGrid = (value: number, rangeGridSize?: number) => {
 	return Math.round(value / rangeGridSize) * rangeGridSize;
 };
 
-export type GetDefaultSpanFromDragEvent = (
-	event: DragSpanEvent,
-	timelineBag: TimelineBag,
-) => Range | null;
-
-export type GetDefaultSpanFromResizeEvent = (
-	event: ResizeSpanEvent,
-	timelineBag: TimelineBag,
-) => Range | null;
-
-export const getDefaultSpanFromDragEvent: GetDefaultSpanFromDragEvent = (
+export const getDefaultSpanFromDragEvent: GetSpanFromDragEventStrategy = (
 	event,
 	timelineBag,
 ) => {
@@ -55,7 +44,7 @@ export const getDefaultSpanFromDragEvent: GetDefaultSpanFromDragEvent = (
 	return null;
 };
 
-export const getDefaultSpanFromResizeEvent: GetDefaultSpanFromResizeEvent = (
+export const getDefaultSpanFromResizeEvent: GetSpanFromResizeEventStrategy = (
 	event,
 	timelineBag,
 ) => {
