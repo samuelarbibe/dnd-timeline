@@ -1,5 +1,20 @@
 
 
+## [3.1.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@3.0.0...dnd-timeline@3.1.0) (2026-03-04)
+
+
+### Features
+
+* add capability to control resizing animation ([fa75201](https://github.com/samuelarbibe/dnd-timeline/commit/fa752014bc8ad339aa3f2329ef48ba3cf8cd6349))
+
+
+### Bug Fixes
+
+* address review feedback on except unnecessary type ([84c5d01](https://github.com/samuelarbibe/dnd-timeline/commit/84c5d01a9a7b294084fd02e86a3075f669802de4))
+* address review feedback on resize strategy api and animation config ([d942f94](https://github.com/samuelarbibe/dnd-timeline/commit/d942f946c6230e63e7a26184ec50c6f15388889a))
+* rebase examples/create ([9702e79](https://github.com/samuelarbibe/dnd-timeline/commit/9702e79f5e46a2f5fd6bc89a522ba642c16d996f))
+* row height in the demo timeline ([e0d67f3](https://github.com/samuelarbibe/dnd-timeline/commit/e0d67f35f4f1dd184b43fd7d21a4d4a50bc411c0))
+
 ## [3.0.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@2.4.0...dnd-timeline@3.0.0) (2026-02-27)
 
 
