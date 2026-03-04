@@ -40,6 +40,7 @@ export default function useTimeline({
 	onResizeMove,
 	onResizeStart,
 	onRangeChanged,
+	sidebarWidth,
 	overlayed = false,
 	rangeGridSizeDefinition,
 	usePanStrategy = useWheelStrategy,
@@ -109,12 +110,6 @@ export default function useTimeline({
 		setRef: setTimelineRef,
 		width: timelineWidth,
 		direction,
-	} = useElementRef();
-
-	const {
-		ref: sidebarRef,
-		setRef: setSidebarRef,
-		width: sidebarWidth,
 	} = useElementRef();
 
 	const timelineViewportWidth = timelineWidth - sidebarWidth;
@@ -292,8 +287,6 @@ export default function useTimeline({
 			onResizeStart: handleResizeStart,
 			useResizeAnimation,
 			addResizeListener,
-			sidebarRef,
-			setSidebarRef,
 			sidebarWidth,
 			resizeHandleWidth,
 			pixelsToValue,
@@ -316,8 +309,6 @@ export default function useTimeline({
 			handleResizeStart,
 			useResizeAnimation,
 			addResizeListener,
-			sidebarRef,
-			setSidebarRef,
 			sidebarWidth,
 			resizeHandleWidth,
 			pixelsToValue,

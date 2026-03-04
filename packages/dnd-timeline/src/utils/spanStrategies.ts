@@ -1,7 +1,7 @@
 import type {
-	Range,
 	GetSpanFromDragEventStrategy,
-	GetSpanFromResizeEventStrategy
+	GetSpanFromResizeEventStrategy,
+	Range,
 } from "../types";
 
 const snapValueToRangeGrid = (value: number, rangeGridSize?: number) => {

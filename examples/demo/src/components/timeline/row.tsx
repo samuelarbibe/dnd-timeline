@@ -8,13 +8,9 @@ interface RowProps extends RowDefinition {
 }
 
 function Row(props: RowProps) {
-	const {
-		setNodeRef,
-		setSidebarRef,
-		rowWrapperStyle,
-		rowStyle,
-		rowSidebarStyle,
-	} = useRow({ id: props.id });
+	const { setNodeRef, rowWrapperStyle, rowStyle, rowSidebarStyle } = useRow({
+		id: props.id,
+	});
 
 	return (
 		<div
@@ -24,9 +20,7 @@ function Row(props: RowProps) {
 				minHeight: 50,
 			}}
 		>
-			<div ref={setSidebarRef} style={rowSidebarStyle}>
-				{props.sidebar}
-			</div>
+			<div style={rowSidebarStyle}>{props.sidebar}</div>
 			<div ref={setNodeRef} style={rowStyle}>
 				{props.children}
 			</div>

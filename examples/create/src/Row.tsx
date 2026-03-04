@@ -11,13 +11,9 @@ interface RowProps extends RowDefinition {
 }
 
 function Row(props: RowProps) {
-	const {
-		setNodeRef,
-		setSidebarRef,
-		rowWrapperStyle,
-		rowStyle,
-		rowSidebarStyle,
-	} = useRow({ id: props.id });
+	const { setNodeRef, rowWrapperStyle, rowStyle, rowSidebarStyle } = useRow({
+		id: props.id,
+	});
 
 	const [dragStartX, setDragStartX] = useState<number | null>(null);
 
@@ -35,9 +31,7 @@ function Row(props: RowProps) {
 
 	return (
 		<div style={{ ...rowWrapperStyle, minHeight: 50 }}>
-			<div ref={setSidebarRef} style={rowSidebarStyle}>
-				{props.sidebar}
-			</div>
+			<div style={rowSidebarStyle}>{props.sidebar}</div>
 			<div
 				ref={setNodeRef}
 				style={{ ...rowStyle, border: "1px solid grey" }}

@@ -88,6 +88,7 @@ function App() {
 			onDragEnd={onDragEnd}
 			onResizeEnd={onResizeEnd}
 			onRangeChanged={setRange}
+			sidebarWidth={200}
 		>
 			<Timeline items={items} rows={rows} />
 			<ExternalList items={externalItems} />

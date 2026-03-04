@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { ROW_HEIGHT } from "../timeline/timeline";
 
 interface ItemContentProps extends PropsWithChildren {
 	classes: string;
@@ -7,7 +8,7 @@ interface ItemContentProps extends PropsWithChildren {
 function ItemContent({ children, classes }: ItemContentProps) {
 	return (
 		<div
-			className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 h-items-center ${classes}`}
+			className={`border-2 rounded-sm shadow-md w-full overflow-hidden flex flex-row pl-3 h-[${ROW_HEIGHT}px] items-center ${classes}`}
 		>
 			{children}
 		</div>

@@ -10,7 +10,7 @@ function Sidebar(props: SidebarProps) {
 		<Box
 			p="3"
 			style={{
-				width: "150px",
+				width: "100%",
 				backgroundColor: "var(--color-panel)",
 				borderRight: "1px solid var(--gray-5)",
 			}}

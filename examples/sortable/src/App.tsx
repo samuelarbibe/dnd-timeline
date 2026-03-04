@@ -77,6 +77,7 @@ function App() {
 			onDragEnd={onDragEnd}
 			onResizeEnd={onResizeEnd}
 			onRangeChanged={setRange}
+			sidebarWidth={200}
 			collisionDetection={closestCenter}
 		>
 			<Timeline items={items} rows={rows} />

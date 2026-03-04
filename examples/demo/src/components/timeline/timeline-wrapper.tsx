@@ -13,6 +13,7 @@ import { useCallback, useState } from "react";
 
 import ItemContent from "@/components/ui/item-content";
 import { activeAtom, itemsAtom } from "@/store";
+import { ROW_HEIGHT } from "./timeline";
 
 const DEFAULT_RANGE: Range = {
 	start: startOfDay(new Date()).getTime(),
@@ -91,12 +92,15 @@ function TimelineWrapper(props: PropsWithChildren) {
 			onDragCancel={onDragCancel}
 			autoScroll={{ enabled: false }}
 			range={range}
+			sidebarWidth={224}
 			overlayed
 		>
 			{props.children}
 			<DragOverlay>
 				{active && (
-					<ItemContent classes="border-red-400">{active.id}</ItemContent>
+					<div className={`h-[${ROW_HEIGHT}px]`}>
+						<ItemContent classes="border-red-400">{active.id}</ItemContent>
+					</div>
 				)}
 			</DragOverlay>
 		</TimelineContext>
