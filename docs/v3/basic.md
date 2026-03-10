@@ -77,3 +77,9 @@ This example implements a simple workaround, that allows selecting items by clic
 In this example, all items are moved relative to their initial position.
 
 {% embed url="https://dnd-timeline-multi.vercel.app" %}
+
+## Resize Animation
+
+This example shows how to combine `useResizeAnimation` with a custom `getSpanFromResizeEventStrategy` to keep the resize interaction visually aligned with snapped or normalized spans.
+
+{% embed url="https://dnd-timeline-resize-animation.vercel.app" %}
