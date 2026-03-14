@@ -99,6 +99,8 @@ This function is injected into all of dnd-kit's events, and allowes you to infer
 }
 </code></pre>
 
+By default, this helper uses the default drag span strategy. This can be overridden with `getSpanFromDragEventStrategy`
+
 #### `getSpanFromResizeEvent`
 
 ```typescript
@@ -122,3 +124,5 @@ This function is injected into all of dnd-timeline's resize events, and allowes 
   // update your state using the updated span.
 }
 </code></pre>
+
+By default, this helper uses the default resize span strategy. This can be overridden with `getSpanFromResizeEventStrategy`

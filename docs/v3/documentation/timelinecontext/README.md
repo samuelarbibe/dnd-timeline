@@ -115,6 +115,9 @@ interface TimelineContextProps {
   onRangeChanged: OnRangeChanged;
   rangeGridSizeDefinition?: number | GridSizeDefinition[];
   sidebarWidth: number;
+  useResizeAnimation?: boolean;
+  getSpanFromDragEventStrategy?: GetSpanFromDragEventStrategy;
+  getSpanFromResizeEventStrategy?: GetSpanFromResizeEventStrategy;
   // ...DndContext Props
 }
 ```
@@ -340,3 +343,39 @@ Can be overwritten per item, using the same prop on `useItem`.
 {% hint style="info" %}
 **If set to `0`, resizing will be disabled.**
 {% endhint %}
+
+#### `useResizeAnimation?`
+
+```tsx
+useResizeAnimation?: boolean = false
+```
+
+Enables resize animations based on the span returned by `getSpanFromResizeEvent`.
+
+This is useful when `rangeGridSizeDefinition` or `getSpanFromResizeEventStrategy` changes the resized item's span during resize interactions.
+
+#### `getSpanFromDragEventStrategy?`
+
+```tsx
+getSpanFromDragEventStrategy?: (
+  event: DragStartEvent | DragMoveEvent | DragEndEvent | DragCancelEvent,
+  timelineBag: TimelineBag,
+) => Span | null
+```
+
+A callback that overrides how `getSpanFromDragEvent` infers the active item's span during drag interactions.
+
+If provided, this strategy will be used instead of the default drag span strategy.
+
+#### `getSpanFromResizeEventStrategy?`
+
+```tsx
+getSpanFromResizeEventStrategy?: (
+  event: ResizeMoveEvent | ResizeEndEvent,
+  timelineBag: TimelineBag,
+) => Span | null
+```
+
+A callback that overrides how `getSpanFromResizeEvent` infers the active item's span during resize interactions.
+
+If provided, this strategy will be used instead of the default resize span strategy.
