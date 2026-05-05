@@ -187,6 +187,21 @@ export default function useItem(props: UseItemProps) {
 		const pointerupHandler = (event: globalThis.PointerEvent) => {
 			if (!dragStartX.current || !draggableProps.node.current) return;
 
+			// Suppress the synthetic click that browsers fire after pointerup on the
+			// same element. @dnd-kit/core's PointerSensor does this for drags; replicate
+			// for resize so consumers' onClick handlers don't fire unexpectedly.
+			if (dragDeltaXRef.current !== 0) {
+				const suppressClick = (e: Event) => e.stopPropagation();
+				document.addEventListener("click", suppressClick, {
+					capture: true,
+					once: true,
+				});
+				setTimeout(
+					() => document.removeEventListener("click", suppressClick, true),
+					50,
+				);
+			}
+
 			onResizeEndCallback({
 				activatorEvent: event,
 				delta: {
