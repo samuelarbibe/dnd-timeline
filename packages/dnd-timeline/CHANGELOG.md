@@ -1,5 +1,13 @@
 
 
+## [3.1.1](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@3.1.0...dnd-timeline@3.1.1) (2026-05-16)
+
+
+### Bug Fixes
+
+* address review feedback on sample sidebar width ([6737aec](https://github.com/samuelarbibe/dnd-timeline/commit/6737aec4b4120e7812e72e9d84aebe794738748c))
+* suppress synthetic click after item resize ([3ea594e](https://github.com/samuelarbibe/dnd-timeline/commit/3ea594eaa32ff61dbcf5065c99b2c5a375a75610)), closes [#90](https://github.com/samuelarbibe/dnd-timeline/issues/90)
+
 ## [3.1.0](https://github.com/samuelarbibe/dnd-timeline/compare/dnd-timeline@3.0.0...dnd-timeline@3.1.0) (2026-03-04)
 
 
