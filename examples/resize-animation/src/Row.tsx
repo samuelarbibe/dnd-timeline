@@ -14,9 +14,7 @@ function Row(props: RowProps) {
 
 	return (
 		<div style={{ ...rowWrapperStyle, minHeight: 50 }}>
-			<div style={rowSidebarStyle}>
-				{props.sidebar}
-			</div>
+			<div style={rowSidebarStyle}>{props.sidebar}</div>
 			<div ref={setNodeRef} style={{ ...rowStyle, border: "1px solid grey" }}>
 				{props.children}
 			</div>
