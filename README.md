@@ -1,6 +1,6 @@
 ![Screenshot 2024-07-04 at 22 01 52](https://github.com/samuelarbibe/dnd-timeline/assets/38098325/f3229bc4-c855-4b50-9ab2-9fd2ac37f0ca)
 
-# [🎉 dnd-timeline](https://dnd-timeline.net)
+# [🎉 dnd-timeline](dnd-timeline-demo.vercel.app)
 
 ## dnd-timeline: A headless timeline library, based on [`dnd-kit`](https://docs.dndkit.com/)
 
